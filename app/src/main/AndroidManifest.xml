@@ -2,14 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.user.myproject">
 
-
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
-
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -18,19 +20,44 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service android:name="org.eclipse.paho.android.service.MqttService" />
 
-        <service android:name="org.eclipse.paho.android.service.MqttService" >
-        </service>
-
-
-
-
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".Modal.Homepage"
+            android:label="@string/title_activity_homepage"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="testing" />
+        <activity
+            android:name=".DetailEventActivity"
+            android:label="@string/title_activity_detail_event"
+            android:launchMode="singleTop"
+            android:parentActivityName=".Modal.Homepage"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.user.myproject.Modal.Homepage" />
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAfRsO-VolLmJV4Jfcqp7_XX0ksAUxd9XU" />
+
+        <activity
+            android:name=".WalkInRegistrationActivity"
+            android:label="@string/title_activity_walk_in_registration"
+            android:parentActivityName=".Modal.Homepage"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.user.myproject.Modal.Homepage" />
         </activity>
     </application>
 

@@ -40,19 +40,27 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:26.+'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
 
-    compile 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.2'
 
     compile('org.eclipse.paho:org.eclipse.paho.android.service:1.0.2') {
         exclude module: 'support-v4'
     }
 
-
     // json library
-    compile 'com.google.code.gson:gson:2.6.2'
 
+
+    
+
+    //zxing qrcode
+    
+    compile 'com.android.support:appcompat-v7:26.+'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.2'
+    compile 'com.google.code.gson:gson:2.6.2'
+    compile 'com.android.support:design:26.+'
+    compile 'com.google.android.gms:play-services-maps:11.0.4'
+    compile 'me.dm7.barcodescanner:zxing:1.8.4'
+    compile 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
     testCompile 'junit:junit:4.12'
 }

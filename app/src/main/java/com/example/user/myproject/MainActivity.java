@@ -1,5 +1,6 @@
 package com.example.user.myproject;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.Toast;
 
 import com.example.user.myproject.Modal.Action;
 import com.example.user.myproject.Modal.EncodedStudent;
+import com.example.user.myproject.Modal.Homepage;
 import com.example.user.myproject.Modal.Student;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -82,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         //String message = text.getText().toString();
         try {
             byte[] ss= message.getBytes();
-            client.publish(Action.topic, message.getBytes(), 0, false);
+            client.publish(Action.serverTopic, message.getBytes(), 0, false);
             Toast.makeText(MainActivity.this, "publish success l!!", Toast.LENGTH_LONG).show();
         } catch (MqttException e) {
             e.printStackTrace();
@@ -115,6 +117,9 @@ public class MainActivity extends AppCompatActivity {
             ss = g.toJson(tempArr);
             //g.toJson("Command","12345");
 
+
+
+
             GsonBuilder builder = new GsonBuilder();
 
             Gson resultG = new Gson();
@@ -134,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
 
         publishMessage(Action.combineMessage("001609",ss));
         publishMessage(Action.combineMessage("001609",decodeJsonString));
+        publishMessage(Action.combineMessage("001609",Action.asciiToHex(ss)));
 
     }
 

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.user.myproject.DetailEventActivity"
+    tools:showIn="@layout/activity_detail_event">
+
+    <TextView
+        android:id="@+id/txtEventName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+
+        android:textColor="@color/colorBlack"
+        android:textSize="45px"
+        android:text="Event Name"
+        android:layout_marginTop="10px"
+        android:layout_marginBottom="10px"
+        tools:layout_editor_absoluteX="132dp"
+        tools:layout_editor_absoluteY="325dp" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:srcCompat="@mipmap/ic_launcher" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorShallowGreen"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="40px"
+            android:text="Description"
+            android:textColor="@color/colorBlack"
+            android:textSize="30px" />
+
+        <TextView
+            android:id="@+id/textEventDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textColor="@color/colorBlack"
+            android:layout_margin="20px"/>
+
+
+
+        <TextView
+            android:id="@+id/txtDetailDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:text="TextView"
+            android:textColor="@color/colorBlack"/>
+
+        <TextView
+            android:id="@+id/txtDetailTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+
+            />
+
+        <TextView
+            android:id="@+id/txtNumberOfParticipants"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:text="TextView" />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal"
+        >
+
+
+        <Button
+            android:id="@+id/btnIndividualRegistration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Individual Registration"
+            android:layout_gravity="center_horizontal"
+            />
+
+
+
+        <Button
+            android:id="@+id/btnGroupRegistration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Group Registration" />
+
+
+    </LinearLayout>
+
+
+
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20px"/>
+
+
+
+
+</LinearLayout>

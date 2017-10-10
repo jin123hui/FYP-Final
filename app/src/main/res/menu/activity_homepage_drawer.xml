@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:title="Home" />
+        <item
+            android:id="@+id/nav_subscriptionCategory"
+            android:title="Subscription category" />
+        <item
+            android:id="@+id/nav_onComingEvent"
+            android:title="On coming Event" />
+        <item
+            android:id="@+id/nav_waitingList"
+            android:title="Waiting List" />
+
+        <item
+            android:id="@+id/nav_pastJoinedEvent"
+            android:title="Past Joined Event" />
+
+        <item
+            android:id="@+id/nav_walkinRegistration"
+            android:title="Walk in registration" />
+
+        <item
+            android:id="@+id/nav_redeemBenefits"
+            android:title="Redeem Benefits"
+            />
+    </group>
+
+</menu>

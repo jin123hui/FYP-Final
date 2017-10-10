@@ -2,6 +2,8 @@ package com.example.user.myproject.Modal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  * Created by User on 29/9/2017.
@@ -10,10 +12,15 @@ import java.util.Arrays;
 public class Action {
 
 
-    public static String topic = "MY/TARUC/ERS/0000000001/PUB";
+    public static String serverTopic = "MY/TARUC/ERS/0000000001/PUB";
+    public static String clientTopic = "MY/TARUC/ERS/0000000002/PUB";
     public static String reserveCommand = "303030303030303030303030303030303030303030303030";
-    public static String mqttServer = "iot.eclipse.org";
+    public static String studentId = "16war10395";
 
+    //54 character reserved
+    public static String mqttServer = "iot.eclipse.org";
+    //public static String mqttTest = "tcp://localhost:1883";
+    public static String mqttTest = "tcp://iot.eclipse.org:1883";
 
     //Turn Hex to ASCll For example : 31 turn to 1
     public static String hexToAscii(String hexStr) {
@@ -36,6 +43,19 @@ public class Action {
         return hex.toString();
 
     }
+
+    public static String asciiToHex(int asciiInt){
+        String asciiStr = String.valueOf(asciiInt);
+        char[] chars = asciiStr.toCharArray();
+        StringBuilder hex = new StringBuilder();
+        for (char ch : chars) {
+            hex.append(Integer.toHexString((int) ch));
+        }
+
+        return hex.toString();
+
+    }
+
 
     public static EncodedStudent[] convertStudentToEncoded(Student[] arr){
 
@@ -76,6 +96,59 @@ public class Action {
 
     public static String combineMessage( String commandName,String jsonString){
         return commandName + reserveCommand + jsonString;
+
+    }
+
+    public static EncodedApplicationEvent[] encodedApplicationEvents(ApplicationEvent[] arr){
+        ArrayList<ApplicationEvent> eventArr = new ArrayList<>(Arrays.asList(arr));
+        ArrayList<EncodedApplicationEvent> encodedEvent = new ArrayList<>();
+        for(ApplicationEvent temp: eventArr){
+            EncodedApplicationEvent event = new EncodedApplicationEvent();
+
+            event.setTimetableId(asciiToHex(temp.getTimetableId()));
+            event.setStartTime(asciiToHex(getTime(temp.getStartTIme())));
+            event.setEndTime(asciiToHex(getTime(temp.getEndTime())));
+
+            event.setEventId(asciiToHex(temp.getEventId()));
+            event.setEventTitle(asciiToHex(temp.getEventTitle()));
+            event.setEventDescription(asciiToHex(temp.getEventDescription()));
+            // event brochyure empty first
+            event.setNoOfParticipants(asciiToHex(temp.getNoOfParticipants()));
+            event.setStatus(asciiToHex(temp.getStatus()));
+            event.setActivityType(asciiToHex(temp.getActivityType()));
+
+            encodedEvent.add(event);
+
+        }
+        EncodedApplicationEvent[] result = {};
+        result = encodedEvent.toArray(result);
+        return result;
+
+    }
+
+    public static ApplicationEvent[] decodeApplicationEvent(EncodedApplicationEvent[] arr){
+            return null;
+
+    }
+
+
+    public static String displayDate(GregorianCalendar gc) {
+        String dateString = String.format("%02d", gc.get(Calendar.DATE))
+                + "/" + String.format("%02d", (gc.get(Calendar.MONTH) + 1)) + "/"
+                + String.format("%02d", gc.get(Calendar.YEAR));
+        return dateString;
+
+    }
+
+
+    public static String getTime(GregorianCalendar gc) {
+        String dateString = String.format("%02d", gc.get(Calendar.DATE))
+                + "/" + String.format("%02d", (gc.get(Calendar.MONTH) + 1)) + "/"
+                + String.format("%02d", gc.get(Calendar.YEAR)) + "    "
+                + String.format("%02d", gc.get(Calendar.HOUR_OF_DAY)) + ":"
+                + String.format("%02d", gc.get(Calendar.MINUTE)) + ":"
+                + String.format("%02d", gc.get(Calendar.SECOND));
+        return dateString;
 
     }
 
