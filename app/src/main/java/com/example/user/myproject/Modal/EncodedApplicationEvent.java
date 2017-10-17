@@ -18,7 +18,6 @@ public class EncodedApplicationEvent {
     private String timetableId;
     private String startTime;
     private String endTime;
-
     private String eventId;
     private String eventTitle;
     private String eventDescription;
@@ -36,7 +35,6 @@ public class EncodedApplicationEvent {
     private String currentParticipants;
     private String status;
     private String activityType;
-
     private String venueId;
     private String venueName;
     private String venueDescription;
@@ -158,8 +156,6 @@ public class EncodedApplicationEvent {
         }
         e.setEventTitle(eventTitle);
 
-
-
         Date d = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
@@ -173,7 +169,6 @@ public class EncodedApplicationEvent {
         gc.setTimeInMillis(d.getTime());
         e.setStartTIme(gc);
 
-
         Date d2 = new Date();
         SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
@@ -185,11 +180,10 @@ public class EncodedApplicationEvent {
         }
         GregorianCalendar gc2 = new GregorianCalendar();
         gc2.setTimeInMillis(d2.getTime());
-        e.setEndTime(gc2    );
-
-
+        e.setEndTime(gc2);
+        e.setActivityType(activityType);
+        e.setVenueName(venueName);
         return e;
-
     }
 
 

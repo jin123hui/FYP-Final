@@ -9,8 +9,8 @@
             android:id="@+id/nav_subscriptionCategory"
             android:title="Subscription category" />
         <item
-            android:id="@+id/nav_onComingEvent"
-            android:title="On coming Event" />
+            android:id="@+id/nav_incomingEvent"
+            android:title="Incoming Event" />
         <item
             android:id="@+id/nav_waitingList"
             android:title="Waiting List" />

@@ -9,13 +9,14 @@ import java.util.GregorianCalendar;
  * Created by User on 29/9/2017.
  */
 
-public class Action {
+public class
+Action {
 
 
-    public static String serverTopic = "MY/TARUC/ERS/0000000001/PUB";
-    public static String clientTopic = "MY/TARUC/ERS/0000000002/PUB";
+    public static String serverTopic = "MY/TARUC/ERS/0000000003/PUB";
+    public static String clientTopic = "MY/TARUC/ERS/0000000004/PUB";
     public static String reserveCommand = "303030303030303030303030303030303030303030303030";
-    public static String studentId = "16war10395";
+    public static String studentId = "16wmu10392";
 
     //54 character reserved
     public static String mqttServer = "iot.eclipse.org";
@@ -106,7 +107,7 @@ public class Action {
             EncodedApplicationEvent event = new EncodedApplicationEvent();
 
             event.setTimetableId(asciiToHex(temp.getTimetableId()));
-            event.setStartTime(asciiToHex(getTime(temp.getStartTIme())));
+            event.setStartTime(asciiToHex(getTime(temp.getStartTime())));
             event.setEndTime(asciiToHex(getTime(temp.getEndTime())));
 
             event.setEventId(asciiToHex(temp.getEventId()));

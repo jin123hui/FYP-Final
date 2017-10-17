@@ -15,7 +15,6 @@ public class ApplicationEvent {
     private int timetableId;
     private GregorianCalendar startTime;
     private GregorianCalendar endTime;
-
     private int eventId;
     private String eventTitle;
     private String eventDescription;
@@ -23,8 +22,6 @@ public class ApplicationEvent {
     private int noOfParticipants;
     private String status;
     private String activityType;
-
-
     private Integer venueId;
     private String venueName;
     private String venueDescription;
@@ -56,7 +53,7 @@ public class ApplicationEvent {
         this.timetableId = timetableId;
     }
 
-    public GregorianCalendar getStartTIme() {
+    public GregorianCalendar getStartTime() {
         return startTime;
     }
 

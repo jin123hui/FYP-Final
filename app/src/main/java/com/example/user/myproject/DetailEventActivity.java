@@ -2,41 +2,28 @@ package com.example.user.myproject;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.support.v7.app.ActionBar;
 
 import com.example.user.myproject.Modal.Action;
 import com.example.user.myproject.Modal.ApplicationEvent;
 import com.example.user.myproject.Modal.EncodedApplicationEvent;
-import com.example.user.myproject.Modal.EventListView;
-import com.example.user.myproject.Modal.Homepage;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -47,10 +34,6 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class DetailEventActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -338,11 +321,11 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
                 ApplicationEvent trueEvent = event.getApplicationEvent();
 
                 TextView txtdate = (TextView)findViewById(R.id.txtDetailDate);
-                String mssg = "Date: "+ Action.displayDate(trueEvent.getStartTIme());
+                String mssg = "Date: "+ Action.displayDate(trueEvent.getStartTime());
                 txtdate.setText(mssg);
 
                 TextView txtTime = (TextView)findViewById(R.id.txtDetailTime);
-                txtTime.setText("Time:" + ApplicationEvent.displayTime(trueEvent.getStartTIme())
+                txtTime.setText("Time:" + ApplicationEvent.displayTime(trueEvent.getStartTime())
                         + " - "  + ApplicationEvent.displayTime(trueEvent.getEndTime()) );
 
                 TextView txtNumberOfParticipants = (TextView)findViewById(R.id.txtNumberOfParticipants);

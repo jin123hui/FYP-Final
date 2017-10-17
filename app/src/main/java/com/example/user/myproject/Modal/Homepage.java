@@ -1,16 +1,11 @@
 package com.example.user.myproject.Modal;
 
-import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
-import android.view.KeyEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,20 +15,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.user.myproject.DetailEventActivity;
-import com.example.user.myproject.MainActivity;
+import com.example.user.myproject.Incoming;
 import com.example.user.myproject.R;
+import com.example.user.myproject.Waiting;
 import com.example.user.myproject.WalkInRegistrationActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -49,7 +43,6 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,7 +59,7 @@ public class Homepage extends AppCompatActivity
     AlertDialog dialog;
     Dialog dialog2;
 
-    String studentId = "16war10395";
+    String studentId = "16wmu10392";
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -293,10 +286,14 @@ public class Homepage extends AppCompatActivity
 
         } else if (id == R.id.nav_subscriptionCategory) {
             userEventSubscription();
-        } else if (id == R.id.nav_onComingEvent) {
-
+        } else if (id == R.id.nav_incomingEvent) {
+            Intent intent = new Intent(this, Incoming.class);
+            startActivity(intent);
+            return true;
         } else if (id == R.id.nav_waitingList) {
-
+            Intent intent = new Intent(this, Waiting.class);
+            startActivity(intent);
+            return true;
         } else if (id == R.id.nav_pastJoinedEvent) {
 
         } else if (id == R.id.nav_walkinRegistration) {
@@ -333,7 +330,6 @@ public class Homepage extends AppCompatActivity
 
     }
 
-
     public void loadAllTestingEvent(){
 
         final ArrayList<ApplicationEvent> arrList = new ArrayList<>();
@@ -365,8 +361,6 @@ public class Homepage extends AppCompatActivity
         });
 
     }
-
-
 
     public void conn(){
 
@@ -408,8 +402,6 @@ public class Homepage extends AppCompatActivity
 
 
     }
-
-
 
     public void disconnect(){
         try {
@@ -524,6 +516,7 @@ public class Homepage extends AppCompatActivity
                 String str = "";
                 try {
                     str = new String(token.getMessage().getPayload());
+
                 } catch (MqttException e) {
                     e.printStackTrace();
                 }

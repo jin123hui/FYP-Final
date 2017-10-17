@@ -44,12 +44,12 @@ public class EventListView extends ArrayAdapter<ApplicationEvent> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         final int location = position;
         String eventName = getItem(position).getEventTitle();
-        String startTimeString = Action.getTime(getItem(position).getStartTIme());
-        GregorianCalendar startTime = getItem(position).getStartTIme();
+        String startTimeString = Action.getTime(getItem(position).getStartTime());
+        GregorianCalendar startTime = getItem(position).getStartTime();
         GregorianCalendar endTime = getItem(position).getEndTime();
         String endTimeString = Action.getTime(getItem(position).getEndTime());
         // String eventName = events[position].getEventTitle();
-        //String startTimeString = ApplicationEvent.getTime(events[position].getStartTIme());
+        //String startTimeString = ApplicationEvent.getTime(events[position].getStartTime());
         //String endTimeString = ApplicationEvent.getTime(events[position].getEndTime());
         ViewHolder viewHolder=null;
 

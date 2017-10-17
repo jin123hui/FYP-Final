@@ -59,6 +59,26 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.user.myproject.Modal.Homepage" />
         </activity>
+        <activity
+            android:name=".Incoming"
+            android:label="Incoming Event List"
+            android:parentActivityName=".Modal.Homepage"
+            android:theme="@style/AppTheme.NoActionBar">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.example.user.myproject.Modal.Homepage" />
+
+        </activity>
+        <activity
+            android:name=".Waiting"
+            android:label="Waiting Event List"
+            android:parentActivityName=".Modal.Homepage"
+            android:theme="@style/AppTheme.NoActionBar">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.example.user.myproject.Modal.Homepage" />
+        </activity>
+
     </application>
 
 </manifest>
