@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.example.user.myproject.DetailEventActivity;
 import com.example.user.myproject.Incoming;
+import com.example.user.myproject.MarkAttendance;
 import com.example.user.myproject.R;
 import com.example.user.myproject.Waiting;
 import com.example.user.myproject.WalkInRegistrationActivity;
@@ -302,6 +303,9 @@ public class Homepage extends AppCompatActivity
         }else if (id == R.id.nav_redeemBenefits){
 
 
+        } else if(id == R.id.nav_mark) {
+            Intent intent = new Intent(getApplicationContext(), MarkAttendance.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

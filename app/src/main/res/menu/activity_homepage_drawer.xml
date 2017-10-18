@@ -27,6 +27,15 @@
             android:id="@+id/nav_redeemBenefits"
             android:title="Redeem Benefits"
             />
+
+
+    </group>
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_mark"
+            android:title="Mark Attendance (Staff)" />
+
+
     </group>
 
 </menu>

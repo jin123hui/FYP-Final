@@ -4,6 +4,7 @@ package com.example.user.myproject.Modal;
  * Created by User on 30/9/2017.
  */
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -11,7 +12,7 @@ import java.util.GregorianCalendar;
  * Created by User on 29/7/2017.
  */
 
-public class ApplicationEvent {
+public class ApplicationEvent implements Serializable {
     private int timetableId;
     private GregorianCalendar startTime;
     private GregorianCalendar endTime;

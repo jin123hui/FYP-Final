@@ -30,10 +30,15 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.TimeZone;
 
 public class Incoming extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -70,7 +75,7 @@ public class Incoming extends AppCompatActivity implements SwipeRefreshLayout.On
                                     public void run() {
 
                                         //swipeRefreshLayout.setRefreshing(true);
-                                        //loadEvent();
+                                        loadEvent();
                                         //swipeRefreshLayout.setRefreshing(false);
                                     }
                                 }
@@ -95,6 +100,7 @@ public class Incoming extends AppCompatActivity implements SwipeRefreshLayout.On
                     //Toast.makeText(Incoming.this, "Connected!!", Toast.LENGTH_LONG).show();
                     try {
                         client.subscribe(Action.clientTopic, 1);
+                        //Toast.makeText(Incoming.this, "Connected!!", Toast.LENGTH_LONG).show();
                     } catch (MqttException ex) {
                         ex.printStackTrace();
                     }
@@ -113,7 +119,8 @@ public class Incoming extends AppCompatActivity implements SwipeRefreshLayout.On
     public void publishMessage(String message) {
         try {
             client.publish(Action.serverTopic, message.getBytes(), 0, false);
-            Toast.makeText(Incoming.this, "Requesting Event Data !!", Toast.LENGTH_LONG).show();
+            //Toast.makeText(Incoming.this, "Requesting Event Data !!", Toast.LENGTH_LONG).show();
+
         } catch (MqttException e) {
             e.printStackTrace();
         }
@@ -142,15 +149,20 @@ public class Incoming extends AppCompatActivity implements SwipeRefreshLayout.On
                 ArrayList<EncodedApplicationEvent> arrList1 = new ArrayList<>(Arrays.asList(result));
                 final ArrayList<ApplicationEvent> arrList = new ArrayList<>();
 
+                regList.clear();
                 for(EncodedApplicationEvent e : arrList1){
                     arrList.add(e.getApplicationEvent());
+                    EventRegistration reg = new EventRegistration();
+                    reg.setRegistrationId(Integer.parseInt(e.getRegistrationId()));
+                    regList.add(reg);
                 }
 
                 incomingEvtList = arrList;
                 //Toast.makeText(Incoming.this, "WOW!!"+arrList.get(0).getVenueName(), Toast.LENGTH_LONG).show();
 
-                ListView listView = (ListView) findViewById(R.id.list);
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+
+                incomingList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView adapterView, View view, int i, long l) {
                         /*Intent intent = new Intent(view.getContext(), Ticket.class);
@@ -165,8 +177,7 @@ public class Incoming extends AppCompatActivity implements SwipeRefreshLayout.On
                     }
                 });
 
-                final DetailedListAdapter adapter = new DetailedListAdapter(context, R.layout.content_incoming, arrList);
-                incomingList.setAdapter(adapter);
+
 
                 /*listView.setOnScrollListener(new AbsListView.OnScrollListener() {
                     public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -187,7 +198,7 @@ public class Incoming extends AppCompatActivity implements SwipeRefreshLayout.On
 
             @Override
             public void deliveryComplete(IMqttDeliveryToken token) {
-                Toast.makeText(Incoming.this, "All event data received!!", Toast.LENGTH_LONG).show();
+                //Toast.makeText(Incoming.this, "All event data received!!", Toast.LENGTH_LONG).show();
                 String str = "";
                 try {
 
@@ -210,11 +221,59 @@ public class Incoming extends AppCompatActivity implements SwipeRefreshLayout.On
         publishMessage(Action.combineMessage("001630",Action.asciiToHex(obj.toString())));
         subscribeEventMessage();
         //swipeRefreshLayout.setRefreshing(false);
+
+
+
+        ApplicationEvent test1 = new ApplicationEvent();
+        test1.setEventId(1001);
+        test1.setTimetableId(10);
+        test1.setVenueName("DK Z");
+        test1.setActivityType("Education");
+        test1.setEventTitle("CCNA Network Talk");
+        test1.setEventDescription("Haha");
+
+        Date d1 = new Date(117, 10, 26, 7, 30, 0);
+        GregorianCalendar gc1 = new GregorianCalendar();
+        gc1.setTimeInMillis(d1.getTime());
+        test1.setStartTIme(gc1);
+
+        Date d2 = new Date(117, 10, 26, 10, 30, 0);
+        GregorianCalendar gc2 = new GregorianCalendar();
+        gc2.setTimeInMillis(d2.getTime());
+        test1.setEndTime(gc2);
+        incomingEvtList.add(test1);
+
+        Date d3 = new Date(117, 10, 9, 7, 30, 0);
+        GregorianCalendar gc3 = new GregorianCalendar();
+        gc3.setTimeInMillis(d3.getTime());
+        EventRegistration reg1 = new EventRegistration();
+        reg1.setRegistrationId(3);
+        regList.add(reg1);
+
+        incomingList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView adapterView, View view, int i, long l) {
+                Intent intent = new Intent(view.getContext(), Ticket.class);
+                intent.putExtra("REGISTRATION", regList.get(i));
+                intent.putExtra("EVENT", incomingEvtList.get(i));
+                try {
+                    client.disconnect();
+                } catch (MqttException e) {
+                    e.printStackTrace();
+                }
+                startActivity(intent);
+            }
+        });
+
+        final DetailedListAdapter adapter = new DetailedListAdapter(context, R.layout.content_incoming, incomingEvtList);
+        incomingList.setAdapter(adapter);
     }
+
 
     @Override
     public void onRefresh() {
-
         loadEvent();
     }
+
+
 }

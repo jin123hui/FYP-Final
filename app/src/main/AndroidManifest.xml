@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
@@ -64,21 +63,36 @@
             android:label="Incoming Event List"
             android:parentActivityName=".Modal.Homepage"
             android:theme="@style/AppTheme.NoActionBar">
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="com.example.user.myproject.Modal.Homepage" />
-
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.user.myproject.Modal.Homepage" />
         </activity>
         <activity
             android:name=".Waiting"
             android:label="Waiting Event List"
             android:parentActivityName=".Modal.Homepage"
             android:theme="@style/AppTheme.NoActionBar">
-        <meta-data
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.user.myproject.Modal.Homepage" />
+        </activity>
+        <activity
+            android:name=".Ticket"
+            android:label="Event Ticket Information"
+            android:parentActivityName=".Incoming"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.user.myproject.Incoming" />
+        </activity>
+        <activity android:name=".MarkAttendance"
+            android:label="Mark Attendance"
+            android:parentActivityName=".Modal.Homepage"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
             android:name="android.support.PARENT_ACTIVITY"
             android:value="com.example.user.myproject.Modal.Homepage" />
         </activity>
-
     </application>
 
 </manifest>

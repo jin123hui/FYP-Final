@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="100dp">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="400dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:text="Education"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:textStyle="italic"
+                android:textSize="18dp"
+                android:textColor="@android:color/holo_red_light"
+                android:layout_width="100dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/evt_cat"
+                android:maxLength="30" />
+
+            <TextView
+                android:text="CCNA Network Talk"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:textSize="18dp"
+                android:textColor="@android:color/holo_blue_light"
+                android:layout_width="300dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/evt_title"
+                android:maxLength="65"/>
+
+            <TextView
+                android:text="Date : "
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:textSize="18dp"
+                android:textColor="@android:color/holo_blue_light"
+                android:layout_width="300dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/evt_date"
+                android:maxLength="65"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:background="#cc8181"
+            android:layout_weight="0">
+
+            <ImageView
+                android:id="@+id/evt_img"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"  />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

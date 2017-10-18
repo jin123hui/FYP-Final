@@ -39,6 +39,16 @@ public class EncodedApplicationEvent {
     private String venueName;
     private String venueDescription;
 
+    public String getRegistrationId() {
+        return registrationId;
+    }
+
+    public void setRegistrationId(String registrationId) {
+        this.registrationId = registrationId;
+    }
+
+    private String registrationId;
+
     public String getVenueId() {
         return venueId;
     }

@@ -4,13 +4,14 @@ package com.example.user.myproject.Modal;
  * Created by User on 30/9/2017.
  */
 
+import java.io.Serializable;
 import java.util.GregorianCalendar;
 
 /**
  * Created by User on 29/7/2017.
  */
 
-public class EventRegistration {
+public class EventRegistration implements Serializable{
     private int registrationId;
     private int timetableId;
     private GregorianCalendar registerDate;
@@ -21,6 +22,19 @@ public class EventRegistration {
     private String notificationStatus;
     private String waitingListStatus;
 
+    public String getRedeemedStatus() {
+        return redeemedStatus;
+    }
+
+    public void setRedeemedStatus(String redeemedStatus) {
+        this.redeemedStatus = redeemedStatus;
+    }
+
+    private String redeemedStatus;
+
+    public EventRegistration() {
+    }
+
     public EventRegistration(int registrationId, int timetableId, GregorianCalendar registerDate, String studentId, String status, String leaderId, String description, String notificationStatus, String waitingListStatus) {
         this.registrationId = registrationId;
         this.timetableId = timetableId;
@@ -28,6 +42,7 @@ public class EventRegistration {
         this.studentId = studentId;
         this.status = status;
         this.leaderId = leaderId;
+
         this.description = description;
         this.notificationStatus = notificationStatus;
         this.waitingListStatus = waitingListStatus;

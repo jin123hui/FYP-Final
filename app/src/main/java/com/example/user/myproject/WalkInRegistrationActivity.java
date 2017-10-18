@@ -275,8 +275,6 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements ZXi
     public void handleResult(Result result) {
         Toast.makeText(getApplicationContext(),result.getText(),Toast.LENGTH_LONG).show();
 
-
-
         JSONObject json = new JSONObject();
         try{
             json.put("timetableId","");
