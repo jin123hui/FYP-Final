@@ -49,8 +49,8 @@ public class EventListView extends ArrayAdapter<ApplicationEvent> {
         GregorianCalendar endTime = getItem(position).getEndTime();
         String endTimeString = Action.getTime(getItem(position).getEndTime());
         // String eventName = events[position].getEventTitle();
-        //String startTimeString = ApplicationEvent.getTime(events[position].getStartTime());
-        //String endTimeString = ApplicationEvent.getTime(events[position].getEndTime());
+        //String startTimeString = ApplicationEvent.getTime(events[position].getEventStartTime());
+        //String endTimeString = ApplicationEvent.getTime(events[position].getEventEndTime());
         ViewHolder viewHolder=null;
 
 

@@ -107,8 +107,8 @@ Action {
             EncodedApplicationEvent event = new EncodedApplicationEvent();
 
             event.setTimetableId(asciiToHex(temp.getTimetableId()));
-            event.setStartTime(asciiToHex(getTime(temp.getStartTime())));
-            event.setEndTime(asciiToHex(getTime(temp.getEndTime())));
+            event.setEventStartTime(asciiToHex(getTime(temp.getStartTime())));
+            event.setEventEndTime(asciiToHex(getTime(temp.getEndTime())));
 
             event.setEventId(asciiToHex(temp.getEventId()));
             event.setEventTitle(asciiToHex(temp.getEventTitle()));

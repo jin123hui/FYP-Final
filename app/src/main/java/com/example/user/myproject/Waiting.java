@@ -28,9 +28,13 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class Waiting extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
@@ -51,7 +55,7 @@ public class Waiting extends AppCompatActivity implements SwipeRefreshLayout.OnR
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        waitingList = (ListView) findViewById(R.id.list);
+        waitingList = (ListView) findViewById(R.id.waitinglist);
         waitingEvtList = new ArrayList<>();
         regList = new ArrayList<>();
 
@@ -65,6 +69,7 @@ public class Waiting extends AppCompatActivity implements SwipeRefreshLayout.OnR
                                     public void run() {
                                         //swipeRefreshLayout.setRefreshing(true);
                                         //readEvent();
+                                        loadEvent();
                                     }
                                 }
         );
@@ -118,7 +123,7 @@ public class Waiting extends AppCompatActivity implements SwipeRefreshLayout.OnR
     public void publishMessage(String message) {
         try {
             client.publish(Action.serverTopic, message.getBytes(), 0, false);
-            Toast.makeText(Waiting.this, "Requesting Event Data !!", Toast.LENGTH_LONG).show();
+            //Toast.makeText(Waiting.this, "Requesting Event Data !!", Toast.LENGTH_LONG).show();
         } catch (MqttException e) {
             e.printStackTrace();
         }
@@ -147,52 +152,72 @@ public class Waiting extends AppCompatActivity implements SwipeRefreshLayout.OnR
                 ArrayList<EncodedApplicationEvent> arrList1 = new ArrayList<>(Arrays.asList(result));
                 final ArrayList<ApplicationEvent> arrList = new ArrayList<>();
 
+                regList.clear();
                 for(EncodedApplicationEvent e : arrList1){
-                    arrList.add(e.getApplicationEvent());
+                    ApplicationEvent evt = new ApplicationEvent();
+                    evt.setTimetableId(Integer.parseInt(e.getTimetableId()));
+                    Date d = new Date();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    try {
+                        //sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                        d = sdf.parse(e.getEventStartTime());
+                    } catch (ParseException ex) {
+                    }
+
+                    GregorianCalendar gc = new GregorianCalendar();
+                    gc.setTimeInMillis(d.getTime());
+                    evt.setStartTIme(gc);
+
+                    Date d2 = new Date();
+                    SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    try {
+                        //sdf2.setTimeZone(TimeZone.getTimeZone("UTC"));
+                        d2 = sdf2.parse(e.getEventEndTime());
+                    } catch (ParseException ex) {
+
+                    }
+                    GregorianCalendar gc2 = new GregorianCalendar();
+                    gc2.setTimeInMillis(d2.getTime());
+                    evt.setEndTime(gc2);
+
+                    evt.setEventTitle(e.getEventTitle());
+                    evt.setActivityType(e.getActivityType());
+                    evt.setVenueName(e.getVenueName());
+                    arrList.add(evt);
+
+                    EventRegistration reg = new EventRegistration();
+                    reg.setRegistrationId(Integer.parseInt(e.getRegistrationId()));
+                    regList.add(reg);
+                    Toast.makeText(Waiting.this, e.getEventTitle(), Toast.LENGTH_LONG).show();
                 }
 
                 waitingEvtList = arrList;
-                //Toast.makeText(Waiting.this, "WOW!!"+arrList.get(0).getVenueName(), Toast.LENGTH_LONG).show();
 
-                ListView listView = (ListView) findViewById(R.id.list);
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                waitingList = (ListView) findViewById(R.id.waitinglist);
+                final DetailedListAdapter adapter = new DetailedListAdapter(context, R.layout.content_waiting, arrList);
+                waitingList.setAdapter(adapter);
+
+                waitingList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView adapterView, View view, int i, long l) {
-                        /*Intent intent = new Intent(view.getContext(), Ticket.class);
+                        Intent intent = new Intent(view.getContext(), Ticket.class);
                         intent.putExtra("REGISTRATION", regList.get(i));
-                        intent.putExtra("EVENT", incomingEvtList.get(i));
+                        intent.putExtra("EVENT", waitingEvtList.get(i));
                         try {
                             client.disconnect();
                         } catch (MqttException e) {
                             e.printStackTrace();
                         }
-                        startActivity(intent);*/
+                        startActivity(intent);
                     }
                 });
 
-                final DetailedListAdapter adapter = new DetailedListAdapter(context, R.layout.content_waiting, arrList);
-                waitingList.setAdapter(adapter);
-
-                /*listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-                    public void onScrollStateChanged(AbsListView view, int scrollState) {
-                    }
-
-                    public void onScroll(AbsListView view, int firstVisibleItem,
-                                         int visibleItemCount, int totalItemCount) {
-                        if(firstVisibleItem+visibleItemCount == totalItemCount && totalItemCount!=0)
-                        {
-                            if(flag_loading == false)
-                            {
-                                flag_loading = true;
-                            }
-                        }
-                    }
-                });*/
+                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void deliveryComplete(IMqttDeliveryToken token) {
-                Toast.makeText(Waiting.this, "All event data received!!", Toast.LENGTH_LONG).show();
+                //Toast.makeText(Waiting.this, "All event data received!!", Toast.LENGTH_LONG).show();
                 String str = "";
                 try {
 

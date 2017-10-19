@@ -1,8 +1,5 @@
 package com.example.user.myproject.Modal;
 
-import android.app.Application;
-import android.widget.Toast;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,8 +13,8 @@ import java.util.TimeZone;
 public class EncodedApplicationEvent {
 
     private String timetableId;
-    private String startTime;
-    private String endTime;
+    private String eventStartTime;
+    private String eventEndTime;
     private String eventId;
     private String eventTitle;
     private String eventDescription;
@@ -83,20 +80,20 @@ public class EncodedApplicationEvent {
         this.timetableId = timetableId;
     }
 
-    public String getStartTime() {
-        return startTime;
+    public String getEventStartTime() {
+        return eventStartTime;
     }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
+    public void setEventStartTime(String eventStartTime) {
+        this.eventStartTime = eventStartTime;
     }
 
-    public String getEndTime() {
-        return endTime;
+    public String getEventEndTime() {
+        return eventEndTime;
     }
 
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
+    public void setEventEndTime(String eventEndTime) {
+        this.eventEndTime = eventEndTime;
     }
 
     public String getEventId() {
@@ -170,7 +167,7 @@ public class EncodedApplicationEvent {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-            d = sdf.parse(startTime);
+            d = sdf.parse(eventStartTime);
         } catch (ParseException ex) {
             //Toast.makeText(getApplicationContext(), "Date error: " + ex.getMessage(), Toast.LENGTH_LONG).show();
         }
@@ -183,7 +180,7 @@ public class EncodedApplicationEvent {
         SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             sdf2.setTimeZone(TimeZone.getTimeZone("UTC"));
-            d2 = sdf2.parse(endTime);
+            d2 = sdf2.parse(eventEndTime);
         } catch (ParseException ex) {
             String ss = "";
             //Toast.makeText(getApplicationContext(), "Date error: " + ex.getMessage(), Toast.LENGTH_LONG).show();
@@ -191,8 +188,8 @@ public class EncodedApplicationEvent {
         GregorianCalendar gc2 = new GregorianCalendar();
         gc2.setTimeInMillis(d2.getTime());
         e.setEndTime(gc2);
-        e.setActivityType(activityType);
-        e.setVenueName(venueName);
+        //e.setActivityType(activityType);
+        //e.setVenueName(venueName);
         return e;
     }
 

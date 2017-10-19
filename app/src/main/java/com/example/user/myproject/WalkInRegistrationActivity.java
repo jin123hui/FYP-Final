@@ -128,8 +128,8 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements ZXi
                         EncodedApplicationEvent encodApp = new EncodedApplicationEvent();
                         encodApp.setTimetableId(obj.getString("timetableId"));
                         encodApp.setEventTitle(obj.getString("eventTitle"));
-                        encodApp.setStartTime(obj.getString("eventStartTime"));
-                        encodApp.setEndTime(obj.getString("eventEndTime"));
+                        encodApp.setEventStartTime(obj.getString("eventStartTime"));
+                        encodApp.setEventEndTime(obj.getString("eventEndTime"));
                         encodApp.setCurrentParticipants(obj.getString("availableSeat"));
                         encodApp.setNoOfParticipants(obj.getString("noOfParticipants"));
 
@@ -312,8 +312,8 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements ZXi
                 EncodedApplicationEvent encodApp = new EncodedApplicationEvent();
                 encodApp.setTimetableId(obj.getString("timetableId"));
                 encodApp.setEventTitle(obj.getString("eventTitle"));
-                encodApp.setStartTime(obj.getString("eventStartTime"));
-                encodApp.setEndTime(obj.getString("eventEndTime"));
+                encodApp.setEventStartTime(obj.getString("eventStartTime"));
+                encodApp.setEventEndTime(obj.getString("eventEndTime"));
                 encodApp.setCurrentParticipants(obj.getString("availableSeat"));
                 encodApp.setNoOfParticipants(obj.getString("noOfParticipants"));
 

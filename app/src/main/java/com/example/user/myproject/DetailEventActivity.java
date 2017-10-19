@@ -298,8 +298,8 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
                     //event.setTimetableId(obj.getString("timetableId"));
                     event.setEventTitle(obj.getString("eventTitle"));
                     event.setEventDescription(obj.getString("eventDescription"));
-                    event.setStartTime(obj.getString("eventStartTime"));
-                    event.setEndTime(obj.getString("eventEndTime"));
+                    event.setEventStartTime(obj.getString("eventStartTime"));
+                    event.setEventEndTime(obj.getString("eventEndTime"));
                     event.setVenueName(obj.getString("venueName"));
                     event.setVenueDescription(obj.getString("venueDescription"));
                     event.setNoOfParticipants(obj.getString("noOfParticipants"));

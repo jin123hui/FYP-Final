@@ -15,10 +15,12 @@ import android.widget.Toast;
 
 import com.example.user.myproject.Modal.Action;
 import com.example.user.myproject.Modal.ApplicationEvent;
+import com.example.user.myproject.Modal.CaptureActivityPortrait;
 import com.example.user.myproject.Modal.EncodedApplicationEvent;
 import com.google.zxing.Result;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.journeyapps.barcodescanner.CaptureActivity;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -90,8 +92,10 @@ public class MarkAttendance extends AppCompatActivity implements ZXingScannerVie
         integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
         integrator.setPrompt("Scan");
         integrator.setCameraId(0);
-        integrator.setBeepEnabled(false);
+        integrator.setBeepEnabled(true);
+        integrator.setOrientationLocked(true);
         integrator.setBarcodeImageEnabled(false);
+        integrator.setCaptureActivity(CaptureActivityPortrait.class);
         integrator.initiateScan();
     }
 
@@ -177,7 +181,7 @@ public class MarkAttendance extends AppCompatActivity implements ZXingScannerVie
         try {
             byte[] ss= message.getBytes();
             client.publish(Action.serverTopic, message.getBytes(), 0, false);
-            Toast.makeText(getApplicationContext(), "publish success !!", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "publish success !!", Toast.LENGTH_LONG).show();
         } catch (MqttException e) {
             e.printStackTrace();
         }

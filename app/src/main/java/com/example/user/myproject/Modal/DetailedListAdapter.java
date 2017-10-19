@@ -65,37 +65,27 @@ public class DetailedListAdapter extends ArrayAdapter<ApplicationEvent> {
     }
 
     public String calcRemainingTime(GregorianCalendar evtDate) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date evtDateConverted = new Date();
-        try {
-            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-            evtDateConverted = sdf.parse(evtDate.toString());
-        } catch (ParseException ex) {
-            //Toast.makeText("Date error: " + ex.getMessage(), Toast.LENGTH_LONG).show();
-        }
-
         Date todayDate = new Date();
         String timeRemaining;
 
-        long diff = todayDate.getTime() - evtDateConverted.getTime();
+        long diff = evtDate.getTimeInMillis() - todayDate.getTime();
         long diffSeconds = TimeUnit.MILLISECONDS.toSeconds(diff) % 60;
         long diffMinutes = TimeUnit.MILLISECONDS.toMinutes(diff) % 60;
         long diffHours = TimeUnit.MILLISECONDS.toHours(diff) % 24;
         long diffDays = TimeUnit.MILLISECONDS.toDays(diff);
 
         if(diffDays>365)
-            timeRemaining = (int)(diffDays/365) + " YR";
-        else if(diffDays>7)
-            timeRemaining = (int)(diffDays/7) + " WK";
+            timeRemaining = (int)(diffDays/365) + " YR(s)";
+        //else if(diffDays>7)
+         //   timeRemaining = (int)(diffDays/7) + " WK";
         else if(diffDays>0)
-            timeRemaining = diffDays + " DAY";
+            timeRemaining = diffDays + " DAY(s)";
         else if(diffHours>0)
-            timeRemaining = diffHours + " HR";
+            timeRemaining = diffHours + " HR(s)";
         else if(diffMinutes>0)
-            timeRemaining = diffMinutes + " MIN";
+            timeRemaining = diffMinutes + " MIN(s)";
         else
-            timeRemaining = diffSeconds + " SEC";
-
+            timeRemaining = diffSeconds + " SEC(s)";
         return timeRemaining;
     }
 
