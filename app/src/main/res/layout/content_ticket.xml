@@ -35,9 +35,9 @@
                 android:textStyle="bold"
                 android:textSize="18dp"
                 android:textColor="@android:color/black"
-                android:layout_width="10dp"
+                android:layout_width="wrap_content"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"/>
+                android:layout_height="match_parent"/>
 
             <TextView
                 android:text="..."
@@ -45,10 +45,27 @@
                 android:textStyle="bold"
                 android:textSize="18dp"
                 android:textColor="@android:color/holo_green_light"
-                android:layout_width="220dp"
+                android:layout_width="wrap_content"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:id="@+id/reg_status" />
+
+            <Button
+                android:text="Reminder"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textStyle="bold"
+                android:textAllCaps="false"
+                android:textSize="16dp"
+                android:background="@android:color/holo_red_light"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp"
+                android:minHeight="0dp"
+                android:layout_weight="0"
+                android:id="@+id/reminder_btn" />
 
          </LinearLayout>
 

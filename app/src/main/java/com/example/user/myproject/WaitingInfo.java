@@ -3,10 +3,8 @@ package com.example.user.myproject;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,14 +18,9 @@ import android.widget.Toast;
 import com.example.user.myproject.Modal.Action;
 import com.example.user.myproject.Modal.ApplicationEvent;
 import com.example.user.myproject.Modal.BasicListAdapter;
-import com.example.user.myproject.Modal.EncodedApplicationEvent;
-import com.example.user.myproject.Modal.EncodedAttendance;
 import com.example.user.myproject.Modal.EncodedEventRegistration;
 import com.example.user.myproject.Modal.EventRegistration;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -42,30 +35,25 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Ticket extends AppCompatActivity {
+public class WaitingInfo extends AppCompatActivity {
 
     private EventRegistration reg;
     private ApplicationEvent evt;
     private ListView evtListV;
     private List<ApplicationEvent> evtList;
-    public final static int WHITE = 0xFFFFFFFF;
-    public final static int BLACK = 0xFF000000;
-    public final static int WIDTH = 300;
-    public final static int HEIGHT = 300;
-    private MqttAndroidClient client;
-    private String studentId = "16wmu10392";
-    private Context context;
     private ProgressDialog pd;
+    private Context context;
+    private MqttAndroidClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ticket);
+        setContentView(R.layout.activity_waiting_info);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        pd = new ProgressDialog(Ticket.this);
+        pd = new ProgressDialog(WaitingInfo.this);
         pd.setMessage("Loading");
         pd.show();
 
@@ -81,6 +69,9 @@ public class Ticket extends AppCompatActivity {
 
         }
 
+        Button btnReg = (Button) findViewById(R.id.register_waiting_btn);
+        btnReg.setVisibility(View.INVISIBLE);
+
         context = this;
         conn();
 
@@ -90,13 +81,13 @@ public class Ticket extends AppCompatActivity {
         loadEvent();
         //loadRegDetail();
 
-        Button btnCancel = (Button)findViewById(R.id.cancel_btn);
+        Button btnCancel = (Button)findViewById(R.id.cancel_waiting_btn);
         btnCancel.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(Ticket.this);
-                alert.setTitle("Cancel Registration");
-                alert.setMessage("Confirm to cancel your registration?");
+                AlertDialog.Builder alert = new AlertDialog.Builder(WaitingInfo.this);
+                alert.setTitle("Cancel Waiting List");
+                alert.setMessage("Confirm to cancel your reservation in waiting list?");
                 alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
                     @Override
@@ -108,9 +99,9 @@ public class Ticket extends AppCompatActivity {
                             ex.printStackTrace();
                         }
 
-                        publishMessage(Action.combineMessage("001634",Action.asciiToHex(obj.toString())));
+                        publishMessage(Action.combineMessage("001636",Action.asciiToHex(obj.toString())));
                         if (client == null ){
-                            Toast.makeText(Ticket.this, "Connection fail!!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(WaitingInfo.this, "Connection fail!!", Toast.LENGTH_LONG).show();
                         }
                         client.setCallback(new MqttCallback() {
                             @Override
@@ -124,7 +115,7 @@ public class Ticket extends AppCompatActivity {
                                 JSONObject obj = new JSONObject(strMessage);
                                 String messages = obj.getString("message");
 
-                                Toast.makeText(Ticket.this, messages, Toast.LENGTH_LONG).show();
+                                Toast.makeText(WaitingInfo.this, messages, Toast.LENGTH_LONG).show();
                                 finish();
                             }
                             @Override
@@ -146,31 +137,56 @@ public class Ticket extends AppCompatActivity {
             }
         });
 
-        Button btnReminder = (Button)findViewById(R.id.reminder_btn);
-        btnReminder.setOnClickListener(new View.OnClickListener(){
+        Button btnRegister = (Button)findViewById(R.id.register_waiting_btn);
+        btnRegister.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(Ticket.this);
-                alert.setTitle("Set Reminder");
-                alert.setMessage("Confirm to set reminder for this event?");
+                AlertDialog.Builder alert = new AlertDialog.Builder(WaitingInfo.this);
+                alert.setTitle("Registration");
+                alert.setMessage("Confirm to register the event in waiting list?");
                 alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        pd = new ProgressDialog(WaitingInfo.this);
+                        pd.setMessage("Loading");
+                        pd.show();
+                        JSONObject obj = new JSONObject();
+                        try{
+                            obj.put("registrationId", reg.getRegistrationId());
+                            obj.put("timetableId", evt.getTimetableId());
+                        }catch(Exception ex){
+                            ex.printStackTrace();
+                        }
+                        publishMessage(Action.combineMessage("001638",Action.asciiToHex(obj.toString())));
+                        if (client == null ){
+                            Toast.makeText(WaitingInfo.this, "Connection fail!!", Toast.LENGTH_LONG).show();
+                        }
+                        client.setCallback(new MqttCallback() {
+                            @Override
+                            public void connectionLost(Throwable cause) {
+                            }
 
-                        Intent calIntent = new Intent(Intent.ACTION_INSERT);
-                        calIntent.setType("vnd.android.cursor.item/event");
-                        calIntent.putExtra(CalendarContract.Events.TITLE, evt.getEventTitle());
-                        calIntent.putExtra(CalendarContract.Events.EVENT_LOCATION, evt.getVenueName());
-                        calIntent.putExtra(CalendarContract.Events.DESCRIPTION, evt.getEventDescription());
+                            @Override
+                            public void messageArrived(String topic, MqttMessage message) throws Exception {
+                                String strMessage = new String(message.getPayload());
+                                strMessage = Action.hexToAscii(strMessage);
+                                JSONObject obj = new JSONObject(strMessage);
+                                String messages = obj.getString("message");
 
-                        calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
-                                evt.getStartTime().getTimeInMillis());
-                        calIntent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
-                                evt.getEndTime().getTimeInMillis());
-
-                        startActivity(calIntent);
-
+                                if(obj.getString("success").equals("1")) {
+                                    Toast.makeText(WaitingInfo.this, messages, Toast.LENGTH_LONG).show();
+                                    finish();
+                                } else {
+                                    Toast.makeText(WaitingInfo.this, messages, Toast.LENGTH_LONG).show();
+                                }
+                                pd.dismiss();
+                            }
+                            @Override
+                            public void deliveryComplete(IMqttDeliveryToken token) {
+                                // Toast.makeText(Ticket.this, "All message received!!", Toast.LENGTH_LONG).show();
+                            }
+                        });
                         dialog.dismiss();
                     }
                 });
@@ -187,14 +203,27 @@ public class Ticket extends AppCompatActivity {
     }
 
     private void loadEvent() {
-        final BasicListAdapter adapter = new BasicListAdapter(this, R.layout.content_ticket, evtList);
+        final BasicListAdapter adapter = new BasicListAdapter(this, R.layout.content_waiting_info, evtList);
         evtListV.setAdapter(adapter);
+    }
+
+    private String checkWaitingStatus() {
+
+        if(reg.getWaitingListStatus()!=null) {
+            if(reg.getWaitingListStatus().equals("ACTIVE")) {
+                return "Pending in Waiting List";
+            } else {
+                return "Not in Waiting List";
+            }
+        } else {
+            return "Not in Waiting List";
+        }
     }
 
     public void conn(){
         String clientId = MqttClient.generateClientId();
         client = new MqttAndroidClient(this.getApplicationContext(), Action.mqttTest,
-                        clientId);
+                clientId);
 
         try {
             IMqttToken token = client.connect();
@@ -207,13 +236,12 @@ public class Ticket extends AppCompatActivity {
 
                         JSONObject obj = new JSONObject();
                         try{
-                            obj.put("registrationId", reg.getRegistrationId());
+                            obj.put("timetableId", evt.getTimetableId());
                         }catch (Exception ex){
                             ex.printStackTrace();
                         }
-                        publishMessage(Action.combineMessage("001632",Action.asciiToHex(obj.toString())));
-                        subscribeRegMessage();
-                        //checkAttendance();
+                        publishMessage(Action.combineMessage("001637",Action.asciiToHex(obj.toString())));
+                        subscribeWaitMessage();
 
                     } catch (MqttException ex) {
                         ex.printStackTrace();
@@ -222,7 +250,7 @@ public class Ticket extends AppCompatActivity {
 
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    Toast.makeText(Ticket.this, "Connection fail!!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(WaitingInfo.this, "Connection fail!!", Toast.LENGTH_LONG).show();
                     // Something went wrong e.g. connection timeout or firewall problems
                     // Log.d(TAG, "onFailure");
 
@@ -244,9 +272,9 @@ public class Ticket extends AppCompatActivity {
         }
     }
 
-    public void subscribeRegMessage(){
+    public void subscribeWaitMessage(){
         if (client == null ){
-            Toast.makeText(Ticket.this, "Connection fail!!", Toast.LENGTH_LONG).show();
+            Toast.makeText(WaitingInfo.this, "Connection fail!!", Toast.LENGTH_LONG).show();
         }
         client.setCallback(new MqttCallback() {
             @Override
@@ -260,32 +288,17 @@ public class Ticket extends AppCompatActivity {
                 strMessage = Action.hexToAscii(strMessage);
                 JSONObject obj = new JSONObject(strMessage);
                 EncodedEventRegistration registration = new EncodedEventRegistration();
+
+                TextView tvStatus = (TextView) findViewById(R.id.wait_status);
+                Button btnReg = (Button) findViewById(R.id.register_waiting_btn);
                 if (obj.getString("success").equals("1")){
-                    registration.setRegistrationId(reg.getRegistrationId()+"");
-                    registration.setTimetableId(obj.getString("timetableId"));
-                    registration.setWaitingListStatus(obj.getString("waitingListStatus"));
-                    registration.setRedeemedStatus(obj.getString("redeemedStatus"));
-                    registration.setStatus(obj.getString("status"));
+                    tvStatus.setText(obj.getString("message"));
+                    btnReg.setVisibility(View.VISIBLE);
                 }else{
+                    tvStatus.setText(obj.getString("message"));
                 }
 
-                TextView tvStatus = (TextView) findViewById(R.id.reg_status);
-                TextView tvRegId = (TextView) findViewById(R.id.reg_id);
-
-                if(!registration.getStatus().isEmpty()) {
-                    tvStatus.setText("Participated");
-                }
-
-                tvRegId.setText(registration.getRegistrationId());
-
-                ImageView qrCode = (ImageView) findViewById(R.id.qrCode);
-                try {
-                    Bitmap bitmap = encodeAsBitmap(String.valueOf(registration.getRegistrationId()));
-                    qrCode.setImageBitmap(bitmap);
-                } catch (WriterException e) {
-                    e.printStackTrace();
-                }
-                checkAttendance();
+                pd.dismiss();
             }
 
             @Override
@@ -300,102 +313,4 @@ public class Ticket extends AppCompatActivity {
             }
         });
     }
-
-    private void checkAttendance() {
-
-        JSONObject obj = new JSONObject();
-        try{
-            obj.put("registrationId", reg.getRegistrationId());
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
-        publishMessage(Action.combineMessage("001633",Action.asciiToHex(obj.toString())));
-        try {
-            client.subscribe(Action.clientTopic, 1);
-        } catch (MqttException ex) {
-            ex.printStackTrace();
-        }
-        subscribeAttndMessage();
-    }
-
-    public void subscribeAttndMessage(){
-        if (client == null ){
-            Toast.makeText(Ticket.this, "Connection fail!!", Toast.LENGTH_LONG).show();
-        }
-        client.setCallback(new MqttCallback() {
-            @Override
-            public void connectionLost(Throwable cause) {
-                String s = "";
-            }
-
-            @Override
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
-                String status = "";
-                String strMessage = new String(message.getPayload());
-                strMessage = Action.hexToAscii(strMessage);
-                JSONObject obj = new JSONObject(strMessage);
-                EncodedAttendance attnd = new EncodedAttendance();
-                if (obj.getString("success").equals("1")) { // && obj.getString("attendanceId")!=null){
-                    attnd.setRegistrationId(reg.getRegistrationId()+"");
-                    attnd.setAttendanceId(obj.getString("attendanceId"));
-                    attnd.setAttendanceTime(obj.getString("attendanceTime"));
-                    attnd.setEventSession(obj.getString("eventSession"));
-                    attnd.setStatus(obj.getString("status"));
-
-                    if(attnd.getStatus().equals("Active")) {
-                        status = attnd.getEventSession() + " \nTime: " + Action.getTime(attnd.getTime());
-                    } else {
-                        status = "Pending";
-                    }
-                }else{
-                    status = "Pending";
-                }
-                TextView tvAttdStatus = (TextView) findViewById(R.id.attd_status);
-                tvAttdStatus.setText(status);
-                pd.dismiss();
-                try {
-                    client.disconnect();
-                } catch (MqttException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void deliveryComplete(IMqttDeliveryToken token) {
-               // Toast.makeText(Ticket.this, "Attendance information received!!", Toast.LENGTH_LONG).show();
-                String str = "";
-                try {
-                    str = new String(token.getMessage().getPayload());
-                } catch (MqttException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    private Bitmap encodeAsBitmap(String str) throws WriterException {
-        BitMatrix result;
-        try {
-            result = new MultiFormatWriter().encode(str,
-                    BarcodeFormat.QR_CODE, WIDTH, WIDTH, null);
-        } catch (IllegalArgumentException iae) {
-            // Unsupported format
-            return null;
-        }
-        int w = result.getWidth();
-        int h = result.getHeight();
-        int[] pixels = new int[w * h];
-        for (int y = 0; y < h; y++) {
-            int offset = y * w;
-            for (int x = 0; x < w; x++) {
-                pixels[offset + x] = result.get(x, y) ? BLACK : WHITE;
-            }
-        }
-        Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        bitmap.setPixels(pixels, 0, w, 0, 0, w, h);
-        return bitmap;
-    }
-
-
-
 }

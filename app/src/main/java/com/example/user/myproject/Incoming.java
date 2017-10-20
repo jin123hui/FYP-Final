@@ -1,5 +1,6 @@
 package com.example.user.myproject;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -46,6 +47,7 @@ public class Incoming extends AppCompatActivity implements SwipeRefreshLayout.On
     private String studentId = "16wmu10392";
     private Context context;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,12 +56,14 @@ public class Incoming extends AppCompatActivity implements SwipeRefreshLayout.On
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
+
         incomingList = (ListView) findViewById(R.id.incominglist);
         incomingEvtList = new ArrayList<>();
         regList = new ArrayList<>();
 
         context = this;
-        conn();
+        //conn();
         //loadEvent();
         //regList.clear();
         //incomingEvtList.clear();
@@ -83,6 +87,13 @@ public class Incoming extends AppCompatActivity implements SwipeRefreshLayout.On
         loadEvent();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        swipeRefreshLayout.setRefreshing(true);
+        conn();
+    }
+
     public void conn(){
         String clientId = MqttClient.generateClientId();
         client = new MqttAndroidClient(this.getApplicationContext(), Action.mqttTest,
@@ -97,6 +108,8 @@ public class Incoming extends AppCompatActivity implements SwipeRefreshLayout.On
                     try {
                         client.subscribe(Action.clientTopic, 1);
                         //Toast.makeText(Incoming.this, "Connected!!", Toast.LENGTH_LONG).show();
+
+                        loadEvent();
                     } catch (MqttException ex) {
                         ex.printStackTrace();
                     }

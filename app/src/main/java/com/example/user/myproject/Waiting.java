@@ -60,7 +60,7 @@ public class Waiting extends AppCompatActivity implements SwipeRefreshLayout.OnR
         regList = new ArrayList<>();
 
         context = this;
-        conn();
+        //conn();
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -76,20 +76,14 @@ public class Waiting extends AppCompatActivity implements SwipeRefreshLayout.OnR
     }
 
     private void readEvent() {
-        /*swipeRefreshLayout.setRefreshing(true);
-        regList.clear();
-        waitingEvtList.clear();
-        //Test data
-        Event test1 = new Event(1003, "Marketing Speech", "Haha", "Seminar", new Date(117, 10, 16, 7, 30, 0), new Date(117, 10, 16, 10, 30, 0), "DK SG6");
-        Event test2 = new Event(1004, "Dance Dance Show", "Haha222", "Music", new Date(117, 10, 17, 5, 0, 0), new Date(117, 10, 17, 11, 30, 0), "Main Hall");
-        waitingEvtList.add(test1);
-        waitingEvtList.add(test2);
-        Registration reg1 = new Registration(100203, 1001, "16WMU10392", null, new Date(117, 10, 9, 7, 30, 0), null, "ACTIVE", null, "ACTIVE");
-        Registration reg2 = new Registration(100204, 1002, "16WMU10392", null, new Date(117, 10, 9, 9, 30, 0), null, "ACTIVE", null, "ACTIVE");
-        regList.add(reg1);
-        regList.add(reg2);*/
         loadEvent();
-        //swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        swipeRefreshLayout.setRefreshing(true);
+        conn();
     }
 
     public void conn(){
@@ -105,6 +99,8 @@ public class Waiting extends AppCompatActivity implements SwipeRefreshLayout.OnR
                     //Toast.makeText(Incoming.this, "Connected!!", Toast.LENGTH_LONG).show();
                     try {
                         client.subscribe(Action.clientTopic, 1);
+
+                        loadEvent();
                     } catch (MqttException ex) {
                         ex.printStackTrace();
                     }
@@ -200,7 +196,7 @@ public class Waiting extends AppCompatActivity implements SwipeRefreshLayout.OnR
                 waitingList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView adapterView, View view, int i, long l) {
-                        Intent intent = new Intent(view.getContext(), Ticket.class);
+                        Intent intent = new Intent(view.getContext(), WaitingInfo.class);
                         intent.putExtra("REGISTRATION", regList.get(i));
                         intent.putExtra("EVENT", waitingEvtList.get(i));
                         try {
