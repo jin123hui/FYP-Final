@@ -92,6 +92,9 @@ public class WaitingInfo extends AppCompatActivity {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        pd = new ProgressDialog(WaitingInfo.this);
+                        pd.setMessage("Loading");
+                        pd.show();
                         JSONObject obj = new JSONObject();
                         try{
                             obj.put("registrationId", reg.getRegistrationId());
@@ -116,6 +119,7 @@ public class WaitingInfo extends AppCompatActivity {
                                 String messages = obj.getString("message");
 
                                 Toast.makeText(WaitingInfo.this, messages, Toast.LENGTH_LONG).show();
+                                pd.dismiss();
                                 finish();
                             }
                             @Override

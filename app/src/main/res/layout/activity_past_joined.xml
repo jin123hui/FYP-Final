@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.user.myproject.Upcoming">
+    tools:context="com.example.user.myproject.PastJoined">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -20,6 +20,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_incoming" />
+    <include layout="@layout/content_past_joined" />
 
 </android.support.design.widget.CoordinatorLayout>

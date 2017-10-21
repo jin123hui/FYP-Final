@@ -27,6 +27,16 @@ public class ApplicationEvent implements Serializable {
     private String venueName;
     private String venueDescription;
 
+    public GregorianCalendar getEbTicketDueDate() {
+        return ebTicketDueDate;
+    }
+
+    public void setEbTicketDueDate(GregorianCalendar ebTicketDueDate) {
+        this.ebTicketDueDate = ebTicketDueDate;
+    }
+
+    private GregorianCalendar ebTicketDueDate;
+
 
     public ApplicationEvent(){}
 

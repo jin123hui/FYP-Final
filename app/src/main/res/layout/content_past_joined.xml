@@ -5,23 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.user.myproject.Waiting"
-    tools:showIn="@layout/activity_waiting"
+    tools:context="com.example.user.myproject.PastJoined"
+    tools:showIn="@layout/activity_past_joined"
     android:orientation="vertical">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/empty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="NO WAITING LIST AVAILABLE!"
-            android:textColor="#525252"
-            android:textSize="19.0sp"
-            android:visibility="gone" />
+    <TextView
+        android:id="@+id/empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="NO PAST JOINED EVENT AVAILABLE!"
+        android:textColor="#525252"
+        android:textSize="19.0sp"
+        android:visibility="gone" />
 
     <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swipe_refresh_layout"
@@ -29,19 +29,17 @@
         android:layout_height="wrap_content"
         tools:layout_editor_absoluteY="0dp"
         tools:layout_editor_absoluteX="8dp">
+
         <ListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/white"
-            android:layout_weight="1"
-            android:id="@+id/waitinglist">
+            android:id="@+id/pastlist">
+
         </ListView>
-
-
     </android.support.v4.widget.SwipeRefreshLayout>
 
-
-</RelativeLayout>
+    </RelativeLayout>
 
 
 </LinearLayout>

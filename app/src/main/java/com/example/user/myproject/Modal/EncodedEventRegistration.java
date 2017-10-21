@@ -19,6 +19,26 @@ public class EncodedEventRegistration implements Serializable{
     private String waitingListStatus;
     private String redeemedStatus;
 
+    public String getEbTicketDueDate() {
+        return ebTicketDueDate;
+    }
+
+    public void setEbTicketDueDate(String ebTicketDueDate) {
+        this.ebTicketDueDate = ebTicketDueDate;
+    }
+
+    private String ebTicketDueDate;
+
+    public String getEventTitle() {
+        return eventTitle;
+    }
+
+    public void setEventTitle(String eventTitle) {
+        this.eventTitle = eventTitle;
+    }
+
+    private String eventTitle;
+
     public String getRedeemedStatus() {
         return redeemedStatus;
     }

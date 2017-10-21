@@ -10,7 +10,7 @@
             android:title="Subscription category" />
         <item
             android:id="@+id/nav_incomingEvent"
-            android:title="Incoming Event" />
+            android:title="Upcoming Event" />
         <item
             android:id="@+id/nav_waitingList"
             android:title="Waiting List" />
@@ -33,7 +33,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_mark"
-            android:title="Mark Attendance (Staff)" />
+            android:title="Scan QR Code (Staff)" />
 
 
     </group>

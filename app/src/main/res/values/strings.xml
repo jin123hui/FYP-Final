@@ -23,6 +23,7 @@
 
     <string name="google_map_api_key">AIzaSyAfRsO-VolLmJV4Jfcqp7_XX0ksAUxd9XU</string>
     <string name="title_activity_walk_in_registration">WalkInRegistrationActivity</string>
+    <string name="title_activity_redeem_benefit">RedeemBenefit</string>
 
 
 </resources>

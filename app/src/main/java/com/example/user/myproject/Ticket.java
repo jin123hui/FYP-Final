@@ -40,6 +40,8 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class Ticket extends AppCompatActivity {
@@ -82,7 +84,7 @@ public class Ticket extends AppCompatActivity {
         }
 
         context = this;
-        conn();
+        //conn();
 
         evtList = new ArrayList<>();
         evtListV = (ListView) findViewById(R.id.list);
@@ -101,6 +103,10 @@ public class Ticket extends AppCompatActivity {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        pd = new ProgressDialog(Ticket.this);
+                        pd.setMessage("Loading");
+                        pd.show();
+
                         JSONObject obj = new JSONObject();
                         try{
                             obj.put("registrationId", reg.getRegistrationId());
@@ -125,6 +131,7 @@ public class Ticket extends AppCompatActivity {
                                 String messages = obj.getString("message");
 
                                 Toast.makeText(Ticket.this, messages, Toast.LENGTH_LONG).show();
+                                pd.dismiss();
                                 finish();
                             }
                             @Override
@@ -184,6 +191,12 @@ public class Ticket extends AppCompatActivity {
                 alert.show();
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        conn();
     }
 
     private void loadEvent() {
@@ -266,26 +279,44 @@ public class Ticket extends AppCompatActivity {
                     registration.setWaitingListStatus(obj.getString("waitingListStatus"));
                     registration.setRedeemedStatus(obj.getString("redeemedStatus"));
                     registration.setStatus(obj.getString("status"));
+
+                    TextView tvStatus = (TextView) findViewById(R.id.reg_status);
+                    TextView tvRegId = (TextView) findViewById(R.id.reg_id);
+                    TextView tvTicket = (TextView) findViewById(R.id.txtTicket);
+                    Button btnReminder = (Button) findViewById(R.id.reminder_btn);
+                    Button btnCancel = (Button) findViewById(R.id.cancel_btn);
+                    ImageView qrCode = (ImageView) findViewById(R.id.qrCode);
+
+                    if(!registration.getStatus().isEmpty()) {
+                        tvStatus.setText("Participated");
+                        btnReminder.setVisibility(View.VISIBLE);
+                        qrCode.setVisibility(View.VISIBLE);
+                        btnCancel.setVisibility(View.VISIBLE);
+                        tvTicket.setVisibility(View.VISIBLE);
+
+                        if(evt.getEndTime().before(new GregorianCalendar())) {
+                            tvStatus.setText("Participated. Event is over.");
+                            btnReminder.setVisibility(View.INVISIBLE);
+                            qrCode.setVisibility(View.INVISIBLE);
+                            btnCancel.setVisibility(View.INVISIBLE);
+                            tvTicket.setVisibility(View.INVISIBLE);
+                        }
+                    }
+
+                    tvRegId.setText(registration.getRegistrationId());
+
+                    try {
+                        Bitmap bitmap = encodeAsBitmap(String.valueOf(registration.getRegistrationId()));
+                        qrCode.setImageBitmap(bitmap);
+                    } catch (WriterException e) {
+                        e.printStackTrace();
+                    }
+                    checkAttendance();
+
                 }else{
                 }
 
-                TextView tvStatus = (TextView) findViewById(R.id.reg_status);
-                TextView tvRegId = (TextView) findViewById(R.id.reg_id);
 
-                if(!registration.getStatus().isEmpty()) {
-                    tvStatus.setText("Participated");
-                }
-
-                tvRegId.setText(registration.getRegistrationId());
-
-                ImageView qrCode = (ImageView) findViewById(R.id.qrCode);
-                try {
-                    Bitmap bitmap = encodeAsBitmap(String.valueOf(registration.getRegistrationId()));
-                    qrCode.setImageBitmap(bitmap);
-                } catch (WriterException e) {
-                    e.printStackTrace();
-                }
-                checkAttendance();
             }
 
             @Override
@@ -353,11 +384,6 @@ public class Ticket extends AppCompatActivity {
                 TextView tvAttdStatus = (TextView) findViewById(R.id.attd_status);
                 tvAttdStatus.setText(status);
                 pd.dismiss();
-                try {
-                    client.disconnect();
-                } catch (MqttException e) {
-                    e.printStackTrace();
-                }
             }
 
             @Override

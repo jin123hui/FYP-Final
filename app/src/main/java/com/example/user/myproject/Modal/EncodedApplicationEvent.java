@@ -36,6 +36,16 @@ public class EncodedApplicationEvent {
     private String venueName;
     private String venueDescription;
 
+    public String getEbTicketDueDate() {
+        return ebTicketDueDate;
+    }
+
+    public void setEbTicketDueDate(String ebTicketDueDate) {
+        this.ebTicketDueDate = ebTicketDueDate;
+    }
+
+    private String ebTicketDueDate;
+
     public String getRegistrationId() {
         return registrationId;
     }

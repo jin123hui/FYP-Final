@@ -10,6 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,15 +54,24 @@ public class MarkAttendance extends AppCompatActivity implements ZXingScannerVie
     @Override
     public void handleResult(Result result) {
         JSONObject json = new JSONObject();
+        RadioGroup radGrp = (RadioGroup) findViewById(R.id.radGrp);
         try{
-            json.put("registrationId","");
-            EditText session = (EditText)findViewById(R.id.txt_session);
-            json.put("eventSession", session.getText());
+            if(radGrp.getCheckedRadioButtonId() == R.id.markAtt) {
+                json.put("registrationId","");
+                EditText session = (EditText)findViewById(R.id.txt_session);
+                json.put("eventSession", session.getText());
+            } else if(radGrp.getCheckedRadioButtonId() == R.id.markBenefit) {
+                json.put("registrationId","");
+            }
         }catch(Exception ex){
             ex.printStackTrace();
         }
 
-        publishMessage(Action.combineMessage("001635",Action.asciiToHex(json.toString())));
+        if(radGrp.getCheckedRadioButtonId() == R.id.markAtt) {
+            publishMessage(Action.combineMessage("001635",Action.asciiToHex(json.toString())));
+        } else if(radGrp.getCheckedRadioButtonId() == R.id.markBenefit) {
+            publishMessage(Action.combineMessage("001641",Action.asciiToHex(json.toString())));
+        }
 
         if (client == null ){
             Toast.makeText(getApplicationContext(), "Connection fail!!", Toast.LENGTH_LONG).show();
@@ -102,20 +113,29 @@ public class MarkAttendance extends AppCompatActivity implements ZXingScannerVie
     @Override
     protected  void onActivityResult(int requestCode, int resultCode, Intent data){
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        RadioGroup radGrp = (RadioGroup) findViewById(R.id.radGrp);
         if (result != null){
             if(result.getContents() == null){
                 Toast.makeText(getApplicationContext(),"Nothing is scanned",Toast.LENGTH_LONG).show();
             }else{
                 JSONObject json = new JSONObject();
                 try{
-                    json.put("registrationId",result.getContents());
-                    EditText session = (EditText)findViewById(R.id.txt_session);
-                    json.put("eventSession", session.getText());
+                    if(radGrp.getCheckedRadioButtonId() == R.id.markAtt) {
+                        json.put("registrationId",result.getContents());
+                        EditText session = (EditText)findViewById(R.id.txt_session);
+                        json.put("eventSession", session.getText());
+                    } else if(radGrp.getCheckedRadioButtonId() == R.id.markBenefit) {
+                        json.put("registrationId",result.getContents());
+                    }
                 }catch(Exception ex){
                     ex.printStackTrace();
                 }
 
-                publishMessage(Action.combineMessage("001635",Action.asciiToHex(json.toString())));
+                if(radGrp.getCheckedRadioButtonId() == R.id.markAtt) {
+                    publishMessage(Action.combineMessage("001635",Action.asciiToHex(json.toString())));
+                } else if(radGrp.getCheckedRadioButtonId() == R.id.markBenefit) {
+                    publishMessage(Action.combineMessage("001641",Action.asciiToHex(json.toString())));
+                }
 
                 if (client == null ){
                     Toast.makeText(getApplicationContext(), "Connection fail!!", Toast.LENGTH_LONG).show();

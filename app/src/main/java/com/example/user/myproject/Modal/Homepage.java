@@ -25,8 +25,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.user.myproject.DetailEventActivity;
-import com.example.user.myproject.Incoming;
+import com.example.user.myproject.RedeemBenefit;
+import com.example.user.myproject.Upcoming;
 import com.example.user.myproject.MarkAttendance;
+import com.example.user.myproject.PastJoined;
 import com.example.user.myproject.R;
 import com.example.user.myproject.Waiting;
 import com.example.user.myproject.WalkInRegistrationActivity;
@@ -288,7 +290,7 @@ public class Homepage extends AppCompatActivity
         } else if (id == R.id.nav_subscriptionCategory) {
             userEventSubscription();
         } else if (id == R.id.nav_incomingEvent) {
-            Intent intent = new Intent(this, Incoming.class);
+            Intent intent = new Intent(this, Upcoming.class);
             startActivity(intent);
             return true;
         } else if (id == R.id.nav_waitingList) {
@@ -296,13 +298,16 @@ public class Homepage extends AppCompatActivity
             startActivity(intent);
             return true;
         } else if (id == R.id.nav_pastJoinedEvent) {
-
+            Intent intent = new Intent(this, PastJoined.class);
+            startActivity(intent);
+            return true;
         } else if (id == R.id.nav_walkinRegistration) {
             Intent intent = new Intent(getApplicationContext(), WalkInRegistrationActivity.class);
             startActivity(intent);
         }else if (id == R.id.nav_redeemBenefits){
-
-
+            Intent intent = new Intent(this, RedeemBenefit.class);
+            startActivity(intent);
+            return true;
         } else if(id == R.id.nav_mark) {
             Intent intent = new Intent(getApplicationContext(), MarkAttendance.class);
             startActivity(intent);

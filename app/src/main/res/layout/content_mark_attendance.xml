@@ -25,6 +25,24 @@
         android:ems="10"
         android:text="First Session" />
 
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/radGrp">
+        <RadioButton
+            android:id="@+id/markAtt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Mark Attendance" />
+        <RadioButton
+            android:id="@+id/markBenefit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Redeem Benefit" />
+
+    </RadioGroup>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

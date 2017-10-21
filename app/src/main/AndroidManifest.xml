@@ -59,8 +59,8 @@
                 android:value="com.example.user.myproject.Modal.Homepage" />
         </activity>
         <activity
-            android:name=".Incoming"
-            android:label="Incoming Event List"
+            android:name=".Upcoming"
+            android:label="Upcoming Event List"
             android:parentActivityName=".Modal.Homepage"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
@@ -79,27 +79,27 @@
         <activity
             android:name=".Ticket"
             android:label="Event Ticket Information"
-            android:parentActivityName=".Incoming"
+            android:parentActivityName=".Upcoming"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.user.myproject.Incoming" />
+                android:value="com.example.user.myproject.Upcoming" />
         </activity>
-        <activity android:name=".MarkAttendance"
+        <activity
+            android:name=".MarkAttendance"
             android:label="Mark Attendance"
             android:parentActivityName=".Modal.Homepage"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="com.example.user.myproject.Modal.Homepage" />
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.user.myproject.Modal.Homepage" />
         </activity>
         <activity
             android:name=".Modal.CaptureActivityPortrait"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             android:theme="@style/zxing_CaptureTheme"
-            android:windowSoftInputMode="stateAlwaysHidden">
-            </activity>
+            android:windowSoftInputMode="stateAlwaysHidden"></activity>
         <activity
             android:name=".WaitingInfo"
             android:label="Waiting List Event"
@@ -108,6 +108,25 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.user.myproject.Waiting" />
+        </activity>
+        <activity
+            android:name=".PastJoined"
+            android:label="Past Joined Event"
+            android:parentActivityName=".Modal.Homepage"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.user.myproject.Modal.Homepage" />
+        </activity>
+        <activity
+            android:name=".RedeemBenefit"
+            android:label="Redeem Benefits"
+            android:parentActivityName=".Modal.Homepage"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.user.myproject.Modal.Homepage" />
+
         </activity>
     </application>
 

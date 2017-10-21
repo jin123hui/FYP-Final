@@ -1,6 +1,5 @@
 package com.example.user.myproject;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -37,7 +36,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-public class Incoming extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class Upcoming extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private ListView incomingList;
     private List<ApplicationEvent> incomingEvtList;
@@ -104,10 +103,10 @@ public class Incoming extends AppCompatActivity implements SwipeRefreshLayout.On
             token.setActionCallback(new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
-                    //Toast.makeText(Incoming.this, "Connected!!", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(Upcoming.this, "Connected!!", Toast.LENGTH_LONG).show();
                     try {
                         client.subscribe(Action.clientTopic, 1);
-                        //Toast.makeText(Incoming.this, "Connected!!", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(Upcoming.this, "Connected!!", Toast.LENGTH_LONG).show();
 
                         loadEvent();
                     } catch (MqttException ex) {
@@ -117,7 +116,7 @@ public class Incoming extends AppCompatActivity implements SwipeRefreshLayout.On
 
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    Toast.makeText(Incoming.this, "Connection fail!!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Upcoming.this, "Connection fail!!", Toast.LENGTH_LONG).show();
                 }
             });
         } catch (MqttException e) {
@@ -128,7 +127,7 @@ public class Incoming extends AppCompatActivity implements SwipeRefreshLayout.On
     public void publishMessage(String message) {
         try {
             client.publish(Action.serverTopic, message.getBytes(), 0, false);
-            //Toast.makeText(Incoming.this, "Requesting Event Data !!", Toast.LENGTH_LONG).show();
+            //Toast.makeText(Upcoming.this, "Requesting Event Data !!", Toast.LENGTH_LONG).show();
 
         } catch (MqttException e) {
             e.printStackTrace();
@@ -137,7 +136,7 @@ public class Incoming extends AppCompatActivity implements SwipeRefreshLayout.On
 
     public void subscribeEventMessage(){
         if (client == null ){
-            Toast.makeText(Incoming.this, "Connection fail!!", Toast.LENGTH_LONG).show();
+            Toast.makeText(Upcoming.this, "Connection fail!!", Toast.LENGTH_LONG).show();
         }
         client.setCallback(new MqttCallback() {
             @Override
@@ -194,13 +193,14 @@ public class Incoming extends AppCompatActivity implements SwipeRefreshLayout.On
                     EventRegistration reg = new EventRegistration();
                     reg.setRegistrationId(Integer.parseInt(e.getRegistrationId()));
                     regList.add(reg);
-                    //Toast.makeText(Incoming.this, e.getEventTitle(), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(Upcoming.this, e.getEventTitle(), Toast.LENGTH_LONG).show();
                 }
 
                 incomingEvtList = arrList;
-                //Toast.makeText(Incoming.this, "WOW!!"+arrList.get(0).getVenueName(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(Upcoming.this, "WOW!!"+arrList.get(0).getVenueName(), Toast.LENGTH_LONG).show();
 
                 incomingList = (ListView) findViewById(R.id.incominglist);
+                incomingList.setEmptyView(findViewById(R.id.empty));
                 final DetailedListAdapter adapter = new DetailedListAdapter(context, R.layout.content_incoming, arrList);
                 incomingList.setAdapter(adapter);
 
@@ -210,11 +210,7 @@ public class Incoming extends AppCompatActivity implements SwipeRefreshLayout.On
                         Intent intent = new Intent(view.getContext(), Ticket.class);
                         intent.putExtra("REGISTRATION", regList.get(i));
                         intent.putExtra("EVENT", incomingEvtList.get(i));
-                        try {
-                            client.disconnect();
-                        } catch (MqttException e) {
-                            e.printStackTrace();
-                        }
+
                         startActivity(intent);
                     }
                 });
@@ -224,7 +220,7 @@ public class Incoming extends AppCompatActivity implements SwipeRefreshLayout.On
 
             @Override
             public void deliveryComplete(IMqttDeliveryToken token) {
-                //Toast.makeText(Incoming.this, "All event data received!!", Toast.LENGTH_LONG).show();
+                //Toast.makeText(Upcoming.this, "All event data received!!", Toast.LENGTH_LONG).show();
                 String str = "";
                 try {
                     str = new String(token.getMessage().getPayload());
@@ -245,53 +241,7 @@ public class Incoming extends AppCompatActivity implements SwipeRefreshLayout.On
 
         publishMessage(Action.combineMessage("001630",Action.asciiToHex(obj.toString())));
         subscribeEventMessage();
-        //swipeRefreshLayout.setRefreshing(false);
 
-
-
-        /*ApplicationEvent test1 = new ApplicationEvent();
-        test1.setEventId(1001);
-        test1.setTimetableId(10);
-        test1.setVenueName("DK Z");
-        test1.setActivityType("Education");
-        test1.setEventTitle("CCNA Network Talk");
-        test1.setEventDescription("Haha");
-
-        Date d1 = new Date(117, 10, 26, 7, 30, 0);
-        GregorianCalendar gc1 = new GregorianCalendar();
-        gc1.setTimeInMillis(d1.getTime());
-        test1.setStartTIme(gc1);
-
-        Date d2 = new Date(117, 10, 26, 10, 30, 0);
-        GregorianCalendar gc2 = new GregorianCalendar();
-        gc2.setTimeInMillis(d2.getTime());
-        test1.setEventEndTime(gc2);
-        incomingEvtList.add(test1);
-
-        Date d3 = new Date(117, 10, 9, 7, 30, 0);
-        GregorianCalendar gc3 = new GregorianCalendar();
-        gc3.setTimeInMillis(d3.getTime());
-        EventRegistration reg1 = new EventRegistration();
-        reg1.setRegistrationId(3);
-        regList.add(reg1);
-
-        incomingList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView adapterView, View view, int i, long l) {
-                Intent intent = new Intent(view.getContext(), Ticket.class);
-                intent.putExtra("REGISTRATION", regList.get(i));
-                intent.putExtra("EVENT", incomingEvtList.get(i));
-                try {
-                    client.disconnect();
-                } catch (MqttException e) {
-                    e.printStackTrace();
-                }
-                startActivity(intent);
-            }
-        });
-
-        final DetailedListAdapter adapter = new DetailedListAdapter(context, R.layout.content_incoming, incomingEvtList);
-        incomingList.setAdapter(adapter);*/
     }
 
 

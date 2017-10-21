@@ -32,6 +32,28 @@ public class EventRegistration implements Serializable{
 
     private String redeemedStatus;
 
+
+    public GregorianCalendar getEbTicketDueDate() {
+        return ebTicketDueDate;
+    }
+
+    public void setEbTicketDueDate(GregorianCalendar ebTicketDueDate) {
+        this.ebTicketDueDate = ebTicketDueDate;
+    }
+
+    private GregorianCalendar ebTicketDueDate;
+
+    public String getEventTitle() {
+        return eventTitle;
+    }
+
+    public void setEventTitle(String eventTitle) {
+        this.eventTitle = eventTitle;
+    }
+
+    private String eventTitle;
+
+
     public EventRegistration() {
     }
 

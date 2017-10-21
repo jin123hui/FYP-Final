@@ -1,7 +1,5 @@
 package com.example.user.myproject;
 
-import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +13,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import com.example.user.myproject.Modal.Action;
 import com.example.user.myproject.Modal.ApplicationEvent;
+import com.example.user.myproject.Modal.BasicListAdapter;
 import com.example.user.myproject.Modal.DetailedListAdapter;
 import com.example.user.myproject.Modal.EncodedApplicationEvent;
 import com.example.user.myproject.Modal.EventRegistration;
@@ -30,7 +29,6 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,30 +37,30 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-public class Waiting extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class PastJoined extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
-    private ListView waitingList;
-    private List<ApplicationEvent> waitingEvtList;
+    private ListView pastList;
+    private List<ApplicationEvent> pastEvtList;
     private List<EventRegistration> regList;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private boolean flag_loading = false;
     private MqttAndroidClient client;
-    private String studentId = "16war10395";
+    private String studentId = "16wmu10392";
     private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_waiting);
+        setContentView(R.layout.activity_past_joined);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        waitingList = (ListView) findViewById(R.id.waitinglist);
-        waitingEvtList = new ArrayList<>();
+        pastList = (ListView) findViewById(R.id.pastlist);
+        pastEvtList = new ArrayList<>();
         regList = new ArrayList<>();
 
         context = this;
-        //conn();
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -70,17 +68,10 @@ public class Waiting extends AppCompatActivity implements SwipeRefreshLayout.OnR
                                     @Override
                                     public void run() {
                                         //swipeRefreshLayout.setRefreshing(true);
-                                        //readEvent();
-                                        loadEvent();
+                                        loadPast();
                                     }
                                 }
         );
-
-
-    }
-
-    private void readEvent() {
-        loadEvent();
     }
 
     @Override
@@ -103,8 +94,9 @@ public class Waiting extends AppCompatActivity implements SwipeRefreshLayout.OnR
                     //Toast.makeText(Upcoming.this, "Connected!!", Toast.LENGTH_LONG).show();
                     try {
                         client.subscribe(Action.clientTopic, 1);
+                        //Toast.makeText(Upcoming.this, "Connected!!", Toast.LENGTH_LONG).show();
 
-                        loadEvent();
+                        loadPast();
                     } catch (MqttException ex) {
                         ex.printStackTrace();
                     }
@@ -112,7 +104,7 @@ public class Waiting extends AppCompatActivity implements SwipeRefreshLayout.OnR
 
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    Toast.makeText(Waiting.this, "Connection fail!!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(PastJoined.this, "Connection fail!!", Toast.LENGTH_LONG).show();
                 }
             });
         } catch (MqttException e) {
@@ -123,7 +115,8 @@ public class Waiting extends AppCompatActivity implements SwipeRefreshLayout.OnR
     public void publishMessage(String message) {
         try {
             client.publish(Action.serverTopic, message.getBytes(), 0, false);
-            //Toast.makeText(Waiting.this, "Requesting Event Data !!", Toast.LENGTH_LONG).show();
+            //Toast.makeText(Upcoming.this, "Requesting Event Data !!", Toast.LENGTH_LONG).show();
+
         } catch (MqttException e) {
             e.printStackTrace();
         }
@@ -131,7 +124,7 @@ public class Waiting extends AppCompatActivity implements SwipeRefreshLayout.OnR
 
     public void subscribeEventMessage(){
         if (client == null ){
-            Toast.makeText(Waiting.this, "Connection fail!!", Toast.LENGTH_LONG).show();
+            Toast.makeText(PastJoined.this, "Connection fail!!", Toast.LENGTH_LONG).show();
         }
         client.setCallback(new MqttCallback() {
             @Override
@@ -188,24 +181,24 @@ public class Waiting extends AppCompatActivity implements SwipeRefreshLayout.OnR
                     EventRegistration reg = new EventRegistration();
                     reg.setRegistrationId(Integer.parseInt(e.getRegistrationId()));
                     regList.add(reg);
-                    Toast.makeText(Waiting.this, e.getEventTitle(), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(Upcoming.this, e.getEventTitle(), Toast.LENGTH_LONG).show();
                 }
 
-                waitingEvtList = arrList;
+                pastEvtList = arrList;
+                //Toast.makeText(Upcoming.this, "WOW!!"+arrList.get(0).getVenueName(), Toast.LENGTH_LONG).show();
 
-                waitingList = (ListView) findViewById(R.id.waitinglist);
-                waitingList.setEmptyView(findViewById(R.id.empty));
-                final DetailedListAdapter adapter = new DetailedListAdapter(context, R.layout.content_waiting, arrList);
-                waitingList.setAdapter(adapter);
+                pastList = (ListView) findViewById(R.id.pastlist);
+                pastList.setEmptyView(findViewById(R.id.empty));
 
+                final BasicListAdapter adapter = new BasicListAdapter(context, R.layout.content_past_joined, pastEvtList);
+                pastList.setAdapter(adapter);
 
-
-                waitingList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                pastList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView adapterView, View view, int i, long l) {
-                        Intent intent = new Intent(view.getContext(), WaitingInfo.class);
+                        Intent intent = new Intent(view.getContext(), Ticket.class);
                         intent.putExtra("REGISTRATION", regList.get(i));
-                        intent.putExtra("EVENT", waitingEvtList.get(i));
+                        intent.putExtra("EVENT", pastEvtList.get(i));
 
                         startActivity(intent);
                     }
@@ -216,10 +209,9 @@ public class Waiting extends AppCompatActivity implements SwipeRefreshLayout.OnR
 
             @Override
             public void deliveryComplete(IMqttDeliveryToken token) {
-                //Toast.makeText(Waiting.this, "All event data received!!", Toast.LENGTH_LONG).show();
+                //Toast.makeText(Upcoming.this, "All event data received!!", Toast.LENGTH_LONG).show();
                 String str = "";
                 try {
-
                     str = new String(token.getMessage().getPayload());
                 } catch (MqttException e) {
                     e.printStackTrace();
@@ -228,9 +220,9 @@ public class Waiting extends AppCompatActivity implements SwipeRefreshLayout.OnR
         });
     }
 
+    private void loadPast() {
 
 
-    private void loadEvent() {
         JSONObject obj = new JSONObject();
         try {
             obj.put("studentId",studentId);
@@ -238,13 +230,12 @@ public class Waiting extends AppCompatActivity implements SwipeRefreshLayout.OnR
             e.printStackTrace();
         }
 
-        publishMessage(Action.combineMessage("001631",Action.asciiToHex(obj.toString())));
+        publishMessage(Action.combineMessage("001639",Action.asciiToHex(obj.toString())));
         subscribeEventMessage();
-        //swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void onRefresh() {
-        loadEvent();
+        loadPast();
     }
 }
