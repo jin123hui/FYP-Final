@@ -10,144 +10,143 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout_editor_absoluteY="8dp"
-        tools:layout_editor_absoluteX="8dp">
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp">
 
         <ListView
+            android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="101dp"
-            android:background="@android:color/white"
-            android:id="@+id/list">
-        </ListView>
+            android:background="@android:color/white"></ListView>
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <TextView
-                android:text="Status :"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="10dp"
-                android:textStyle="bold"
-                android:textSize="18dp"
-                android:textColor="@android:color/black"
                 android:layout_width="wrap_content"
-                android:layout_weight="1"
-                android:layout_height="match_parent"/>
-
-            <TextView
-                android:text="..."
-                android:layout_marginTop="5dp"
-                android:textStyle="bold"
-                android:textSize="18dp"
-                android:textColor="@android:color/holo_green_light"
-                android:layout_width="wrap_content"
-                android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:id="@+id/reg_status" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="0"
+                android:text="Status : "
+                android:textColor="@android:color/black"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/reg_status"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:text="..."
+                android:textColor="@android:color/holo_green_light"
+                android:textSize="18dp"
+                android:textStyle="bold" />
 
             <Button
-                android:text="Reminder"
+                android:id="@+id/reminder_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:textStyle="bold"
-                android:textAllCaps="false"
-                android:textSize="16dp"
-                android:background="@android:color/holo_red_light"
-                android:textColor="@android:color/white"
-                android:layout_marginTop="3dp"
                 android:layout_marginBottom="3dp"
                 android:layout_marginLeft="3dp"
                 android:layout_marginRight="3dp"
-                android:minHeight="0dp"
+                android:layout_marginTop="3dp"
                 android:layout_weight="0"
-                android:id="@+id/reminder_btn" />
-
-         </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:text="Registration Id :"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="10dp"
-                android:textStyle="bold"
-                android:textSize="18dp"
-                android:textColor="@android:color/black"
-                android:layout_width="25dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:text="..."
-                android:layout_marginTop="5dp"
-                android:textStyle="bold"
-                android:textSize="18dp"
-                android:textColor="@android:color/holo_green_light"
-                android:layout_width="120dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:id="@+id/reg_id" />
+                android:background="@android:color/holo_red_light"
+                android:minHeight="0dp"
+                android:text="Reminder"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="16dp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0">
+            android:orientation="horizontal">
 
-        <TextView
-            android:text="Ticket :"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="10dp"
-            android:textStyle="bold"
-            android:textSize="18dp"
-            android:textColor="@android:color/black"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/txtTicket"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="0"
+                android:text="Registration Id : "
+                android:textColor="@android:color/black"
+                android:textSize="18dp"
+                android:textStyle="bold" />
 
-        <ImageView
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_gravity="center"
-            android:id="@+id/qrCode" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/reg_id"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:text="..."
+                android:textColor="@android:color/holo_green_light"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:orientation="vertical">
 
             <TextView
-                android:text="Attendance Status :"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="10dp"
-                android:textStyle="bold"
-                android:textSize="18dp"
-                android:textColor="@android:color/black"
-                android:layout_width="80dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:text="..."
-                android:layout_marginTop="5dp"
-                android:textStyle="bold"
-                android:textSize="18dp"
-                android:textColor="@android:color/holo_red_light"
-                android:layout_width="100dp"
-                android:layout_weight="1"
+                android:id="@+id/txtTicket"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/attd_status" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:text="Ticket :"
+                android:textColor="@android:color/black"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/qrCode"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:layout_gravity="center" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="0"
+                android:text="Attendance Status : "
+                android:textColor="@android:color/black"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/attd_status"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:text="..."
+                android:textColor="@android:color/holo_red_light"
+                android:textSize="18dp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -156,25 +155,25 @@
             android:layout_height="0dip"
             android:layout_weight="1"
             android:gravity="center|bottom"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
-        <Button
-            android:text="CANCEL REGISTRATION"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textAllCaps="false"
-            android:textSize="20dp"
-            android:background="@android:color/holo_red_light"
-            android:textColor="@android:color/white"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:id="@+id/cancel_btn" />
+            <Button
+                android:id="@+id/cancel_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/holo_red_light"
+                android:text="CANCEL REGISTRATION"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="20dp"
+                android:textStyle="bold" />
             <!--android:onClick="logout"/>-->
 
-            </LinearLayout>
+        </LinearLayout>
 
     </LinearLayout>
 

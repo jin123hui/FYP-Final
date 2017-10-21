@@ -24,8 +24,13 @@
             android:title="Walk in registration" />
 
         <item
-            android:id="@+id/nav_redeemBenefits"
-            android:title="Redeem Benefits"
+        android:id="@+id/nav_redeemBenefits"
+        android:title="Redeem Benefits"
+        />
+
+        <item
+            android:id="@+id/nav_softskill"
+            android:title="Soft Skill Point"
             />
 
 

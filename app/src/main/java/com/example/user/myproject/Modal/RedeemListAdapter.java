@@ -46,7 +46,7 @@ public class RedeemListAdapter extends ArrayAdapter<EventRegistration> {
 
         final EventRegistration evt = getItem(position);
         viewHolder.title.setText(evt.getEventTitle());
-        viewHolder.dueDate.setText(Action.displayDate(evt.getEbTicketDueDate()));
+        //viewHolder.dueDate.setText(Action.displayDate(evt.getEbTicketDueDate()));
         return convertView;
     }
 

@@ -27,6 +27,16 @@ public class ApplicationEvent implements Serializable {
     private String venueName;
     private String venueDescription;
 
+    public String getSoftSkillPoint() {
+        return softSkillPoint;
+    }
+
+    public void setSoftSkillPoint(String softSkillPoint) {
+        this.softSkillPoint = softSkillPoint;
+    }
+
+    private String softSkillPoint;
+
     public GregorianCalendar getEbTicketDueDate() {
         return ebTicketDueDate;
     }

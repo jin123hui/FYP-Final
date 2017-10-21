@@ -374,7 +374,7 @@ public class Ticket extends AppCompatActivity {
                     attnd.setStatus(obj.getString("status"));
 
                     if(attnd.getStatus().equals("Active")) {
-                        status = attnd.getEventSession() + " \nTime: " + Action.getTime(attnd.getTime());
+                        status = attnd.getEventSession();// + " \nTime: " + Action.getTime(attnd.getTime());
                     } else {
                         status = "Pending";
                     }

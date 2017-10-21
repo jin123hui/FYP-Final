@@ -7,4 +7,14 @@
         android:layout_height="300dp"
         android:layout_gravity="center"
         android:id="@+id/qrCode"/>
+
+    <TextView
+        android:text="Show to redeem benefit."
+        android:textColor="@android:color/holo_red_dark"
+        android:layout_gravity="center"
+        android:textAlignment="center"
+        android:textSize="18dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

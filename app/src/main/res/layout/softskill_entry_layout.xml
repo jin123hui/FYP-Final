@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:id = "@+id/relativeLayout1"
+        android:layout_width = "fill_parent"
+        android:layout_height = "wrap_content"
+        android:background = "@color/colorCell" >
+
+        <TextView
+            android:id = "@+id/softSkillEvtTitle"
+            android:layout_width = "0dp"
+            android:layout_height = "match_parent"
+            android:layout_weight = "2"
+            android:layout_marginRight="5dp"
+            android:background = "@drawable/cell_shape"
+            android:ellipsize = "end"
+            android:padding = "5dp"
+            android:text = "..."
+            android:textColor="@android:color/black"
+            android:singleLine = "true" />
+
+        <TextView
+            android:id = "@+id/ssCS"
+            android:layout_width = "0dp"
+            android:layout_height = "match_parent"
+            android:layout_weight = "0.5"
+            android:background = "@drawable/cell_shape"
+            android:ellipsize = "end"
+            android:padding = "5dp"
+            android:text = "..."
+            android:textAlignment="center"
+            android:singleLine = "true" />
+
+        <TextView
+            android:id = "@+id/ssCTPS"
+            android:layout_width = "0dp"
+            android:layout_height = "match_parent"
+            android:layout_weight = "0.75"
+            android:background = "@drawable/cell_shape"
+            android:ellipsize = "end"
+            android:padding = "5dp"
+            android:text = "..."
+            android:textAlignment="center"
+            android:singleLine = "true" />
+
+        <TextView
+            android:id = "@+id/ssTS"
+            android:layout_width = "0dp"
+            android:layout_height = "match_parent"
+            android:layout_weight = "0.5"
+            android:background = "@drawable/cell_shape"
+            android:ellipsize = "end"
+            android:padding = "5dp"
+            android:text = "..."
+            android:textAlignment="center"
+            android:singleLine = "true" />
+
+        <TextView
+            android:id = "@+id/ssLL"
+            android:layout_width = "0dp"
+            android:layout_height = "match_parent"
+            android:layout_weight = "0.5"
+            android:background = "@drawable/cell_shape"
+            android:ellipsize = "end"
+            android:padding = "5dp"
+            android:text = "..."
+            android:textAlignment="center"
+            android:singleLine = "true" />
+
+        <TextView
+            android:id = "@+id/ssKK"
+            android:layout_width = "0dp"
+            android:layout_height = "match_parent"
+            android:layout_weight = "0.5"
+            android:background = "@drawable/cell_shape"
+            android:ellipsize = "end"
+            android:padding = "5dp"
+            android:text = "..."
+            android:textAlignment="center"
+            android:singleLine = "true" />
+
+        <TextView
+            android:id = "@+id/ssEM"
+            android:layout_width = "0dp"
+            android:layout_height = "match_parent"
+            android:layout_weight = "0.5"
+            android:background = "@drawable/cell_shape"
+            android:ellipsize = "end"
+            android:padding = "5dp"
+            android:text = "..."
+            android:textAlignment="center"
+            android:singleLine = "true" />
+
+        <TextView
+            android:id = "@+id/ssLS"
+            android:layout_width = "0dp"
+            android:layout_height = "match_parent"
+            android:layout_weight = "0.5"
+            android:background = "@drawable/cell_shape"
+            android:ellipsize = "end"
+            android:padding = "5dp"
+            android:text = "..."
+            android:textAlignment="center"
+            android:singleLine = "true" />
+    </LinearLayout>
+
+
+</LinearLayout>

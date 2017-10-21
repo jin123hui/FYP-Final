@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 /**
  * Created by User on 29/9/2017.
@@ -135,7 +136,7 @@ Action {
 
     public static String displayDate(GregorianCalendar gc) {
         String dateString = String.format("%02d", gc.get(Calendar.DATE))
-                + "/" + String.format("%02d", (gc.get(Calendar.MONTH) + 1)) + "/"
+                + " " + gc.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH ) + " "
                 + String.format("%02d", gc.get(Calendar.YEAR));
         return dateString;
 

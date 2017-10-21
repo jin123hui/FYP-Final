@@ -21,6 +21,16 @@ public class EncodedApplicationEvent {
     private String eventBrochure;
     private String noOfParticipants;
 
+    public String getSoftSkillPoint() {
+        return softSkillPoint;
+    }
+
+    public void setSoftSkillPoint(String softSkillPoint) {
+        this.softSkillPoint = softSkillPoint;
+    }
+
+    private String softSkillPoint;
+
     public String getCurrentParticipants() {
         return currentParticipants;
     }

@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.example.user.myproject.DetailEventActivity;
 import com.example.user.myproject.RedeemBenefit;
+import com.example.user.myproject.SoftSkill;
 import com.example.user.myproject.Upcoming;
 import com.example.user.myproject.MarkAttendance;
 import com.example.user.myproject.PastJoined;
@@ -311,6 +312,10 @@ public class Homepage extends AppCompatActivity
         } else if(id == R.id.nav_mark) {
             Intent intent = new Intent(getApplicationContext(), MarkAttendance.class);
             startActivity(intent);
+        } else if(id == R.id.nav_softskill) {
+            Intent intent = new Intent(this, SoftSkill.class);
+            startActivity(intent);
+            return true;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

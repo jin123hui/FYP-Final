@@ -3,6 +3,8 @@ package com.example.user.myproject;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -10,13 +12,16 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import com.example.user.myproject.Modal.Action;
 import com.example.user.myproject.Modal.ApplicationEvent;
 import com.example.user.myproject.Modal.DetailedListAdapter;
 import com.example.user.myproject.Modal.EncodedApplicationEvent;
 import com.example.user.myproject.Modal.EventRegistration;
+import com.example.user.myproject.Modal.SoftSkillListAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -35,37 +40,29 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.StringTokenizer;
 
-public class Upcoming extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class SoftSkill extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
-    private ListView incomingList;
-    private List<ApplicationEvent> incomingEvtList;
-    private List<EventRegistration> regList;
+    private ListView evtListV;
+    private List<ApplicationEvent> evtList;
     private SwipeRefreshLayout swipeRefreshLayout;
     private MqttAndroidClient client;
     private String studentId = "16wmu10392";
     private Context context;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_upcoming);
+        setContentView(R.layout.activity_soft_skill);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-
-        incomingList = (ListView) findViewById(R.id.incominglist);
-        incomingEvtList = new ArrayList<>();
-        regList = new ArrayList<>();
+        evtListV = (ListView) findViewById(R.id.softskilllist);
+        evtList = new ArrayList<>();
 
         context = this;
-        //conn();
-        //loadEvent();
-        //regList.clear();
-        //incomingEvtList.clear();
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -74,16 +71,12 @@ public class Upcoming extends AppCompatActivity implements SwipeRefreshLayout.On
                                     public void run() {
 
                                         //swipeRefreshLayout.setRefreshing(true);
-                                        loadEvent();
+                                        loadSoftSkill();
                                         //swipeRefreshLayout.setRefreshing(false);
                                     }
                                 }
         );
-    }
 
-    private void readEvent() {
-        //conn();
-        loadEvent();
     }
 
     @Override
@@ -96,7 +89,7 @@ public class Upcoming extends AppCompatActivity implements SwipeRefreshLayout.On
     public void conn(){
         String clientId = MqttClient.generateClientId();
         client = new MqttAndroidClient(this.getApplicationContext(), Action.mqttTest,
-                        clientId);
+                clientId);
 
         try {
             IMqttToken token = client.connect();
@@ -108,7 +101,7 @@ public class Upcoming extends AppCompatActivity implements SwipeRefreshLayout.On
                         client.subscribe(Action.clientTopic, 1);
                         //Toast.makeText(Upcoming.this, "Connected!!", Toast.LENGTH_LONG).show();
 
-                        loadEvent();
+                        loadSoftSkill();
                     } catch (MqttException ex) {
                         ex.printStackTrace();
                     }
@@ -116,7 +109,7 @@ public class Upcoming extends AppCompatActivity implements SwipeRefreshLayout.On
 
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    Toast.makeText(Upcoming.this, "Connection fail!!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(SoftSkill.this, "Connection fail!!", Toast.LENGTH_LONG).show();
                 }
             });
         } catch (MqttException e) {
@@ -136,7 +129,7 @@ public class Upcoming extends AppCompatActivity implements SwipeRefreshLayout.On
 
     public void subscribeEventMessage(){
         if (client == null ){
-            Toast.makeText(Upcoming.this, "Connection fail!!", Toast.LENGTH_LONG).show();
+            Toast.makeText(SoftSkill.this, "Connection fail!!", Toast.LENGTH_LONG).show();
         }
         client.setCallback(new MqttCallback() {
             @Override
@@ -157,63 +150,47 @@ public class Upcoming extends AppCompatActivity implements SwipeRefreshLayout.On
                 ArrayList<EncodedApplicationEvent> arrList1 = new ArrayList<>(Arrays.asList(result));
                 final ArrayList<ApplicationEvent> arrList = new ArrayList<>();
 
-                regList.clear();
+                ApplicationEvent title = new ApplicationEvent();
+                title.setEventTitle("Event Title");
+                title.setSoftSkillPoint("CS,CTPS,TS,LL,KK,EM,LS");
+                arrList.add(title);
+
+                int cs = 0;
+                int ctps = 0;
+                int ts = 0;
+                int ll = 0;
+                int kk = 0;
+                int em = 0;
+                int ls = 0;
+
                 for(EncodedApplicationEvent e : arrList1){
                     ApplicationEvent evt = new ApplicationEvent();
-                    evt.setTimetableId(Integer.parseInt(e.getTimetableId()));
-                    Date d = new Date();
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    try {
-                        //sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                        d = sdf.parse(e.getEventStartTime());
-                    } catch (ParseException ex) {
-                    }
-
-                    GregorianCalendar gc = new GregorianCalendar();
-                    gc.setTimeInMillis(d.getTime());
-                    evt.setStartTIme(gc);
-
-                    Date d2 = new Date();
-                    SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    try {
-                        //sdf2.setTimeZone(TimeZone.getTimeZone("UTC"));
-                        d2 = sdf2.parse(e.getEventEndTime());
-                    } catch (ParseException ex) {
-
-                    }
-                    GregorianCalendar gc2 = new GregorianCalendar();
-                    gc2.setTimeInMillis(d2.getTime());
-                    evt.setEndTime(gc2);
-
                     evt.setEventTitle(e.getEventTitle());
-                    evt.setActivityType(e.getActivityType());
-                    evt.setVenueName(e.getVenueName());
+                    evt.setSoftSkillPoint(e.getSoftSkillPoint());
                     arrList.add(evt);
 
-                    EventRegistration reg = new EventRegistration();
-                    reg.setRegistrationId(Integer.parseInt(e.getRegistrationId()));
-                    regList.add(reg);
-                    //Toast.makeText(Upcoming.this, e.getEventTitle(), Toast.LENGTH_LONG).show();
+                    StringTokenizer tokens = new StringTokenizer(e.getSoftSkillPoint(), ",");
+                    cs += Integer.parseInt(tokens.nextToken());
+                    ctps += Integer.parseInt(tokens.nextToken());
+                    ts += Integer.parseInt(tokens.nextToken());
+                    ll += Integer.parseInt(tokens.nextToken());
+                    kk += Integer.parseInt(tokens.nextToken());
+                    em += Integer.parseInt(tokens.nextToken());
+                    ls += Integer.parseInt(tokens.nextToken());
                 }
 
-                incomingEvtList = arrList;
+                ApplicationEvent total = new ApplicationEvent();
+                total.setEventTitle("Total Score :");
+                total.setSoftSkillPoint(cs+","+ctps+","+ts+","+ll+","+kk+","+em+","+ls);
+                arrList.add(total);
+
+                evtList = arrList;
                 //Toast.makeText(Upcoming.this, "WOW!!"+arrList.get(0).getVenueName(), Toast.LENGTH_LONG).show();
 
-                incomingList = (ListView) findViewById(R.id.incominglist);
-                incomingList.setEmptyView(findViewById(R.id.empty));
-                final DetailedListAdapter adapter = new DetailedListAdapter(context, R.layout.content_upcoming, arrList);
-                incomingList.setAdapter(adapter);
-
-                incomingList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView adapterView, View view, int i, long l) {
-                        Intent intent = new Intent(view.getContext(), Ticket.class);
-                        intent.putExtra("REGISTRATION", regList.get(i));
-                        intent.putExtra("EVENT", incomingEvtList.get(i));
-
-                        startActivity(intent);
-                    }
-                });
+                evtListV = (ListView) findViewById(R.id.softskilllist);
+                evtListV.setEmptyView(findViewById(R.id.empty));
+                final SoftSkillListAdapter adapter = new SoftSkillListAdapter(context, R.layout.content_soft_skill, arrList);
+                evtListV.setAdapter(adapter);
 
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -231,7 +208,7 @@ public class Upcoming extends AppCompatActivity implements SwipeRefreshLayout.On
         });
     }
 
-    private void loadEvent() {
+    private void loadSoftSkill() {
         JSONObject obj = new JSONObject();
         try {
             obj.put("studentId",studentId);
@@ -239,7 +216,7 @@ public class Upcoming extends AppCompatActivity implements SwipeRefreshLayout.On
             e.printStackTrace();
         }
 
-        publishMessage(Action.combineMessage("001630",Action.asciiToHex(obj.toString())));
+        publishMessage(Action.combineMessage("001642",Action.asciiToHex(obj.toString())));
         subscribeEventMessage();
 
     }
@@ -247,8 +224,6 @@ public class Upcoming extends AppCompatActivity implements SwipeRefreshLayout.On
 
     @Override
     public void onRefresh() {
-        loadEvent();
+        loadSoftSkill();
     }
-
-
 }
