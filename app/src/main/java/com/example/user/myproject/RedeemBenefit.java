@@ -26,6 +26,7 @@ import com.example.user.myproject.Modal.Action;
 import com.example.user.myproject.Modal.ApplicationEvent;
 import com.example.user.myproject.Modal.DetailedListAdapter;
 import com.example.user.myproject.Modal.EncodedApplicationEvent;
+import com.example.user.myproject.Modal.EncodedAttendance;
 import com.example.user.myproject.Modal.EncodedEventRegistration;
 import com.example.user.myproject.Modal.EventRegistration;
 import com.example.user.myproject.Modal.RedeemListAdapter;
@@ -200,11 +201,11 @@ public class RedeemBenefit extends AppCompatActivity implements SwipeRefreshLayo
 
                 redeemListV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onItemClick(AdapterView adapterView, View view, int i, long l) {
+                    public void onItemClick(AdapterView adapterView, View view, final int i, long l) {
 
                         //Toast.makeText(RedeemBenefit.this, arrList.get(i).getEventTitle(), Toast.LENGTH_LONG).show();
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(RedeemBenefit.this);
+                        final AlertDialog.Builder builder = new AlertDialog.Builder(RedeemBenefit.this);
                         //Yes Button
                         builder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
                             @Override
@@ -225,6 +226,41 @@ public class RedeemBenefit extends AppCompatActivity implements SwipeRefreshLayo
                         }
 
                         builder.show();
+
+                        client.setCallback(new MqttCallback() {
+                            @Override
+                            public void connectionLost(Throwable cause) {
+
+                                String s = "";
+                            }
+
+                            @Override
+                            public void messageArrived(String topic, MqttMessage message) throws Exception {
+                                String strMessage = new String(message.getPayload());
+                                strMessage = Action.hexToAscii(strMessage);
+                                JSONObject obj = new JSONObject(strMessage);
+
+                                if(!obj.getString("clientMsg").isEmpty() && obj.getString("clientMsg").equals("Redeemed") && obj.getString("registrationId").equals(redeemList.get(i).getRegistrationId()+"")) {
+                                    Toast.makeText(RedeemBenefit.this, "Redeemed", Toast.LENGTH_LONG).show();
+                                    //builder.dismiss();
+                                    //loadBenefit();
+                                    finish();
+                                    startActivity(getIntent());
+                                }
+                            }
+
+                            @Override
+                            public void deliveryComplete(IMqttDeliveryToken token) {
+                                //Toast.makeText(Upcoming.this, "All event data received!!", Toast.LENGTH_LONG).show();
+                                String str = "";
+                                try {
+                                    str = new String(token.getMessage().getPayload());
+                                } catch (MqttException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+
                     }
                 });
 

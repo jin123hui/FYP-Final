@@ -2,6 +2,8 @@ package com.example.user.myproject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +30,10 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -188,21 +194,23 @@ public class Upcoming extends AppCompatActivity implements SwipeRefreshLayout.On
                     evt.setEventTitle(e.getEventTitle());
                     evt.setActivityType(e.getActivityType());
                     evt.setVenueName(e.getVenueName());
-                    arrList.add(evt);
+
 
                     EventRegistration reg = new EventRegistration();
                     reg.setRegistrationId(Integer.parseInt(e.getRegistrationId()));
                     regList.add(reg);
                     //Toast.makeText(Upcoming.this, e.getEventTitle(), Toast.LENGTH_LONG).show();
+                    arrList.add(evt);
+
                 }
 
                 incomingEvtList = arrList;
-                //Toast.makeText(Upcoming.this, "WOW!!"+arrList.get(0).getVenueName(), Toast.LENGTH_LONG).show();
 
                 incomingList = (ListView) findViewById(R.id.incominglist);
                 incomingList.setEmptyView(findViewById(R.id.empty));
                 final DetailedListAdapter adapter = new DetailedListAdapter(context, R.layout.content_upcoming, arrList);
                 incomingList.setAdapter(adapter);
+
 
                 incomingList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -210,7 +218,6 @@ public class Upcoming extends AppCompatActivity implements SwipeRefreshLayout.On
                         Intent intent = new Intent(view.getContext(), Ticket.class);
                         intent.putExtra("REGISTRATION", regList.get(i));
                         intent.putExtra("EVENT", incomingEvtList.get(i));
-
                         startActivity(intent);
                     }
                 });

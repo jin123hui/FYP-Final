@@ -14,8 +14,8 @@ public class
 Action {
 
 
-    public static String serverTopic = "MY/TARUC/ERS/0000000003/PUB";
-    public static String clientTopic = "MY/TARUC/ERS/0000000004/PUB";
+    public static String serverTopic = "MY/TARUC/ERS/0000000005/PUB";
+    public static String clientTopic = "MY/TARUC/ERS/0000000006/PUB";
     public static String reserveCommand = "303030303030303030303030303030303030303030303030";
     public static String studentId = "16wmu10392";
 

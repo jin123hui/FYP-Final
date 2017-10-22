@@ -366,21 +366,25 @@ public class Ticket extends AppCompatActivity {
                 strMessage = Action.hexToAscii(strMessage);
                 JSONObject obj = new JSONObject(strMessage);
                 EncodedAttendance attnd = new EncodedAttendance();
-                if (obj.getString("success").equals("1")) { // && obj.getString("attendanceId")!=null){
-                    attnd.setRegistrationId(reg.getRegistrationId()+"");
-                    attnd.setAttendanceId(obj.getString("attendanceId"));
-                    attnd.setAttendanceTime(obj.getString("attendanceTime"));
-                    attnd.setEventSession(obj.getString("eventSession"));
-                    attnd.setStatus(obj.getString("status"));
-
-                    if(attnd.getStatus().equals("Active")) {
-                        status = attnd.getEventSession();// + " \nTime: " + Action.getTime(attnd.getTime());
-                    } else {
-                        status = "Pending";
-                    }
-                }else{
+                if(!obj.getString("clientMsg").isEmpty() && obj.getString("clientMsg").equals("Marked") && obj.getString("registrationId").equals(reg.getRegistrationId()+"")) {
+                    Toast.makeText(Ticket.this, "Marked", Toast.LENGTH_LONG).show();
+                    status = obj.getString("eventSession") + ". Marked";
+                } else if (obj.getString("success").equals("0")){
                     status = "Pending";
-                }
+                } else if (obj.getString("success").equals("1")) { // && obj.getString("attendanceId")!=null){
+                        attnd.setRegistrationId(reg.getRegistrationId()+"");
+                        attnd.setAttendanceId(obj.getString("attendanceId"));
+                        attnd.setAttendanceTime(obj.getString("attendanceTime"));
+                        attnd.setEventSession(obj.getString("eventSession"));
+                        attnd.setStatus(obj.getString("status"));
+
+                        if(attnd.getStatus().equals("Active")) {
+                            status = attnd.getEventSession() + ". Marked.";// + " \nTime: " + Action.getTime(attnd.getTime());
+                        } else {
+                            status = "Pending";
+                        }
+                    }
+
                 TextView tvAttdStatus = (TextView) findViewById(R.id.attd_status);
                 tvAttdStatus.setText(status);
                 pd.dismiss();

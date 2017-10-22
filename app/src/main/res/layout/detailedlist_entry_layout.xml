@@ -160,20 +160,13 @@
 
         </LinearLayout>
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0"
-            android:background="#cc8181">
-
             <ImageView
                 android:id="@+id/evt_img"
-                android:layout_width="100dp"
+                android:layout_width="130dp"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
-                android:scaleType="fitCenter" />
+                android:scaleType="fitXY" />
 
-        </LinearLayout>
 
 
     </LinearLayout>

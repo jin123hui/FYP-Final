@@ -4,6 +4,8 @@ package com.example.user.myproject.Modal;
  * Created by User on 30/9/2017.
  */
 
+import android.graphics.Bitmap;
+
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -26,6 +28,16 @@ public class ApplicationEvent implements Serializable {
     private Integer venueId;
     private String venueName;
     private String venueDescription;
+
+    public Bitmap getEventPicture() {
+        return eventPicture;
+    }
+
+    public void setEventPicture(Bitmap eventPicture) {
+        this.eventPicture = eventPicture;
+    }
+
+    private Bitmap eventPicture;
 
     public String getSoftSkillPoint() {
         return softSkillPoint;

@@ -32,7 +32,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="10dp"
                 android:textSize="18dp"
-                android:textColor="@android:color/holo_blue_light"
+                android:textColor="@android:color/black"
                 android:layout_width="300dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -53,21 +53,13 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:background="#cc8181"
-            android:layout_weight="0">
-
             <ImageView
                 android:id="@+id/evt_img"
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
-                android:scaleType="fitCenter"  />
+                android:scaleType="fitXY" />
 
-        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>
