@@ -1,11 +1,23 @@
 package com.example.user.myproject;
 
+import android.Manifest;
 import android.app.Dialog;
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +27,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.app.ActionBar;
@@ -46,11 +61,25 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.io.BufferedInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.ref.WeakReference;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class DetailEventActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -60,6 +89,10 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
     float longitude ;
     float latitude ;
     String locationName;
+    EncodedApplicationEvent event;
+    String studentId = "16war10395";
+    String studentName = "desmond";
+    private ArrayList<String> files_on_server = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +103,33 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-       // getActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Button individualRegistrationButton = (Button)findViewById(R.id.btnIndividualRegistration);
+        individualRegistrationButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                onIndividualClick(null);
+            }
+        });
+
+
+        Button groupRegistration = (Button)findViewById(R.id.btnGroupRegistration);
+        groupRegistration.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onGroupRegistrationClick();
+            }
+        });
+
+
+        permission_check();
+
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         conn();
 
         Bundle bundle = getIntent().getExtras();
@@ -83,35 +142,64 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
 
         int sss = 0;
 
-
-
-        Button individualRegistrationButton = (Button)findViewById(R.id.btnIndividualRegistration);
-        individualRegistrationButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                onIndividualClick(null);
-            }
-        });
-
-
-
     }
 
+    public void onGroupRegistrationClick(){
+
+        if(event == null)
+            return;
+
+
+        if(Integer.parseInt(event.getCurrentGroup()) >= Integer.parseInt(event.getMaxGroup())){
+                Toast.makeText(getApplicationContext(),"Cannot perform group registration because event full!",Toast.LENGTH_LONG).show();;
+
+        }else{
+            EditText eventRegistrationDescription = (EditText)findViewById(R.id.eventRegistrationDescription);
+
+            Intent intent = new Intent(getApplicationContext(), GroupRegistrationActivity.class);
+            intent.putExtra("STUDENTID",studentId);
+            intent.putExtra("STUDENTNAME",studentName);
+            intent.putExtra("SEATAVAILABLE",event.getGroupMemberAvailable());
+            intent.putExtra("TIMETABLEID",event.getTimetableId());
+            String val = eventRegistrationDescription.getText().toString();
+            intent.putExtra("REG_DESCRIPTION",eventRegistrationDescription.getText().toString());
+
+            startActivity(intent);
+        }
+
+    }
     public void onIndividualClick(View v) {
+        if(event == null)
+            return;
+
+
+        String reserveMessage = "";
 
 
         AlertDialog.Builder alert = new AlertDialog.Builder(DetailEventActivity.this);
         alert.setTitle("Individual Registration");
-        alert.setMessage("Confirm perform individual registration to the event?");
+        if(Integer.parseInt(event.getCurrentParticipants()) >= Integer.parseInt(event.getNoOfParticipants())){
+            alert.setMessage("Confirm reserve the event since it is full?");
+            reserveMessage  = "Active";
+        }else{
+            alert.setMessage("Confirm perform individual registration to the event?");
+            reserveMessage = "";
+        }
+        final String reserve = reserveMessage;
         alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
+                EditText eventRegistrationDescription = (EditText)findViewById(R.id.eventRegistrationDescription);
+
+
                 JSONObject obj = new JSONObject();
                 try{
                     obj.put("studentId",Action.studentId);
                     obj.put("timetableId",timetableId);
+                    obj.put("waitinglistStatus",reserve);
+                    obj.put("description",eventRegistrationDescription.getText().toString());
 
                 }catch(Exception ex){
                     ex.printStackTrace();
@@ -146,7 +234,7 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
 
                     @Override
                     public void deliveryComplete(IMqttDeliveryToken token) {
-                       // Toast.makeText(DetailEventActivity.this, "All message received!!", Toast.LENGTH_LONG).show();
+                        // Toast.makeText(DetailEventActivity.this, "All message received!!", Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -255,8 +343,6 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
                         publishMessage(Action.combineMessage("001612",Action.asciiToHex(obj.toString())));
                         subscribeEventMessage();
 
-
-
                     } catch (MqttException ex) {
                         ex.printStackTrace();
                     }
@@ -308,7 +394,7 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
                 strMessage = Action.hexToAscii(strMessage);
                 JSONObject obj = new JSONObject(strMessage);
                 String ssss = obj.getString("success");
-                EncodedApplicationEvent event = new EncodedApplicationEvent();
+                event = new EncodedApplicationEvent();
                 event.setTimetableId(timetableId+"");
                 if (obj.getString("success").equals("1")){
                    // EncodedApplicationEvent event = new EncodedApplicationEvent();
@@ -321,16 +407,21 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
                     event.setVenueDescription(obj.getString("venueDescription"));
                     event.setNoOfParticipants(obj.getString("noOfParticipants"));
                     event.setCurrentParticipants(obj.getString("currentParticipants"));
+                    event.setCurrentGroup(obj.getString("teamLimit"));
+                    event.setMaxGroup(obj.getString("maxTeam"));
+                    event.setGroupMemberAvailable(obj.getString("minTeam"));
+                    event.setEventBrochure(obj.getString("eventBrochure"));
 
 
                 }else{
-
+                    Toast.makeText(getApplicationContext(),"Data retrieve failed!! Please contact admin.",Toast.LENGTH_LONG).show();;
+                    finish();
 
                 }
 
 
-                TextView title = (TextView)findViewById(R.id.txtEventName);
-                title.setText(event.getEventTitle());
+
+                setTitle(event.getEventTitle());
 
                 TextView eventDescription = (TextView)findViewById(R.id.textEventDescription);
                 eventDescription.setText(event.getEventDescription());
@@ -345,9 +436,27 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
                 txtTime.setText("Time:" + ApplicationEvent.displayTime(trueEvent.getStartTIme())
                         + " - "  + ApplicationEvent.displayTime(trueEvent.getEndTime()) );
 
-                TextView txtNumberOfParticipants = (TextView)findViewById(R.id.txtNumberOfParticipants);
-                txtNumberOfParticipants.setText(event.getCurrentParticipants()+" / " + event.getNoOfParticipants());
 
+                TextView txtIndividualInfo = (TextView)findViewById(R.id.txtIndividualInfo);
+                txtIndividualInfo.setText("Seat available: "+ event.getCurrentParticipants()+ " / "+ event.getNoOfParticipants() );
+
+                TextView txtGroupInfo = (TextView)findViewById(R.id.txtGroupInfo);
+                txtGroupInfo.setText("Group Available: " + event.getCurrentGroup() + " / "+ event.getMaxGroup());
+
+
+                ImageView image = (ImageView)findViewById(R.id.imageDetailEvent);
+
+                ImageTask task = new ImageTask(image);
+                int tempTimetable = 0;
+                try {
+                    tempTimetable = Integer.parseInt(event.getTimetableId());
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                    tempTimetable = 0;
+                }
+
+
+                task.execute(tempTimetable);
 
                 if(googleServicesAvailable()){
                   //  Toast.makeText(this, "Welp success", Toast.LENGTH_SHORT).show();
@@ -358,6 +467,10 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
                 }
 
                 setMapLocation(event.getLat(), event.getLong(),event.getVenueName(),10);
+
+                ScrollView view = (ScrollView)findViewById(R.id.ScrollView01);
+                view.setVisibility(View.VISIBLE);
+
 
                 String s = "";
             }
@@ -382,12 +495,104 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
     public void setSubscription(String topicStr) {
         try {
             client.subscribe(topicStr, 1);
-
-
         } catch (MqttException ex) {
             ex.printStackTrace();
         }
         String ss= "";
+    }
+
+
+    private void permission_check(){
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},100);
+                return;
+            }
+
+        }
+
+        initialize();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == 100 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            initialize();
+        }else{
+            permission_check();
+        }
+        //super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+
+    public DownloadManager downloadManager;
+
+    private void initialize() {
+
+        Button download = (Button)findViewById(R.id.btnDownloadBrochure);
+        download.setOnClickListener(new View.OnClickListener(){
+
+
+            @Override
+            public void onClick(View view) {
+                if(event == null || event.getEventBrochure().equals("")){
+                    Toast.makeText(getApplicationContext(),"No brochure found in database!",Toast.LENGTH_LONG).show();
+                    return;
+                }else {
+                    Toast.makeText(getApplicationContext(),event.getEventBrochure(),Toast.LENGTH_LONG).show();
+
+                    DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+                    Uri uri = Uri.parse("http://192.168.0.194/example/phpMQTT/files/downloadBrochure.php?files="+event.getEventBrochure());
+                    DownloadManager.Request request = new DownloadManager.Request(uri);
+                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                    Long reference = downloadManager.enqueue(request);
+                }
+            }
+        });
+    }
+
+
+
+    private class ImageTask extends AsyncTask<Integer, Void, Bitmap>
+    {
+        private final WeakReference<ImageView> imageViewReference;
+
+        public ImageTask(ImageView imageView) {
+
+            imageViewReference = new WeakReference<ImageView>(imageView);
+        }
+
+        protected void onPreExecute() {
+        }
+
+        protected Bitmap doInBackground(Integer... params) {
+            Bitmap myBitmap = null;
+            try {
+                URL url = new URL("http://192.168.0.194/example/phpMQTT/files/get_image.php?timetableId="+params[0]);// + evt.getTimetableId());
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                myBitmap = BitmapFactory.decodeStream(input);
+
+            } catch (IOException e) {
+                //e.printStackTrace();
+                //e.getMessage();
+            }
+            return myBitmap;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            if (imageViewReference != null && result != null) {
+                final ImageView imageView = imageViewReference.get();
+                if (imageView != null) {
+                    imageView.setImageBitmap(result);
+                } else {
+                    // if you see  dao then change to icnoimage icon
+                    imageView.setImageResource(R.mipmap.ic_launcher);
+                }
+            }
+        }
     }
 
 }

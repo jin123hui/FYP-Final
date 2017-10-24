@@ -14,15 +14,23 @@
     <string-array name="eventCategory">
         <item>All events</item>
         <item>User subscription</item>
-        <item>Sports</item>
+        <item>Business</item>
         <item>Education</item>
+        <item>Game</item>
+        <item>IT</item>
+        <item>Music</item>
+        <item>Sports</item>
+
 
 
     </string-array>
 
+    <string name="getImageURL">http://192.168.0.194/example/phpMQTT/files/get_image.php?timetableId=</string>
+
 
     <string name="google_map_api_key">AIzaSyAfRsO-VolLmJV4Jfcqp7_XX0ksAUxd9XU</string>
     <string name="title_activity_walk_in_registration">WalkInRegistrationActivity</string>
+    <string name="title_activity_group_registration">GroupRegistrationActivity</string>
 
 
 </resources>

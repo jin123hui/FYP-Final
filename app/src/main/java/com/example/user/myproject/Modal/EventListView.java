@@ -6,7 +6,10 @@ package com.example.user.myproject.Modal;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,10 +17,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.user.myproject.R;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.ref.WeakReference;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
@@ -75,6 +84,9 @@ public class EventListView extends ArrayAdapter<ApplicationEvent> {
         viewHolder.txtStartTime.setText("Date: "+ Action.displayDate(startTime));
         viewHolder.txtEndTime.setText("Time:" + ApplicationEvent.displayTime(startTime) + " - "  + ApplicationEvent.displayTime(endTime) );
 
+        ImageTask task = new ImageTask(viewHolder.image);
+        task.execute(getItem(position).getTimetableId());
+
 
         return convertView;
         //return super.getView(position, convertView, parent);
@@ -84,14 +96,63 @@ public class EventListView extends ArrayAdapter<ApplicationEvent> {
         TextView txtEventName;
         TextView txtStartTime;
         TextView txtEndTime;
+        ImageView image;
 
         ViewHolder(View v){
             txtEventName = (TextView)(v.findViewById(R.id.txtEventName));
             txtStartTime = (TextView)(v.findViewById(R.id.txtStartTime));
             txtEndTime = (TextView)(v.findViewById(R.id.txtEndTime));
+            image = (ImageView)(v.findViewById(R.id.homeEventImage));
 
         }
 
     }
+
+
+
+    private class ImageTask extends AsyncTask<Integer, Void, Bitmap>
+    {
+        private final WeakReference<ImageView> imageViewReference;
+
+        public ImageTask(ImageView imageView) {
+
+            imageViewReference = new WeakReference<ImageView>(imageView);
+        }
+
+        protected void onPreExecute() {
+        }
+
+        protected Bitmap doInBackground(Integer... params) {
+            Bitmap myBitmap = null;
+            try {
+                URL url = new URL("http://192.168.0.194/example/phpMQTT/files/get_image.php?timetableId="+params[0]);// + evt.getTimetableId());
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                myBitmap = BitmapFactory.decodeStream(input);
+
+            } catch (IOException e) {
+                //e.printStackTrace();
+                //e.getMessage();
+            }
+            return myBitmap;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            if (imageViewReference != null && result != null) {
+                final ImageView imageView = imageViewReference.get();
+                if (imageView != null) {
+                    imageView.setImageBitmap(result);
+                } else {
+                    // if you see  dao then change to icnoimage icon
+                    imageView.setImageResource(R.mipmap.ic_launcher);
+                }
+            }
+        }
+    }
+
+
+
 
 }

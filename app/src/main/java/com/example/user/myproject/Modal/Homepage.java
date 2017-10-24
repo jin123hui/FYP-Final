@@ -2,9 +2,11 @@ package com.example.user.myproject.Modal;
 
 import android.app.Application;
 import android.app.Dialog;
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -32,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.user.myproject.DetailEventActivity;
+import com.example.user.myproject.GroupRegistrationActivity;
 import com.example.user.myproject.MainActivity;
 import com.example.user.myproject.R;
 import com.example.user.myproject.WalkInRegistrationActivity;
@@ -51,6 +54,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
@@ -67,6 +71,7 @@ public class Homepage extends AppCompatActivity
     Dialog dialog2;
 
     String studentId = "16war10395";
+    String studentName = "desmond";
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -87,7 +92,7 @@ public class Homepage extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         context = this;
-        conn();
+
         //setSubscription(Action.topic);
 
 
@@ -97,7 +102,7 @@ public class Homepage extends AppCompatActivity
             swipeRefreshLayout.post(new Runnable() {
                                         @Override
                                         public void run() {
-                                            //swipeRefreshLayout.setRefreshing(true);
+                                           // swipeRefreshLayout.setRefreshing(true);
                                             // readQuestion();
                                             //readEvent();
                                         }
@@ -121,6 +126,14 @@ public class Homepage extends AppCompatActivity
        //loadAllEvent();
 
 
+       // TextView appDrawerName = (TextView)findViewById(R.id.appDrawerName);
+        //appDrawerName.setText("Bi Bu Bi BU");
+
+       // TextView appDrawerEmail = (TextView)findViewById(R.id.appDrawerEmail);
+       // appDrawerEmail.setText(Action.studentId);
+
+
+
 
 
     }
@@ -139,15 +152,17 @@ public class Homepage extends AppCompatActivity
 
         CheckBox chkBoxSports = (CheckBox)mView.findViewById(R.id.checkBoxSports);
         CheckBox chkBoxEducation = (CheckBox)mView.findViewById(R.id.checkBoxEducation);
-        CheckBox chkBox1 = (CheckBox)mView.findViewById(R.id.checkBox3);
-        CheckBox chkBox2 = (CheckBox)mView.findViewById(R.id.checkBox4);
-        CheckBox chkBox3 = (CheckBox)mView.findViewById(R.id.checkBox5);
+        CheckBox chkBox1 = (CheckBox)mView.findViewById(R.id.checkBoxGame);
+        CheckBox chkBox2 = (CheckBox)mView.findViewById(R.id.checkBoxIT);
+        CheckBox chkBox3 = (CheckBox)mView.findViewById(R.id.checkBoxBusiness);
+        CheckBox chkBoxMusic = (CheckBox)mView.findViewById(R.id.checkBoxMusic);
         final ArrayList<CheckBox> checkBoxList = new ArrayList<CheckBox>();
         checkBoxList.add(chkBoxSports);
         checkBoxList.add(chkBoxEducation);
         checkBoxList.add(chkBox1);
         checkBoxList.add(chkBox2);
         checkBoxList.add(chkBox3);
+        checkBoxList.add(chkBoxMusic);
 
         for (CheckBox temp : checkBoxList){
             for (String msg: subscriptionList){
@@ -248,6 +263,14 @@ public class Homepage extends AppCompatActivity
 
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        conn();
+
+
+    }
+
+    @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -294,10 +317,22 @@ public class Homepage extends AppCompatActivity
         } else if (id == R.id.nav_subscriptionCategory) {
             userEventSubscription();
         } else if (id == R.id.nav_onComingEvent) {
-
+            DownloadManager downloadManager = (DownloadManager)getSystemService(Context.DOWNLOAD_SERVICE);
+            Uri uri = Uri.parse("http://192.168.0.194/example/phpMQTT/files/downloadBrochure.php?files=event1");
+            DownloadManager.Request request = new DownloadManager.Request(uri);
+            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+            Long reference = downloadManager.enqueue(request);
         } else if (id == R.id.nav_waitingList) {
 
         } else if (id == R.id.nav_pastJoinedEvent) {
+
+
+            Intent intent = new Intent(getApplicationContext(), GroupRegistrationActivity.class);
+            intent.putExtra("STUDENTID",studentId);
+            intent.putExtra("STUDENTNAME",studentName);
+            intent.putExtra("SEATAVAILABLE",3);
+            intent.putExtra("TIMETABLEID",1);
+            startActivity(intent);
 
         } else if (id == R.id.nav_walkinRegistration) {
             Intent intent = new Intent(getApplicationContext(), WalkInRegistrationActivity.class);
@@ -348,21 +383,14 @@ public class Homepage extends AppCompatActivity
         lstView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView adapterView, View view, int i, long l) {
-                //Toast.makeText(getBaseContext(), questionList.get(i).getSubject(), Toast.LENGTH_SHORT).show();
-                //Intent intent = new Intent(view.getContext(), DiscussionActivity.class);
-                // intent.putExtra("QUESTION", questionList.get(i).getId());
-                //startActivity(intent);
                 Intent intent = new Intent(view.getContext(), DetailEventActivity.class);
                 intent.putExtra("TIMETABLEID", arrList.get(i).getTimetableId());
                 startActivity(intent);
 
-
-                //Toast.makeText(getApplicationContext(), "row:" + i, Toast.LENGTH_LONG).show();
-                //Object test  = adapterView.getItemAtPosition(i);
-                //String ss = "";
-
             }
         });
+
+
 
     }
 
@@ -417,7 +445,7 @@ public class Homepage extends AppCompatActivity
             disconToken.setActionCallback(new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
-                    Toast.makeText(Homepage.this, "disconnected!!", Toast.LENGTH_LONG).show();
+                  //  Toast.makeText(Homepage.this, "disconnected!!", Toast.LENGTH_LONG).show();
                     // we are now successfully disconnected
                 }
 
@@ -435,15 +463,12 @@ public class Homepage extends AppCompatActivity
     }
 
     public void publishMessage(String message) {
-        // EditText topicText = (EditText)findViewById(R.id.topic);
-        // topicStr = ""
-        //EditText text = (EditText)findViewById(R.id.Msg);
 
         //String message = text.getText().toString();
         try {
             byte[] ss= message.getBytes();
             client.publish(Action.serverTopic, message.getBytes(), 0, false);
-            Toast.makeText(Homepage.this, "publish success l!!", Toast.LENGTH_LONG).show();
+            //Toast.makeText(Homepage.this, "publish success l!!", Toast.LENGTH_LONG).show();
         } catch (MqttException e) {
             e.printStackTrace();
         }
@@ -465,7 +490,7 @@ public class Homepage extends AppCompatActivity
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 String strMessage = new String(message.getPayload());
-
+                swipeRefreshLayout.setRefreshing(false);
                 GsonBuilder builder = new GsonBuilder();
 
                 builder.serializeNulls();
@@ -504,6 +529,7 @@ public class Homepage extends AppCompatActivity
                         } catch (MqttException e) {
                             e.printStackTrace();
                         }
+
                         startActivity(intent);
                         //Toast.makeText(getApplicationContext(), "row:" + i, Toast.LENGTH_LONG).show();
                         //Object test  = adapterView.getItemAtPosition(i);
@@ -512,7 +538,7 @@ public class Homepage extends AppCompatActivity
                 });
 
 
-
+                swipeRefreshLayout.setRefreshing(false);
                 String s = "";
                 //vibrator.vibrate(300);
                 //ringtone.play();
@@ -639,6 +665,7 @@ public class Homepage extends AppCompatActivity
 
     @Override
     public void onRefresh() {
+        swipeRefreshLayout.setRefreshing(true);
         readEvent();
     }
 

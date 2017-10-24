@@ -6,9 +6,11 @@
 
 
     <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
+        android:id="@+id/homeEventImage"
+        android:layout_width="100dp"
         android:layout_height="76dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
         app:srcCompat="@mipmap/ic_launcher" />
 
     <LinearLayout
@@ -24,6 +26,7 @@
             android:id="@+id/txtEventName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/colorDarkBlue"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:text="TextView"

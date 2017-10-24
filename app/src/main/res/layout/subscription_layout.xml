@@ -55,10 +55,10 @@
                 android:text="Education" />
 
             <CheckBox
-                android:id="@+id/checkBox3"
+                android:id="@+id/checkBoxGame"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="CheckBox3" />
+                android:text="Game" />
 
 
         </LinearLayout>
@@ -72,16 +72,22 @@
 
 
             <CheckBox
-                android:id="@+id/checkBox4"
+                android:id="@+id/checkBoxIT"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="CheckBox4" />
+                android:text="IT" />
 
             <CheckBox
-                android:id="@+id/checkBox5"
+                android:id="@+id/checkBoxBusiness"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="CheckBox5" />
+                android:text="Business" />
+
+            <CheckBox
+                android:id="@+id/checkBoxMusic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Music" />
 
 
         </LinearLayout>

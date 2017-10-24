@@ -49,11 +49,8 @@ dependencies {
 
     // json library
 
-
-    
-
     //zxing qrcode
-    
+
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.2'
@@ -62,5 +59,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:11.0.4'
     compile 'me.dm7.barcodescanner:zxing:1.8.4'
     compile 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
     testCompile 'junit:junit:4.12'
 }

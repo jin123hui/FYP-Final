@@ -21,6 +21,20 @@ public class Student {
         this.faculty = faculty;
     }
 
+    public Student(String studentId,String studenetName){
+        this.studentId = studentId;
+        this.studenetName = studenetName;
+        this.faculty = "";
+
+    }
+
+    public Student(String studentId){
+        this.studentId = studentId;
+        this.studenetName = "";
+        this.faculty = "";
+
+    }
+
     public String getStudentId() {
         return studentId;
     }
@@ -46,7 +60,12 @@ public class Student {
     }
 
 
-
-
-
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Student && ((Student)obj).studentId.equals(this.studentId)){
+            return true;
+        }else {
+            return super.equals(obj);
+        }
+    }
 }
