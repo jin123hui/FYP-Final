@@ -1,11 +1,15 @@
 package com.example.user.myproject;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -32,6 +36,7 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -50,20 +55,105 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements ZXi
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        conn();
 
-        createPermissions(Manifest.permission.CAMERA,CAMERA_REQUEST_CODE);
+
+
+
+
 
 
     }
 
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        conn();
+        createPermissions(Manifest.permission.CAMERA,CAMERA_REQUEST_CODE);
+        Button registerButton = (Button)findViewById(R.id.buttonWalkInRegistration);
+        registerButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+
+                if (timetableId == 0){
+
+
+                    Toast.makeText(getApplicationContext(),"Please scan an event before register!",Toast.LENGTH_LONG).show();
+
+                }else{
+
+                    JSONObject obj = new JSONObject();
+                    try{
+                        obj.put("studentId",Action.studentId);
+                        obj.put("timetableId",timetableId);
+
+                    }catch(Exception ex){
+                        ex.printStackTrace();
+                    }
+
+
+
+                    publishMessage(Action.combineMessage("001613",Action.asciiToHex(obj.toString())));
+
+
+
+                    if (client == null ){
+                        Toast.makeText(getApplicationContext(), "Connection fail!!", Toast.LENGTH_LONG).show();
+                    }
+                    client.setCallback(new MqttCallback() {
+                        @Override
+                        public void connectionLost(Throwable cause) {
+                        }
+
+                        @Override
+                        public void messageArrived(String topic, MqttMessage message) throws Exception {
+                            String strMessage = new String(message.getPayload());
+                            strMessage = Action.hexToAscii(strMessage);
+                            JSONObject obj = new JSONObject(strMessage);
+                            String success = obj.getString("success");
+                            String messages = obj.getString("message");
+
+
+
+
+                            if(success.equals("1")){
+                                Toast.makeText(getApplicationContext(), messages, Toast.LENGTH_LONG).show();
+                                finish();
+
+                            }else{
+                                Toast.makeText(getApplicationContext(), messages, Toast.LENGTH_LONG).show();
+                            }
+
+
+                        }
+
+                        @Override
+                        public void deliveryComplete(IMqttDeliveryToken token) {
+                            // Toast.makeText(DetailEventActivity.this, "All message received!!", Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+
+
+
+
+                }
+
+            }
+        });
+
+    }
 
     public void runQrCodeScanner(View view){
 
 
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
-        integrator.setPrompt("Scan");
+        //integrator.setPrompt("Scan");
+
+        integrator.setOrientationLocked(true);
+
 
         integrator.setCameraId(0);
         integrator.setBeepEnabled(false);
@@ -71,10 +161,10 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements ZXi
         integrator.initiateScan();
 
 
-       // scannerView = new ZXingScannerView(getApplicationContext());
+        // scannerView = new ZXingScannerView(getApplicationContext());
         //setContentView(scannerView);
-      //  scannerView.setResultHandler(this);
-     //   scannerView.startCamera();
+        //  scannerView.setResultHandler(this);
+        //   scannerView.startCamera();
     }
 
     @Override
@@ -101,7 +191,7 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements ZXi
 
 
                 publishMessage(Action.combineMessage("001614",Action.asciiToHex(json.toString())));
-
+                setSubscription(Action.serverTopic);
                 if (client == null ){
                     Toast.makeText(getApplicationContext(), "Connection fail!!", Toast.LENGTH_LONG).show();
                 }
@@ -159,84 +249,6 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements ZXi
 
                         }else{
                             registerButton.setVisibility(View.GONE);
-                            registerButton.setOnClickListener(new View.OnClickListener(){
-
-                                @Override
-                                public void onClick(View view) {
-
-                                    AlertDialog.Builder alert = new AlertDialog.Builder(getApplicationContext());
-                                    alert.setTitle("Walk in Registration");
-                                    alert.setMessage("Confirm perform individual registration to the event?");
-                                    alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                            JSONObject obj = new JSONObject();
-                                            try{
-                                                obj.put("studentId",Action.studentId);
-                                                obj.put("timetableId",timetableId);
-
-                                            }catch(Exception ex){
-                                                ex.printStackTrace();
-                                            }
-
-
-
-                                            publishMessage(Action.combineMessage("001613",Action.asciiToHex(obj.toString())));
-
-
-
-                                            if (client == null ){
-                                                Toast.makeText(getApplicationContext(), "Connection fail!!", Toast.LENGTH_LONG).show();
-                                            }
-                                            client.setCallback(new MqttCallback() {
-                                                @Override
-                                                public void connectionLost(Throwable cause) {
-                                                }
-
-                                                @Override
-                                                public void messageArrived(String topic, MqttMessage message) throws Exception {
-                                                    String strMessage = new String(message.getPayload());
-                                                    strMessage = Action.hexToAscii(strMessage);
-                                                    JSONObject obj = new JSONObject(strMessage);
-                                                    String success = obj.getString("success");
-                                                    String messages = obj.getString("message");
-
-
-                                                    if(success.equals("1")){
-                                                        Toast.makeText(getApplicationContext(), messages, Toast.LENGTH_LONG).show();
-                                                        finish();
-
-                                                    }else{
-                                                        Toast.makeText(getApplicationContext(), messages, Toast.LENGTH_LONG).show();
-                                                    }
-
-
-                                                }
-
-                                                @Override
-                                                public void deliveryComplete(IMqttDeliveryToken token) {
-                                                    // Toast.makeText(DetailEventActivity.this, "All message received!!", Toast.LENGTH_LONG).show();
-                                                }
-                                            });
-
-
-                                            dialog.dismiss();
-                                        }
-                                    });
-
-                                    alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
-
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                        }
-                                    });
-
-                                    alert.show();
-                                }
-                            });
 
                             msg.setText(obj.getString("message"));
 
@@ -275,6 +287,8 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements ZXi
     public void handleResult(Result result) {
         Toast.makeText(getApplicationContext(),result.getText(),Toast.LENGTH_LONG).show();
 
+
+
         JSONObject json = new JSONObject();
         try{
             json.put("timetableId","");
@@ -283,6 +297,9 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements ZXi
 
             ex.printStackTrace();
         }
+
+
+
 
         publishMessage(Action.combineMessage("001614",Action.asciiToHex(json.toString())));
 
@@ -435,7 +452,7 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements ZXi
         });
 
 
-      //  scannerView.resumeCameraPreview(this);
+        //  scannerView.resumeCameraPreview(this);
 
 
 
@@ -463,8 +480,8 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements ZXi
 
                 } else {
                     Toast.makeText(getApplicationContext(), "camera permission denied", Toast.LENGTH_SHORT).show();
-                        // permission denied, boo! Disable the
-                        // functionality that depends on this permission.
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
                     finish();
                 }
                 return ;
@@ -522,5 +539,16 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements ZXi
 
     }
 
+
+    public void setSubscription(String topicStr) {
+        try {
+            client.subscribe(topicStr, 1);
+
+
+        } catch (MqttException ex) {
+            ex.printStackTrace();
+        }
+        String ss= "";
+    }
 
 }

@@ -9,16 +9,20 @@
 
 
     <string name="search_keywords">Search</string>
-    <string name="title_activity_detail_event">DetailEventActivity</string>
+    <string name="title_activity_detail_event">Event Details</string>
 
     <string-array name="eventCategory">
         <item>All events</item>
         <item>User subscription</item>
-        <item>Sports</item>
+        <item>Business</item>
         <item>Education</item>
-
+        <item>Game</item>
+        <item>IT</item>
+        <item>Music</item>
+        <item>Sports</item>
 
     </string-array>
+
 
 
     <string name="google_map_api_key">AIzaSyAfRsO-VolLmJV4Jfcqp7_XX0ksAUxd9XU</string>

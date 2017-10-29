@@ -39,6 +39,34 @@ public class EncodedApplicationEvent {
         this.currentParticipants = currentParticipants;
     }
 
+    public String getCurrentGroup() {
+        return currentGroup;
+    }
+
+    public void setCurrentGroup(String currentGroup) {
+        this.currentGroup = currentGroup;
+    }
+
+    public String getMaxGroup() {
+        return maxGroup;
+    }
+
+    public void setMaxGroup(String maxGroup) {
+        this.maxGroup = maxGroup;
+    }
+
+    public String getGroupMemberAvailable() {
+        return groupMemberAvailable;
+    }
+
+    public void setGroupMemberAvailable(String groupMemberAvailable) {
+        this.groupMemberAvailable = groupMemberAvailable;
+    }
+
+    private String currentGroup;
+    private String maxGroup;
+    private String groupMemberAvailable;
+
     private String currentParticipants;
     private String status;
     private String activityType;

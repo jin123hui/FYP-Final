@@ -59,6 +59,15 @@
                 android:value="com.example.user.myproject.Modal.Homepage" />
         </activity>
         <activity
+            android:name=".GroupRegistrationActivity"
+            android:label="Group Registration"
+            android:parentActivityName=".DetailEventActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.user.myproject.DetailEventActivity" />
+        </activity>
+        <activity
             android:name=".Upcoming"
             android:label="Upcoming Event List"
             android:parentActivityName=".Modal.Homepage"

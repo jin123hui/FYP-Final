@@ -54,8 +54,20 @@ public class EventRegistration implements Serializable{
     private String eventTitle;
 
 
-    public EventRegistration() {
+    public EventRegistration(){
+        registrationId = 0;
+        timetableId = 0;
+        registerDate = new GregorianCalendar();
+        studentId = "";
+        status = "";
+        leaderId = "";
+        description = "";
+        notificationStatus = "";
+        waitingListStatus = "";
+
     }
+
+
 
     public EventRegistration(int registrationId, int timetableId, GregorianCalendar registerDate, String studentId, String status, String leaderId, String description, String notificationStatus, String waitingListStatus) {
         this.registrationId = registrationId;

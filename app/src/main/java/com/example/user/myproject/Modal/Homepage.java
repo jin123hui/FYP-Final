@@ -1,11 +1,18 @@
 package com.example.user.myproject.Modal;
 
+import android.app.Application;
 import android.app.Dialog;
+import android.app.DownloadManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
+import android.view.KeyEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,22 +22,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.user.myproject.DetailEventActivity;
-import com.example.user.myproject.RedeemBenefit;
-import com.example.user.myproject.SoftSkill;
-import com.example.user.myproject.Upcoming;
+import com.example.user.myproject.GroupRegistrationActivity;
+import com.example.user.myproject.MainActivity;
 import com.example.user.myproject.MarkAttendance;
 import com.example.user.myproject.PastJoined;
 import com.example.user.myproject.R;
+import com.example.user.myproject.RedeemBenefit;
+import com.example.user.myproject.SoftSkill;
+import com.example.user.myproject.Upcoming;
 import com.example.user.myproject.Waiting;
 import com.example.user.myproject.WalkInRegistrationActivity;
 import com.google.gson.Gson;
@@ -47,7 +58,9 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
+import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
@@ -63,7 +76,8 @@ public class Homepage extends AppCompatActivity
     AlertDialog dialog;
     Dialog dialog2;
 
-    String studentId = "16wmu10392";
+    String studentId = "16war10395";
+    String studentName = "desmond";
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -84,23 +98,23 @@ public class Homepage extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         context = this;
-        conn();
+
         //setSubscription(Action.topic);
 
 
-            swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
-            swipeRefreshLayout.setOnRefreshListener(this);
-            swipeRefreshLayout.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            //swipeRefreshLayout.setRefreshing(true);
-                                            // readQuestion();
-                                            //readEvent();
-                                        }
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // swipeRefreshLayout.setRefreshing(true);
+                                        // readQuestion();
+                                        //readEvent();
                                     }
+                                }
 
-            );
+        );
 
         String ss ="";
 
@@ -114,8 +128,16 @@ public class Homepage extends AppCompatActivity
         spinner.setAdapter(adapter);
 
 
-      //  loadAllTestingEvent();
-       //loadAllEvent();
+        //  loadAllTestingEvent();
+        //loadAllEvent();
+
+
+        // TextView appDrawerName = (TextView)findViewById(R.id.appDrawerName);
+        //appDrawerName.setText("Bi Bu Bi BU");
+
+        // TextView appDrawerEmail = (TextView)findViewById(R.id.appDrawerEmail);
+        // appDrawerEmail.setText(Action.studentId);
+
 
 
 
@@ -128,23 +150,25 @@ public class Homepage extends AppCompatActivity
 
         //String[] category = {"Sports","Education","chk1"};
 
-       // Gson gson = new Gson();
-       // String jsonMessage = gson.toJson(category,String[].class);
+        // Gson gson = new Gson();
+        // String jsonMessage = gson.toJson(category,String[].class);
         ArrayList<String> subscriptionList = new ArrayList<String>(Arrays.asList(category));
 
 
 
         CheckBox chkBoxSports = (CheckBox)mView.findViewById(R.id.checkBoxSports);
         CheckBox chkBoxEducation = (CheckBox)mView.findViewById(R.id.checkBoxEducation);
-        CheckBox chkBox1 = (CheckBox)mView.findViewById(R.id.checkBox3);
-        CheckBox chkBox2 = (CheckBox)mView.findViewById(R.id.checkBox4);
-        CheckBox chkBox3 = (CheckBox)mView.findViewById(R.id.checkBox5);
+        CheckBox chkBox1 = (CheckBox)mView.findViewById(R.id.checkBoxGame);
+        CheckBox chkBox2 = (CheckBox)mView.findViewById(R.id.checkBoxIT);
+        CheckBox chkBox3 = (CheckBox)mView.findViewById(R.id.checkBoxBusiness);
+        CheckBox chkBoxMusic = (CheckBox)mView.findViewById(R.id.checkBoxMusic);
         final ArrayList<CheckBox> checkBoxList = new ArrayList<CheckBox>();
         checkBoxList.add(chkBoxSports);
         checkBoxList.add(chkBoxEducation);
         checkBoxList.add(chkBox1);
         checkBoxList.add(chkBox2);
         checkBoxList.add(chkBox3);
+        checkBoxList.add(chkBoxMusic);
 
         for (CheckBox temp : checkBoxList){
             for (String msg: subscriptionList){
@@ -243,6 +267,15 @@ public class Homepage extends AppCompatActivity
 
     }
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        swipeRefreshLayout.setRefreshing(true);
+        conn();
+
+
+    }
 
     @Override
     public void onBackPressed() {
@@ -344,6 +377,7 @@ public class Homepage extends AppCompatActivity
 
     }
 
+
     public void loadAllTestingEvent(){
 
         final ArrayList<ApplicationEvent> arrList = new ArrayList<>();
@@ -358,23 +392,18 @@ public class Homepage extends AppCompatActivity
         lstView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView adapterView, View view, int i, long l) {
-                //Toast.makeText(getBaseContext(), questionList.get(i).getSubject(), Toast.LENGTH_SHORT).show();
-                //Intent intent = new Intent(view.getContext(), DiscussionActivity.class);
-                // intent.putExtra("QUESTION", questionList.get(i).getId());
-                //startActivity(intent);
                 Intent intent = new Intent(view.getContext(), DetailEventActivity.class);
                 intent.putExtra("TIMETABLEID", arrList.get(i).getTimetableId());
                 startActivity(intent);
 
-
-                //Toast.makeText(getApplicationContext(), "row:" + i, Toast.LENGTH_LONG).show();
-                //Object test  = adapterView.getItemAtPosition(i);
-                //String ss = "";
-
             }
         });
 
+
+
     }
+
+
 
     public void conn(){
 
@@ -393,7 +422,7 @@ public class Homepage extends AppCompatActivity
                     try {
                         client.subscribe(Action.clientTopic, 1);
 
-
+                        readEvent();
                     } catch (MqttException ex) {
                         ex.printStackTrace();
                     }
@@ -417,13 +446,15 @@ public class Homepage extends AppCompatActivity
 
     }
 
+
+
     public void disconnect(){
         try {
             IMqttToken disconToken = client.disconnect();
             disconToken.setActionCallback(new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
-                    Toast.makeText(Homepage.this, "disconnected!!", Toast.LENGTH_LONG).show();
+                    //  Toast.makeText(Homepage.this, "disconnected!!", Toast.LENGTH_LONG).show();
                     // we are now successfully disconnected
                 }
 
@@ -441,15 +472,12 @@ public class Homepage extends AppCompatActivity
     }
 
     public void publishMessage(String message) {
-        // EditText topicText = (EditText)findViewById(R.id.topic);
-        // topicStr = ""
-        //EditText text = (EditText)findViewById(R.id.Msg);
 
         //String message = text.getText().toString();
         try {
             byte[] ss= message.getBytes();
             client.publish(Action.serverTopic, message.getBytes(), 0, false);
-            Toast.makeText(Homepage.this, "publish success l!!", Toast.LENGTH_LONG).show();
+            //Toast.makeText(Homepage.this, "publish success l!!", Toast.LENGTH_LONG).show();
         } catch (MqttException e) {
             e.printStackTrace();
         }
@@ -471,7 +499,7 @@ public class Homepage extends AppCompatActivity
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 String strMessage = new String(message.getPayload());
-
+                swipeRefreshLayout.setRefreshing(false);
                 GsonBuilder builder = new GsonBuilder();
 
                 builder.serializeNulls();
@@ -510,6 +538,7 @@ public class Homepage extends AppCompatActivity
                         } catch (MqttException e) {
                             e.printStackTrace();
                         }
+
                         startActivity(intent);
                         //Toast.makeText(getApplicationContext(), "row:" + i, Toast.LENGTH_LONG).show();
                         //Object test  = adapterView.getItemAtPosition(i);
@@ -518,7 +547,7 @@ public class Homepage extends AppCompatActivity
                 });
 
 
-
+                swipeRefreshLayout.setRefreshing(false);
                 String s = "";
                 //vibrator.vibrate(300);
                 //ringtone.play();
@@ -530,7 +559,6 @@ public class Homepage extends AppCompatActivity
                 String str = "";
                 try {
                     str = new String(token.getMessage().getPayload());
-
                 } catch (MqttException e) {
                     e.printStackTrace();
                 }
@@ -581,7 +609,7 @@ public class Homepage extends AppCompatActivity
 
 
     public void readEvent(){
-       // setSubscription(Action.topic);
+        // setSubscription(Action.topic);
         //conn();
         JSONObject obj = new JSONObject();
         Spinner spinner = (Spinner)findViewById(R.id.eventSpinner);
@@ -646,6 +674,7 @@ public class Homepage extends AppCompatActivity
 
     @Override
     public void onRefresh() {
+        swipeRefreshLayout.setRefreshing(true);
         readEvent();
     }
 
