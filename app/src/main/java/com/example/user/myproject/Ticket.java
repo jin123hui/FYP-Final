@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -202,6 +203,29 @@ public class Ticket extends AppCompatActivity {
     private void loadEvent() {
         final BasicListAdapter adapter = new BasicListAdapter(this, R.layout.content_ticket, evtList);
         evtListV.setAdapter(adapter);
+
+        evtListV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView adapterView, View view, int i, long l) {
+                //Toast.makeText(getBaseContext(), questionList.get(i).getSubject(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(view.getContext(), DetailEventActivity.class);
+                intent.putExtra("TIMETABLEID", evtList.get(0).getTimetableId());
+                if(evt.getEndTime().before(new GregorianCalendar())) {
+                    intent.putExtra("FROM", "past");
+                } else {
+                    intent.putExtra("FROM", "ticket");
+                }
+                intent.putExtra("REGISTRATION", reg);
+                /*try {
+                    client.disconnect();
+                } catch (MqttException e) {
+                    e.printStackTrace();
+                }*/
+
+                startActivity(intent);
+            }
+        });
+
     }
 
     public void conn(){
@@ -279,6 +303,14 @@ public class Ticket extends AppCompatActivity {
                     registration.setWaitingListStatus(obj.getString("waitingListStatus"));
                     registration.setRedeemedStatus(obj.getString("redeemedStatus"));
                     registration.setStatus(obj.getString("status"));
+                    registration.setDescription(obj.getString("description"));
+
+                    //reg.setRegistrationId(Integer.parseInt(registration.getRegistrationId()));
+                    reg.setTimetableId(Integer.parseInt(registration.getTimetableId()));
+                    reg.setWaitingListStatus(registration.getWaitingListStatus());
+                    reg.setRedeemedStatus(registration.getRedeemedStatus());
+                    reg.setStatus(registration.getStatus());
+                    reg.setDescription(registration.getDescription());
 
                     TextView tvStatus = (TextView) findViewById(R.id.reg_status);
                     TextView tvRegId = (TextView) findViewById(R.id.reg_id);
@@ -311,6 +343,7 @@ public class Ticket extends AppCompatActivity {
                     } catch (WriterException e) {
                         e.printStackTrace();
                     }
+
                     checkAttendance();
 
                 }else{

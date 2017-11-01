@@ -3,12 +3,14 @@ package com.example.user.myproject;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -33,6 +35,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class WaitingInfo extends AppCompatActivity {
@@ -209,19 +212,24 @@ public class WaitingInfo extends AppCompatActivity {
     private void loadEvent() {
         final BasicListAdapter adapter = new BasicListAdapter(this, R.layout.content_waiting_info, evtList);
         evtListV.setAdapter(adapter);
-    }
 
-    private String checkWaitingStatus() {
+        evtListV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView adapterView, View view, int i, long l) {
+                //Toast.makeText(getBaseContext(), questionList.get(i).getSubject(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(view.getContext(), DetailEventActivity.class);
+                intent.putExtra("TIMETABLEID", evtList.get(0).getTimetableId());
+                intent.putExtra("FROM", "waiting");
+                intent.putExtra("REGISTRATION", reg);
+                /*try {
+                    client.disconnect();
+                } catch (MqttException e) {
+                    e.printStackTrace();
+                }*/
 
-        if(reg.getWaitingListStatus()!=null) {
-            if(reg.getWaitingListStatus().equals("ACTIVE")) {
-                return "Pending in Waiting List";
-            } else {
-                return "Not in Waiting List";
+                startActivity(intent);
             }
-        } else {
-            return "Not in Waiting List";
-        }
+        });
     }
 
     public void conn(){

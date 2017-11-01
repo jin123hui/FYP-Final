@@ -117,7 +117,7 @@ public class Homepage extends AppCompatActivity
         );
 
         String ss ="";
-
+        //conn();
 
         Spinner spinner = (Spinner)findViewById(R.id.eventSpinner);
 
@@ -139,7 +139,8 @@ public class Homepage extends AppCompatActivity
         // appDrawerEmail.setText(Action.studentId);
 
 
-
+        swipeRefreshLayout.setRefreshing(true);
+        conn();
 
 
     }
@@ -271,9 +272,6 @@ public class Homepage extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        swipeRefreshLayout.setRefreshing(true);
-        conn();
-
 
     }
 
@@ -283,7 +281,20 @@ public class Homepage extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if(getIntent().getExtras() != null && getIntent().getExtras().getString("lastActivity").equals("third")) {
+                Toast.makeText(getApplicationContext(), "wew this is return from third", Toast.LENGTH_LONG).show();
+            } else {
+                new AlertDialog.Builder(this)
+                        .setTitle("Really Exit?")
+                        .setMessage("Are you sure you want to exit?")
+                        .setNegativeButton(android.R.string.no, null)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Homepage.super.onBackPressed();
+                            }
+                        }).create().show();
+            }
         }
     }
 
@@ -316,11 +327,7 @@ public class Homepage extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            // Handle the camera action
-           // Intent intent = new Intent(this, MainActivity.class);
-           // startActivity(intent);
             readEvent();
-
         } else if (id == R.id.nav_subscriptionCategory) {
             userEventSubscription();
         } else if (id == R.id.nav_incomingEvent) {
@@ -394,10 +401,13 @@ public class Homepage extends AppCompatActivity
             public void onItemClick(AdapterView adapterView, View view, int i, long l) {
                 Intent intent = new Intent(view.getContext(), DetailEventActivity.class);
                 intent.putExtra("TIMETABLEID", arrList.get(i).getTimetableId());
+                intent.putExtra("FROM", "");
+                intent.putExtra("REGISTRATION", new EventRegistration());
                 startActivity(intent);
 
             }
         });
+
 
 
 
@@ -407,10 +417,8 @@ public class Homepage extends AppCompatActivity
 
     public void conn(){
 
-
         String clientId = MqttClient.generateClientId();
-        client =
-                new MqttAndroidClient(this.getApplicationContext(), Action.mqttTest,
+        client = new MqttAndroidClient(this.getApplicationContext(), Action.mqttTest,
                         clientId);
 
         try {
@@ -532,6 +540,8 @@ public class Homepage extends AppCompatActivity
                         //Toast.makeText(getBaseContext(), questionList.get(i).getSubject(), Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(view.getContext(), DetailEventActivity.class);
                         intent.putExtra("TIMETABLEID", arrList.get(i).getTimetableId());
+                        intent.putExtra("FROM", "");
+                        intent.putExtra("REGISTRATION", new EventRegistration());
 
                         try {
                             client.disconnect();

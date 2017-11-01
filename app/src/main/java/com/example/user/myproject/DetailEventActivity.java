@@ -3,12 +3,14 @@ package com.example.user.myproject;
 import android.Manifest;
 import android.app.Dialog;
 import android.app.DownloadManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -31,6 +33,7 @@ import android.widget.Toast;
 import com.example.user.myproject.Modal.Action;
 import com.example.user.myproject.Modal.ApplicationEvent;
 import com.example.user.myproject.Modal.EncodedApplicationEvent;
+import com.example.user.myproject.Modal.EventRegistration;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -69,6 +72,9 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
     String studentId = "16war10395";
     String studentName = "desmond";
     private ArrayList<String> files_on_server = new ArrayList<>();
+    String from;
+    EventRegistration reg;
+    ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +85,20 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        pd = new ProgressDialog(DetailEventActivity.this);
+        pd.setMessage("Loading");
+        pd.show();
+
+        conn();
 
         Button individualRegistrationButton = (Button)findViewById(R.id.btnIndividualRegistration);
         individualRegistrationButton.setOnClickListener(new View.OnClickListener(){
@@ -100,24 +120,108 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
 
         permission_check();
 
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        conn();
-
         Bundle bundle = getIntent().getExtras();
         if(!bundle.isEmpty()){
             timetableId = bundle.getInt("TIMETABLEID");
+            from = bundle.getString("FROM");
+            reg = (EventRegistration) bundle.getSerializable("REGISTRATION");
         }else{
             timetableId = 0 ;
-
+            from = "";
         }
 
-        int sss = 0;
+        TextView txtIndividualInfo = (TextView)findViewById(R.id.txtIndividualInfo);
+        TextView txtGroupInfo = (TextView)findViewById(R.id.txtGroupInfo);
+        EditText eventRegistrationDescription = (EditText)findViewById(R.id.eventRegistrationDescription);
 
+        if(from.equals("ticket")) {
+            groupRegistration.setVisibility(View.INVISIBLE);
+            individualRegistrationButton.setText("Update Registration Details");
+            txtIndividualInfo.setVisibility(View.INVISIBLE);
+            txtGroupInfo.setVisibility(View.INVISIBLE);
+
+            individualRegistrationButton.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view) {
+                    onUpdateRegistrationDetails();
+                }
+            });
+            eventRegistrationDescription.setText(reg.getDescription());
+        } else if(from.equals("waiting")) {
+            groupRegistration.setVisibility(View.INVISIBLE);
+            individualRegistrationButton.setText("Reserved in Waiting List");
+            individualRegistrationButton.setEnabled(false);
+            individualRegistrationButton.setBackgroundColor(Color.GRAY);
+            txtIndividualInfo.setVisibility(View.INVISIBLE);
+            txtGroupInfo.setVisibility(View.INVISIBLE);
+            eventRegistrationDescription.setText(reg.getDescription());
+            eventRegistrationDescription.setEnabled(false);
+        } else if(from.equals("past")) {
+            groupRegistration.setVisibility(View.INVISIBLE);
+            individualRegistrationButton.setText("Participated");
+            individualRegistrationButton.setEnabled(false);
+            individualRegistrationButton.setBackgroundColor(Color.GRAY);
+            txtIndividualInfo.setVisibility(View.INVISIBLE);
+            txtGroupInfo.setVisibility(View.INVISIBLE);
+            eventRegistrationDescription.setText(reg.getDescription());
+            eventRegistrationDescription.setEnabled(false);
+        }
+    }
+
+    public void onUpdateRegistrationDetails() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(DetailEventActivity.this);
+        alert.setTitle("Update Registration Details");
+        alert.setMessage("Confirm to update registration details?");
+        alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                pd = new ProgressDialog(DetailEventActivity.this);
+                pd.setMessage("Loading");
+                pd.show();
+                EditText eventRegistrationDescription = (EditText) findViewById(R.id.eventRegistrationDescription);
+                JSONObject obj = new JSONObject();
+                try {
+                    obj.put("registrationId", reg.getRegistrationId());
+                    obj.put("description", eventRegistrationDescription.getText().toString());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                publishMessage(Action.combineMessage("001643", Action.asciiToHex(obj.toString())));
+                if (client == null) {
+                    Toast.makeText(DetailEventActivity.this, "Connection fail!!", Toast.LENGTH_LONG).show();
+                }
+                client.setCallback(new MqttCallback() {
+                    @Override
+                    public void connectionLost(Throwable cause) {
+                    }
+
+                    @Override
+                    public void messageArrived(String topic, MqttMessage message) throws Exception {
+                        String strMessage = new String(message.getPayload());
+                        strMessage = Action.hexToAscii(strMessage);
+                        JSONObject obj = new JSONObject(strMessage);
+                        String success = obj.getString("success");
+                        String messages = obj.getString("message");
+                        Toast.makeText(DetailEventActivity.this, messages, Toast.LENGTH_LONG).show();
+                        //finish();
+                        pd.dismiss();
+                    }
+
+                    @Override
+                    public void deliveryComplete(IMqttDeliveryToken token) {
+                        // Toast.makeText(DetailEventActivity.this, "All message received!!", Toast.LENGTH_LONG).show();
+                    }
+                });
+                dialog.dismiss();
+            }
+        });
+        alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        alert.show();
     }
 
     public void onGroupRegistrationClick(){
@@ -148,10 +252,7 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
         if(event == null)
             return;
 
-
         String reserveMessage = "";
-
-
         AlertDialog.Builder alert = new AlertDialog.Builder(DetailEventActivity.this);
         alert.setTitle("Individual Registration");
         if(Integer.parseInt(event.getCurrentParticipants()) >= Integer.parseInt(event.getNoOfParticipants())){
@@ -166,27 +267,17 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
                 EditText eventRegistrationDescription = (EditText)findViewById(R.id.eventRegistrationDescription);
-
-
                 JSONObject obj = new JSONObject();
                 try{
                     obj.put("studentId",Action.studentId);
                     obj.put("timetableId",timetableId);
                     obj.put("waitinglistStatus",reserve);
                     obj.put("description",eventRegistrationDescription.getText().toString());
-
                 }catch(Exception ex){
                     ex.printStackTrace();
                 }
-
-
-
                 publishMessage(Action.combineMessage("001613",Action.asciiToHex(obj.toString())));
-
-
-
                 if (client == null ){
                     Toast.makeText(DetailEventActivity.this, "Connection fail!!", Toast.LENGTH_LONG).show();
                 }
@@ -214,19 +305,15 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
                     }
                 });
 
-
                 dialog.dismiss();
             }
         });
-
         alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
-
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
-
         alert.show();
     }
 
@@ -418,7 +505,7 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
 
                 TextView txtGroupInfo = (TextView)findViewById(R.id.txtGroupInfo);
                 txtGroupInfo.setText("Group Available: " + event.getCurrentGroup() + " / "+ event.getMaxGroup());
-
+                pd.dismiss();
 
                 ImageView image = (ImageView)findViewById(R.id.imageDetailEvent);
 

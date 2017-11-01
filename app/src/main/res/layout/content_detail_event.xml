@@ -18,11 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-
             android:focusable="true"
             android:focusableInTouchMode="true">
-
-
 
             <ImageView
                 android:id="@+id/imageDetailEvent"
@@ -33,12 +30,10 @@
                 app:srcCompat="@mipmap/ic_noimage" />
 
 
-
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorShallowGreen"
+                android:background="@color/colorPink"
                 android:orientation="vertical">
 
 
@@ -47,45 +42,41 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-
                     <TextView
                         android:id="@+id/textView5"
-                        android:layout_width="wrap_content"
+                        android:layout_width="100dp"
                         android:layout_height="wrap_content"
-                        android:layout_margin="40px"
+                        android:layout_margin="20px"
                         android:text="Description"
                         android:textColor="@color/colorBlack"
-                        android:textSize="60px" />
+                        android:textSize="50px" />
 
                     <Button
                         android:id="@+id/btnDownloadBrochure"
-                        android:layout_margin="40px"
-                        android:layout_width="wrap_content"
+                        android:layout_margin="20px"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@android:color/holo_red_light"
+                        android:textColor="@android:color/white"
                         android:text="Download Brochure" />
 
-
                 </LinearLayout>
-
-
-
 
                 <TextView
                     android:id="@+id/textEventDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="TextView"
+                    android:text=""
                     android:textColor="@color/colorBlack"
                     android:layout_margin="20px"/>
-
-
 
                 <TextView
                     android:id="@+id/txtDetailDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
-                    android:text="TextView"
+                    android:layout_margin="7dp"
+                    android:text=""
                     android:textColor="@color/colorDarkBlue"/>
 
                 <TextView
@@ -93,9 +84,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
+                    android:layout_margin="7dp"
                     android:textSize="15dp"
                     android:textColor="@color/colorDarkBlue"
-                    android:text="TextView"
+                    android:text=""
 
                     />
 
@@ -128,15 +120,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
-
                     android:textColor="@color/colorRed"
-                    android:text="TextView" />
+                    android:text="" />
 
                 <Button
                     android:id="@+id/btnIndividualRegistration"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Individual Registration"
+                    android:background="@android:color/holo_red_light"
+                    android:textColor="@android:color/white"
                     android:layout_gravity="center_horizontal"
                     />
 
@@ -147,14 +140,16 @@
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
                     android:textColor="@color/colorRed"
-                    android:text="TextView" />
+                    android:text="" />
 
 
                 <Button
                     android:id="@+id/btnGroupRegistration"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:background="@android:color/holo_red_light"
+                    android:textColor="@android:color/white"
                     android:text="Group Registration" />
 
 

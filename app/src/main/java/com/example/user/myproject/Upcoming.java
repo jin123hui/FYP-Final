@@ -5,9 +5,15 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -17,6 +23,7 @@ import com.example.user.myproject.Modal.ApplicationEvent;
 import com.example.user.myproject.Modal.DetailedListAdapter;
 import com.example.user.myproject.Modal.EncodedApplicationEvent;
 import com.example.user.myproject.Modal.EventRegistration;
+import com.example.user.myproject.Modal.Homepage;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.eclipse.paho.android.service.MqttAndroidClient;
@@ -42,7 +49,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-public class Upcoming extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class Upcoming extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
 
     private ListView incomingList;
     private List<ApplicationEvent> incomingEvtList;
@@ -59,9 +66,16 @@ public class Upcoming extends AppCompatActivity implements SwipeRefreshLayout.On
         setContentView(R.layout.activity_upcoming);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
 
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         incomingList = (ListView) findViewById(R.id.incominglist);
         incomingEvtList = new ArrayList<>();
@@ -258,4 +272,48 @@ public class Upcoming extends AppCompatActivity implements SwipeRefreshLayout.On
     }
 
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.nav_home) {
+            Intent intent = new Intent(this, Homepage.class);
+            startActivity(intent);
+            //return true;
+        } else if (id == R.id.nav_subscriptionCategory) {
+            Intent intent = new Intent(this, Homepage.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_incomingEvent) {
+            Intent intent = new Intent(this, Upcoming.class);
+            startActivity(intent);
+            //return true;
+        } else if (id == R.id.nav_waitingList) {
+            Intent intent = new Intent(this, Waiting.class);
+            startActivity(intent);
+            //return true;
+        } else if (id == R.id.nav_pastJoinedEvent) {
+            Intent intent = new Intent(this, PastJoined.class);
+            startActivity(intent);
+            //return true;
+        } else if (id == R.id.nav_walkinRegistration) {
+            Intent intent = new Intent(getApplicationContext(), WalkInRegistrationActivity.class);
+            startActivity(intent);
+        }else if (id == R.id.nav_redeemBenefits){
+            Intent intent = new Intent(this, RedeemBenefit.class);
+            startActivity(intent);
+            //return true;
+        } else if(id == R.id.nav_mark) {
+            Intent intent = new Intent(getApplicationContext(), MarkAttendance.class);
+            startActivity(intent);
+            //return true;
+        } else if(id == R.id.nav_softskill) {
+            Intent intent = new Intent(this, SoftSkill.class);
+            startActivity(intent);
+            //return true;
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
 }

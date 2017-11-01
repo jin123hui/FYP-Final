@@ -7,7 +7,7 @@
             android:title="Home" />
         <item
             android:id="@+id/nav_subscriptionCategory"
-            android:title="Subscription category" />
+            android:title="Subscription Category" />
         <item
             android:id="@+id/nav_incomingEvent"
             android:title="Upcoming Event" />
@@ -21,7 +21,7 @@
 
         <item
             android:id="@+id/nav_walkinRegistration"
-            android:title="Walk in registration" />
+            android:title="Walk-In Registration" />
 
         <item
         android:id="@+id/nav_redeemBenefits"

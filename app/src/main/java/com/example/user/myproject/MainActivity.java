@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.example.user.myproject.Modal.Action;
 import com.example.user.myproject.Modal.EncodedStudent;
 import com.example.user.myproject.Modal.Homepage;
+import com.example.user.myproject.Modal.SessionManager;
 import com.example.user.myproject.Modal.Student;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -96,51 +97,11 @@ public class MainActivity extends AppCompatActivity {
     public void testing(View v){
 
 
-        TextView view = (TextView)findViewById(R.id.textView2);
-
-        view.setText("123");
-
-        String ss = "";
-
-
-
-
-            Student s = new Student("16war10395", "Zhan yi", "fasc");
-            Student[] arr = {new Student("16war10395", "cowsi", "fasc"), new Student("16war10396", "Zhan ponss", "fasd")};
-            // EncodedStudent encodedArr = (EncodedStudent) studentArr.toArray();
-            EncodedStudent[] tempArr = Action.convertStudentToEncoded(arr);
-           // tempArr = (EncodedStudent[])(studentArr.toArray());
-
-
-
-            Gson g = new Gson();
-            ss = g.toJson(tempArr);
-            //g.toJson("Command","12345");
-
-
-
-
-            GsonBuilder builder = new GsonBuilder();
-
-            Gson resultG = new Gson();
-            EncodedStudent[] tempResult = resultG.fromJson(ss,EncodedStudent[].class);
-            Student[] decodeResult = {};
-            decodeResult =  Action.decodeStudents(tempResult);
-
-            Gson g2 = new Gson();
-            String decodeJsonString = g2.toJson(decodeResult);
-
-            //ncodedStudent[] result =
-                    String sssss = "";
-
-
-
-        view.setText(ss);
-
-        publishMessage(Action.combineMessage("001609",ss));
-        publishMessage(Action.combineMessage("001609",decodeJsonString));
-        publishMessage(Action.combineMessage("001609",Action.asciiToHex(ss)));
-
+        SessionManager sess = new SessionManager(this);
+        //sess.createLoginSession(email.toLowerCase(), password);
+        Intent intent = new Intent(this, Homepage.class);
+        //pDialog.dismiss();
+        startActivity(intent);
     }
 
 }

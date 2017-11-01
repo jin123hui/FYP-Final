@@ -1,6 +1,7 @@
 package com.example.user.myproject;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 
 import com.example.user.myproject.Modal.Action;
 import com.example.user.myproject.Modal.EventRegistration;
+import com.example.user.myproject.Modal.Homepage;
 import com.example.user.myproject.Modal.Student;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
@@ -257,7 +259,7 @@ public class GroupRegistrationActivity extends AppCompatActivity {
                 }
                 ArrayList<EventRegistration> arrEventReg = new ArrayList<>();
 
-                EventRegistration leaderReg = new EventRegistration();
+                final EventRegistration leaderReg = new EventRegistration();
                 leaderReg.setTimetableId(timetableId);
                 leaderReg.setStudentId(leaderId);
                 leaderReg.setLeaderId(leaderId);
@@ -305,7 +307,11 @@ public class GroupRegistrationActivity extends AppCompatActivity {
 
                         int response = obj.getInt("rowAffected");
                         Toast.makeText(getApplicationContext(),"Number of record inserted: "+response,Toast.LENGTH_LONG).show();
-                        getParent().finish();
+                        Intent intent = new Intent(getApplicationContext(), Homepage.class);
+                        intent.putExtra("lastActivity", "third");
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+
                         String s = "";
                     }
 
