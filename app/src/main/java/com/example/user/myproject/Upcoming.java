@@ -302,9 +302,9 @@ public class Upcoming extends AppCompatActivity implements NavigationView.OnNavi
             Intent intent = new Intent(this, RedeemBenefit.class);
             startActivity(intent);
             //return true;
-        } else if(id == R.id.nav_mark) {
-            Intent intent = new Intent(getApplicationContext(), MarkAttendance.class);
-            startActivity(intent);
+        //} else if(id == R.id.nav_mark) {
+          //  Intent intent = new Intent(getApplicationContext(), MarkAttendance.class);
+            //startActivity(intent);
             //return true;
         } else if(id == R.id.nav_softskill) {
             Intent intent = new Intent(this, SoftSkill.class);

@@ -97,6 +97,10 @@ public class Homepage extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        View hView =  navigationView.getHeaderView(0);
+        TextView appDrawerName = (TextView) hView.findViewById(R.id.appDrawerName);
+        appDrawerName.setText("16wmu10392");
+
         context = this;
 
         //setSubscription(Action.topic);
@@ -313,7 +317,13 @@ public class Homepage extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_scan) {
+            Intent intent = new Intent(getApplicationContext(), MarkAttendance.class);
+            startActivity(intent);
+            return true;
+        } else if(id == R.id.action_logout) {
+            return true;
+        } else if(id == R.id.action_about) {
             return true;
         }
 
@@ -349,9 +359,9 @@ public class Homepage extends AppCompatActivity
             Intent intent = new Intent(this, RedeemBenefit.class);
             startActivity(intent);
             return true;
-        } else if(id == R.id.nav_mark) {
-            Intent intent = new Intent(getApplicationContext(), MarkAttendance.class);
-            startActivity(intent);
+       // } else if(id == R.id.nav_mark) {
+            //Intent intent = new Intent(getApplicationContext(), MarkAttendance.class);
+            //startActivity(intent);
         } else if(id == R.id.nav_softskill) {
             Intent intent = new Intent(this, SoftSkill.class);
             startActivity(intent);
