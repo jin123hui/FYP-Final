@@ -131,7 +131,7 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
             studentId = bundle.getString("STUDENTID");
         }else{
             timetableId = 0 ;
-            studentId = "";
+            studentId = new SessionManager(this).getUserDetails().get("id");
             from = "";
         }
 
@@ -428,7 +428,7 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
 
                         JSONObject obj = new JSONObject();
                         try{
-                            obj.put("studentId",studentId);
+                            obj.put("studentId",new SessionManager(getApplicationContext()).getUserDetails().get("id"));
                             obj.put("timetableId",timetableId);
                         }catch (Exception ex){
                             ex.printStackTrace();
