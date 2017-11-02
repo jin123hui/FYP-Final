@@ -12,8 +12,8 @@
     <string name="title_activity_detail_event">Event Details</string>
 
     <string-array name="eventCategory">
-        <item>All events</item>
-        <item>User subscription</item>
+        <item>All Events</item>
+        <item>User Subscription</item>
         <item>Business</item>
         <item>Education</item>
         <item>Game</item>

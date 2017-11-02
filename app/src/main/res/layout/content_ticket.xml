@@ -23,7 +23,7 @@
         <ListView
             android:id="@+id/list"
             android:layout_width="match_parent"
-            android:layout_height="101dp"
+            android:layout_height="121dp"
             android:background="@android:color/white"></ListView>
 
         <LinearLayout

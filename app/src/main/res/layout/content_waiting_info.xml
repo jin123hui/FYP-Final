@@ -9,17 +9,17 @@
     tools:showIn="@layout/activity_waiting_info"
     android:orientation="vertical">
 
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0"
         tools:layout_editor_absoluteY="8dp"
         tools:layout_editor_absoluteX="8dp">
 
         <ListView
             android:layout_width="match_parent"
-            android:layout_height="101dp"
+            android:layout_height="121dp"
             android:background="@android:color/white"
             android:id="@+id/list">
         </ListView>
@@ -95,5 +95,7 @@
         </LinearLayout>
 
     </LinearLayout>
+
+
 
 </LinearLayout>

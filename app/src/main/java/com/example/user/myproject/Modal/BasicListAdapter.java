@@ -39,6 +39,7 @@ public class BasicListAdapter extends ArrayAdapter<ApplicationEvent> {
             viewHolder.category = (TextView) convertView.findViewById(R.id.evt_cat);
             viewHolder.title = (TextView) convertView.findViewById(R.id.evt_title);
             viewHolder.date = (TextView) convertView.findViewById(R.id.evt_date);
+            viewHolder.time = (TextView) convertView.findViewById(R.id.evt_ttime);
             viewHolder.evtImg = (ImageView) convertView.findViewById(R.id.evt_img);
             convertView.setTag(viewHolder);
 
@@ -50,6 +51,7 @@ public class BasicListAdapter extends ArrayAdapter<ApplicationEvent> {
         viewHolder.category.setText(evt.getActivityType());
         viewHolder.title.setText(evt.getEventTitle());
         viewHolder.date.setText(Action.displayDate(evt.getStartTime()));
+        viewHolder.time.setText(ApplicationEvent.displayTime(evt.getStartTime()) + " - "  + ApplicationEvent.displayTime(evt.getEndTime()) );
 
         ImageTask task = new ImageTask(viewHolder.evtImg);
         task.execute(evt.getTimetableId());
@@ -87,13 +89,17 @@ public class BasicListAdapter extends ArrayAdapter<ApplicationEvent> {
         }
 
         protected void onPostExecute(Bitmap result) {
-            if (imageViewReference != null && result != null) {
-                final ImageView imageView = imageViewReference.get();
-                if (imageView != null) {
-                    imageView.setImageBitmap(result);
-                } else {
-                    imageView.setImageResource(R.mipmap.ic_noimage);
+            try {
+                if (imageViewReference != null && result != null) {
+                    final ImageView imageView = imageViewReference.get();
+                    if (imageView != null) {
+                        imageView.setImageBitmap(result);
+                    } else {
+                        imageView.setImageResource(R.mipmap.ic_noimage);
+                    }
                 }
+            } catch (Exception e) {
+
             }
         }
     }
@@ -102,6 +108,7 @@ public class BasicListAdapter extends ArrayAdapter<ApplicationEvent> {
         TextView category;
         TextView title;
         TextView date;
+        TextView time;
         ImageView evtImg;
     }
 

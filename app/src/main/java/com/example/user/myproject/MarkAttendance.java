@@ -176,7 +176,7 @@ public class MarkAttendance extends AppCompatActivity implements ZXingScannerVie
             token.setActionCallback(new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
-                    Toast.makeText(getApplicationContext(), "Connected!!", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(), "Connected!!", Toast.LENGTH_LONG).show();
                     try {
                         client.subscribe(Action.clientTopic, 1);
 

@@ -270,7 +270,7 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
                 EditText eventRegistrationDescription = (EditText)findViewById(R.id.eventRegistrationDescription);
                 JSONObject obj = new JSONObject();
                 try{
-                    obj.put("studentId",Action.studentId);
+                    obj.put("studentId",studentId);
                     obj.put("timetableId",timetableId);
                     obj.put("waitinglistStatus",reserve);
                     obj.put("description",eventRegistrationDescription.getText().toString());
@@ -496,12 +496,12 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
                 txtdate.setText(mssg);
 
                 TextView txtTime = (TextView)findViewById(R.id.txtDetailTime);
-                txtTime.setText("Time:" + ApplicationEvent.displayTime(trueEvent.getStartTime())
+                txtTime.setText("Time: " + ApplicationEvent.displayTime(trueEvent.getStartTime())
                         + " - "  + ApplicationEvent.displayTime(trueEvent.getEndTime()) );
 
 
                 TextView txtIndividualInfo = (TextView)findViewById(R.id.txtIndividualInfo);
-                txtIndividualInfo.setText("Seat available: "+ event.getCurrentParticipants()+ " / "+ event.getNoOfParticipants() );
+                txtIndividualInfo.setText("Seat Available: "+ event.getCurrentParticipants()+ " / "+ event.getNoOfParticipants() );
 
                 TextView txtGroupInfo = (TextView)findViewById(R.id.txtGroupInfo);
                 txtGroupInfo.setText("Group Available: " + event.getCurrentGroup() + " / "+ event.getMaxGroup());

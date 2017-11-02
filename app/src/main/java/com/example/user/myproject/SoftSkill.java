@@ -1,6 +1,7 @@
 package com.example.user.myproject;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,8 +12,10 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -108,6 +111,48 @@ public class SoftSkill extends AppCompatActivity implements NavigationView.OnNav
         startMain.addCategory(Intent.CATEGORY_HOME);
         startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(startMain);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.homepage, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_scan) {
+            Intent intent = new Intent(getApplicationContext(), MarkAttendance.class);
+            startActivity(intent);
+            return true;
+        } else if(id == R.id.action_logout) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(SoftSkill.this);
+            alert.setTitle("Logout");
+            alert.setMessage("Confirm to logout?");
+            alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    new SessionManager(getApplicationContext()).logoutUser();
+                    startActivity(intent);
+                    dialog.dismiss();
+                }
+            });
+
+            alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            alert.show();
+        } else if(id == R.id.action_about) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

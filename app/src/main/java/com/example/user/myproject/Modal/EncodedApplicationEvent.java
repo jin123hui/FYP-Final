@@ -210,6 +210,7 @@ public class EncodedApplicationEvent {
             e.setTimetableId(0);
         }
         e.setEventTitle(eventTitle);
+        e.setActivityType(activityType);
 
         Date d = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

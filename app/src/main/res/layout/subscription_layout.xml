@@ -12,7 +12,8 @@
 
         android:textColor="@color/colorBlack"
         android:textSize="45px"
-        android:text="Event subscription"
+        android:text="Category Subscription"
+        android:textStyle="bold"
         android:paddingTop="30px"
         android:paddingBottom="30px"/>
 
@@ -22,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/colorBlack"
-        android:text="Event category"
+        android:text="Event Category"
         android:paddingLeft="10px"
         />
 
@@ -39,7 +40,6 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
 
 
             <CheckBox
@@ -107,15 +107,24 @@
         <Button
             android:id="@+id/btnSubscribe"
             android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="10dp"
             android:layout_height="wrap_content"
             android:text="update subscription"
-            android:layout_marginRight="30px"/>
+            android:background="@android:color/holo_red_light"
+            android:textColor="@android:color/white"
+            android:layout_marginRight="10px"/>
 
 
         <Button
             android:id="@+id/btnCancelSubscription"
             android:layout_width="wrap_content"
+            android:layout_weight="0"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10px"
             android:layout_height="wrap_content"
+            android:background="@android:color/holo_red_light"
+            android:textColor="@android:color/white"
             android:text="Cancel" />
 
 

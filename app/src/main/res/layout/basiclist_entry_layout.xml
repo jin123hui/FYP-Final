@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="100dp">
+    android:layout_height="120dp">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -13,7 +13,7 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="400dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1">
 
             <TextView
@@ -21,7 +21,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="10dp"
                 android:textStyle="italic"
-                android:textSize="18dp"
+                android:textSize="14dp"
                 android:textColor="@android:color/holo_red_light"
                 android:layout_width="100dp"
                 android:layout_weight="1"
@@ -45,12 +45,24 @@
                 android:text="Date : "
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="10dp"
-                android:textSize="18dp"
-                android:textColor="@android:color/holo_blue_light"
-                android:layout_width="300dp"
+                android:textSize="16dp"
+                android:textColor="@android:color/holo_blue_dark"
+                android:layout_width="wrap_content"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:id="@+id/evt_date"
+                android:maxLength="65"/>
+
+            <TextView
+                android:text="Time : "
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:textSize="16dp"
+                android:textColor="@android:color/holo_blue_light"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/evt_ttime"
                 android:maxLength="65"/>
 
         </LinearLayout>
