@@ -151,15 +151,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.user.myproject.Modal.Homepage" />
         </activity>
-        <activity
-            android:name=".GroupRegistrationActivity"
-            android:label="@string/title_activity_group_registration"
-            android:parentActivityName=".DetailEventActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.user.myproject.DetailEventActivity" />
-        </activity>
     </application>
 
 </manifest>
