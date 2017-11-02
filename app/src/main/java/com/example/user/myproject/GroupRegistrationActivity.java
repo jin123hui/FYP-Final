@@ -120,14 +120,7 @@ public class GroupRegistrationActivity extends AppCompatActivity {
         TextView countText = (TextView)findViewById(R.id.txtGroupSlotCount);
         countText.setText("Slot available:" + "0 / " + seatAvailable );
 
-
         loadRegistration();
-        //arrayList.add(new Student("16war10395","student 1","fasc"));
-        //arrayList.add(new Student("16war10396","student2","febe"));
-        //arrayList.add(new Student("16war10397","student3","fasc"));
-
-
-
     }
 
 
@@ -446,7 +439,7 @@ public class GroupRegistrationActivity extends AppCompatActivity {
 
                     @Override
                     public void deliveryComplete(IMqttDeliveryToken token) {
-                        Toast.makeText(getApplicationContext(), "All message received!!", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(), "All message received!!", Toast.LENGTH_LONG).show();
                         String str = "";
                         try {
                             str = new String(token.getMessage().getPayload());
@@ -486,7 +479,7 @@ public class GroupRegistrationActivity extends AppCompatActivity {
             token.setActionCallback(new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
-                    Toast.makeText(getApplicationContext(), "Connected!!", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(), "Connected!!", Toast.LENGTH_LONG).show();
                     try {
                         client.subscribe(Action.clientTopic, 1);
 
@@ -560,7 +553,7 @@ public class GroupRegistrationActivity extends AppCompatActivity {
 
             @Override
             public void deliveryComplete(IMqttDeliveryToken token) {
-                Toast.makeText(getApplicationContext(), "All message received!!", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "All message received!!", Toast.LENGTH_LONG).show();
                 String str = "";
                 try {
                     str = new String(token.getMessage().getPayload());

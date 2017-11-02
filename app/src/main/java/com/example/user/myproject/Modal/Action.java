@@ -10,8 +10,7 @@ import java.util.Locale;
  * Created by User on 29/9/2017.
  */
 
-public class
-Action {
+public class Action {
 
 
     public static String serverTopic = "MY/TARUC/ERS/0000000005/PUB";

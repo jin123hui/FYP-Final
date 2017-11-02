@@ -9,12 +9,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -23,6 +28,8 @@ import android.widget.Toast;
 import com.example.user.myproject.Modal.Action;
 import com.example.user.myproject.Modal.ApplicationEvent;
 import com.example.user.myproject.Modal.EncodedApplicationEvent;
+import com.example.user.myproject.Modal.Homepage;
+import com.example.user.myproject.Modal.SessionManager;
 import com.google.zxing.Result;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -40,12 +47,12 @@ import org.w3c.dom.Text;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
-public class WalkInRegistrationActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
+public class WalkInRegistrationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ZXingScannerView.ResultHandler {
 
     private ZXingScannerView scannerView;
     MqttAndroidClient client;
     private int timetableId = 0;
-
+    private String studentId = "";
     private final int CAMERA_REQUEST_CODE =1;
 
     @Override
@@ -54,20 +61,36 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements ZXi
         setContentView(R.layout.activity_walk_in_registration);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        studentId = new SessionManager(this).getUserDetails().get("id");
 
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
 
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
+        View hView =  navigationView.getHeaderView(0);
+        TextView appDrawerName = (TextView) hView.findViewById(R.id.appDrawerName);
+        appDrawerName.setText(new SessionManager(this).getUserDetails().get("id"));
+    }
 
-
-
+    public void onBackPressed() {
+        Intent startMain = new Intent(getApplicationContext(), Homepage.class);
+        startMain.addCategory(Intent.CATEGORY_HOME);
+        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(startMain);
     }
 
 
     @Override
     protected void onResume(){
         super.onResume();
+        studentId = new SessionManager(this).getUserDetails().get("id");
         conn();
         createPermissions(Manifest.permission.CAMERA,CAMERA_REQUEST_CODE);
         Button registerButton = (Button)findViewById(R.id.buttonWalkInRegistration);
@@ -85,13 +108,12 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements ZXi
 
                     JSONObject obj = new JSONObject();
                     try{
-                        obj.put("studentId",Action.studentId);
+                        obj.put("studentId",studentId);
                         obj.put("timetableId",timetableId);
 
                     }catch(Exception ex){
                         ex.printStackTrace();
                     }
-
 
 
                     publishMessage(Action.combineMessage("001613",Action.asciiToHex(obj.toString())));
@@ -114,9 +136,6 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements ZXi
                             String success = obj.getString("success");
                             String messages = obj.getString("message");
 
-
-
-
                             if(success.equals("1")){
                                 Toast.makeText(getApplicationContext(), messages, Toast.LENGTH_LONG).show();
                                 finish();
@@ -124,8 +143,6 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements ZXi
                             }else{
                                 Toast.makeText(getApplicationContext(), messages, Toast.LENGTH_LONG).show();
                             }
-
-
                         }
 
                         @Override
@@ -133,38 +150,19 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements ZXi
                             // Toast.makeText(DetailEventActivity.this, "All message received!!", Toast.LENGTH_LONG).show();
                         }
                     });
-
-
-
-
-
                 }
-
             }
         });
-
     }
 
     public void runQrCodeScanner(View view){
-
-
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
-        //integrator.setPrompt("Scan");
-
         integrator.setOrientationLocked(true);
-
-
         integrator.setCameraId(0);
         integrator.setBeepEnabled(false);
         integrator.setBarcodeImageEnabled(false);
         integrator.initiateScan();
-
-
-        // scannerView = new ZXingScannerView(getApplicationContext());
-        //setContentView(scannerView);
-        //  scannerView.setResultHandler(this);
-        //   scannerView.startCamera();
     }
 
     @Override
@@ -174,21 +172,12 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements ZXi
             if(result.getContents() == null){
                 Toast.makeText(getApplicationContext(),"You cancelled the scanning",Toast.LENGTH_LONG).show();
             }else{
-
-
-
-
                 JSONObject json = new JSONObject();
                 try{
                     json.put("timetableId",result.getContents());
-
                 }catch(Exception ex){
-
                     ex.printStackTrace();
                 }
-
-
-
 
                 publishMessage(Action.combineMessage("001614",Action.asciiToHex(json.toString())));
                 setSubscription(Action.serverTopic);
@@ -269,7 +258,6 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements ZXi
             }
         }else{
             super.onActivityResult(requestCode,resultCode,data);
-
         }
     }
 
@@ -287,19 +275,12 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements ZXi
     public void handleResult(Result result) {
         Toast.makeText(getApplicationContext(),result.getText(),Toast.LENGTH_LONG).show();
 
-
-
         JSONObject json = new JSONObject();
         try{
             json.put("timetableId","");
-
         }catch(Exception ex){
-
             ex.printStackTrace();
         }
-
-
-
 
         publishMessage(Action.combineMessage("001614",Action.asciiToHex(json.toString())));
 
@@ -341,8 +322,6 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements ZXi
                 msg.setText("");
                 availableSeat.setText("");
 
-
-
                 if(success.equals("1")){
                     eventTitle.setText(obj.getString("eventTitle"));
                     ApplicationEvent trueEvent = encodApp.getApplicationEvent();
@@ -375,14 +354,12 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements ZXi
 
                                     JSONObject obj = new JSONObject();
                                     try{
-                                        obj.put("studentId",Action.studentId);
+                                        obj.put("studentId",studentId);
                                         obj.put("timetableId",timetableId);
 
                                     }catch(Exception ex){
                                         ex.printStackTrace();
                                     }
-
-
 
                                     publishMessage(Action.combineMessage("001613",Action.asciiToHex(obj.toString())));
 
@@ -549,6 +526,38 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements ZXi
             ex.printStackTrace();
         }
         String ss= "";
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.nav_home) {
+            Intent intent = new Intent(this, Homepage.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_incomingEvent) {
+            Intent intent = new Intent(this, Upcoming.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_waitingList) {
+            Intent intent = new Intent(this, Waiting.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_pastJoinedEvent) {
+            Intent intent = new Intent(this, PastJoined.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_walkinRegistration) {
+            Intent intent = new Intent(this, WalkInRegistrationActivity.class);
+            startActivity(intent);
+        }else if (id == R.id.nav_redeemBenefits){
+            Intent intent = new Intent(this, RedeemBenefit.class);
+            startActivity(intent);
+        } else if(id == R.id.nav_softskill) {
+            Intent intent = new Intent(this, SoftSkill.class);
+            startActivity(intent);
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
 }

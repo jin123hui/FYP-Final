@@ -6,9 +6,6 @@
             android:id="@+id/nav_home"
             android:title="Home" />
         <item
-            android:id="@+id/nav_subscriptionCategory"
-            android:title="Subscription Category" />
-        <item
             android:id="@+id/nav_incomingEvent"
             android:title="Upcoming Events" />
         <item
@@ -24,15 +21,14 @@
             android:title="Walk-In Registration" />
 
         <item
-        android:id="@+id/nav_redeemBenefits"
-        android:title="Redeem Benefits" />
+            android:id="@+id/nav_redeemBenefits"
+            android:title="Redeem Benefits"
+            />
 
         <item
             android:id="@+id/nav_softskill"
-            android:title="Soft Skill Point" />
-
+            android:title="Soft Skill Point"/>
 
     </group>
-
 
 </menu>

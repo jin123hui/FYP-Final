@@ -25,6 +25,7 @@ import com.example.user.myproject.Modal.EncodedApplicationEvent;
 import com.example.user.myproject.Modal.EncodedAttendance;
 import com.example.user.myproject.Modal.EncodedEventRegistration;
 import com.example.user.myproject.Modal.EventRegistration;
+import com.example.user.myproject.Modal.SessionManager;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -56,7 +57,7 @@ public class Ticket extends AppCompatActivity {
     public final static int WIDTH = 300;
     public final static int HEIGHT = 300;
     private MqttAndroidClient client;
-    private String studentId = "16wmu10392";
+    private String studentId = "";
     private Context context;
     private ProgressDialog pd;
 
@@ -67,6 +68,8 @@ public class Ticket extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        studentId = new SessionManager(this).getUserDetails().get("id");
 
         pd = new ProgressDialog(Ticket.this);
         pd.setMessage("Loading");
@@ -197,7 +200,9 @@ public class Ticket extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        studentId = new SessionManager(this).getUserDetails().get("id");
         conn();
+
     }
 
     private void loadEvent() {

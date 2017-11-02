@@ -70,9 +70,9 @@ public class BasicListAdapter extends ArrayAdapter<ApplicationEvent> {
 
         protected Bitmap doInBackground(Integer... params) {
             Bitmap myBitmap = null;
-            String ngrok = "c3091b38.ngrok.io";
+            //String ngrok = "c3091b38.ngrok.io";
             try {
-                URL url = new URL("http://"+ngrok+"/phpMQTT-master/files/get_image.php?timetableId="+params[0]);// + evt.getTimetableId());
+                URL url = new URL("http://"+new SessionManager(getContext()).getUserDetails().get("address")+".ngrok.io/phpMQTT-master/files/get_image.php?timetableId="+params[0]);// + evt.getTimetableId());
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setDoInput(true);
                 connection.connect();

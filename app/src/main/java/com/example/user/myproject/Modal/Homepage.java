@@ -35,6 +35,7 @@ import android.widget.Toast;
 
 import com.example.user.myproject.DetailEventActivity;
 import com.example.user.myproject.GroupRegistrationActivity;
+import com.example.user.myproject.LoginActivity;
 import com.example.user.myproject.MainActivity;
 import com.example.user.myproject.MarkAttendance;
 import com.example.user.myproject.PastJoined;
@@ -72,11 +73,8 @@ public class Homepage extends AppCompatActivity
     ArrayList<ApplicationEvent> eventList = new ArrayList<>();
     MqttAndroidClient client;
     Context context;
-
     AlertDialog dialog;
-    Dialog dialog2;
-
-    String studentId = "16war10395";
+    String studentId = "";
     String studentName = "desmond";
 
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -87,6 +85,10 @@ public class Homepage extends AppCompatActivity
         setContentView(R.layout.activity_homepage);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        new SessionManager(this).checkLogin();
+
+        studentId = new SessionManager(this).getUserDetails().get("id");
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -99,12 +101,10 @@ public class Homepage extends AppCompatActivity
 
         View hView =  navigationView.getHeaderView(0);
         TextView appDrawerName = (TextView) hView.findViewById(R.id.appDrawerName);
-        appDrawerName.setText("16wmu10392");
+        appDrawerName.setText(new SessionManager(this).getUserDetails().get("id"));
 
+        //Toast.makeText(Homepage.this, new SessionManager(this).getUserDetails().get("address"), Toast.LENGTH_LONG).show();
         context = this;
-
-        //setSubscription(Action.topic);
-
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
@@ -120,9 +120,6 @@ public class Homepage extends AppCompatActivity
 
         );
 
-        String ss ="";
-        //conn();
-
         Spinner spinner = (Spinner)findViewById(R.id.eventSpinner);
 
         spinner.setOnItemSelectedListener(this);
@@ -131,36 +128,14 @@ public class Homepage extends AppCompatActivity
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-
-        //  loadAllTestingEvent();
-        //loadAllEvent();
-
-
-        // TextView appDrawerName = (TextView)findViewById(R.id.appDrawerName);
-        //appDrawerName.setText("Bi Bu Bi BU");
-
-        // TextView appDrawerEmail = (TextView)findViewById(R.id.appDrawerEmail);
-        // appDrawerEmail.setText(Action.studentId);
-
-
         swipeRefreshLayout.setRefreshing(true);
         conn();
-
-
     }
 
     public void buildSubscriptionDialog(String[] category){
         AlertDialog.Builder mBuilder  = new AlertDialog.Builder(Homepage.this);
         View mView = getLayoutInflater().inflate(R.layout.subscription_layout,null);
-
-        //String[] category = {"Sports","Education","chk1"};
-
-        // Gson gson = new Gson();
-        // String jsonMessage = gson.toJson(category,String[].class);
         ArrayList<String> subscriptionList = new ArrayList<String>(Arrays.asList(category));
-
-
-
         CheckBox chkBoxSports = (CheckBox)mView.findViewById(R.id.checkBoxSports);
         CheckBox chkBoxEducation = (CheckBox)mView.findViewById(R.id.checkBoxEducation);
         CheckBox chkBox1 = (CheckBox)mView.findViewById(R.id.checkBoxGame);
@@ -182,10 +157,6 @@ public class Homepage extends AppCompatActivity
                 }
             }
         }
-
-
-
-
 
         Button btnSubscribe = (Button) mView.findViewById(R.id.btnSubscribe);
         btnSubscribe.setOnClickListener(new View.OnClickListener() {
@@ -224,18 +195,11 @@ public class Homepage extends AppCompatActivity
                         public void messageArrived(String topic, MqttMessage message) throws Exception {
                             String strMessage = new String(message.getPayload());
                             strMessage = Action.hexToAscii(strMessage);
-
                             JSONObject jObj = new JSONObject(strMessage);
-
-
-
                             int rowChanged = jObj.getInt("success");
                             String resultMessage = jObj.getString("message");
-
                             Toast.makeText(Homepage.this, "Result: "+rowChanged + " " + resultMessage, Toast.LENGTH_LONG).show();
                             dialog.cancel();
-                            //vibrator.vibrate(300);
-                            //ringtone.play();
                         }
 
                         @Override
@@ -246,10 +210,6 @@ public class Homepage extends AppCompatActivity
                 }catch (Exception ex){
                     ex.printStackTrace();
                 }
-
-
-
-
             }
         });
 
@@ -261,22 +221,16 @@ public class Homepage extends AppCompatActivity
             }
         });
 
-
         mBuilder.setView(mView);
         dialog = mBuilder.create();
         dialog.show();
-        //dialog.cancel();
-
-
-
-
     }
 
 
     @Override
     protected void onStart() {
         super.onStart();
-
+        studentId = new SessionManager(this).getUserDetails().get("id");
     }
 
     @Override
@@ -285,19 +239,21 @@ public class Homepage extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            if(getIntent().getExtras() != null && getIntent().getExtras().getString("lastActivity").equals("third")) {
-                Toast.makeText(getApplicationContext(), "wew this is return from third", Toast.LENGTH_LONG).show();
-            } else {
-                new AlertDialog.Builder(this)
-                        .setTitle("Really Exit?")
-                        .setMessage("Are you sure you want to exit?")
-                        .setNegativeButton(android.R.string.no, null)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                Homepage.super.onBackPressed();
-                            }
-                        }).create().show();
+            if(getIntent().getExtras() != null) {
+                if (getIntent().getExtras() != null && getIntent().getExtras().getString("lastActivity").equals("third")) {
+                    Toast.makeText(getApplicationContext(), "wew this is return from third", Toast.LENGTH_LONG).show();
+                } else {
+                    new AlertDialog.Builder(this)
+                            .setTitle("Really Exit?")
+                            .setMessage("Are you sure you want to exit?")
+                            .setNegativeButton(android.R.string.no, null)
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    Homepage.super.onBackPressed();
+                                }
+                            }).create().show();
+                }
             }
         }
     }
@@ -322,7 +278,26 @@ public class Homepage extends AppCompatActivity
             startActivity(intent);
             return true;
         } else if(id == R.id.action_logout) {
-            return true;
+            AlertDialog.Builder alert = new AlertDialog.Builder(Homepage.this);
+            alert.setTitle("Logout");
+            alert.setMessage("Confirm to logout?");
+            alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    new SessionManager(getApplicationContext()).logoutUser();
+                    startActivity(intent);
+                    dialog.dismiss();
+                }
+            });
+
+            alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            alert.show();
         } else if(id == R.id.action_about) {
             return true;
         }
@@ -377,17 +352,11 @@ public class Homepage extends AppCompatActivity
 
         try{
             JSONObject jsonObj = new JSONObject();
-
-            // String[] category = {"Sports","Education","chk1"};
-            //Gson gson = new Gson();
-            //String jsonMessage = gson.toJson(category,String[].class);
-
             jsonObj.put("studentId",studentId);
             publishMessage(Action.combineMessage("001610",Action.asciiToHex(jsonObj.toString())));
 
             setSubscription(Action.clientTopic);
             subscribeSubscriptionMessage();
-            String ssss = "";
         }catch(Exception ex){
             ex.printStackTrace();
         }
@@ -417,13 +386,7 @@ public class Homepage extends AppCompatActivity
 
             }
         });
-
-
-
-
     }
-
-
 
     public void conn(){
 
@@ -436,35 +399,25 @@ public class Homepage extends AppCompatActivity
             token.setActionCallback(new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
-                    Toast.makeText(Homepage.this, "Connected!!", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(Homepage.this, "Connected!!", Toast.LENGTH_LONG).show();
                     try {
                         client.subscribe(Action.clientTopic, 1);
-
                         readEvent();
                     } catch (MqttException ex) {
                         ex.printStackTrace();
                     }
-
-                    // We are connected
-                    //Log.d(TAG, "onSuccess");
                 }
 
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     Toast.makeText(Homepage.this, "Connection fail!!", Toast.LENGTH_LONG).show();
-                    // Something went wrong e.g. connection timeout or firewall problems
-                    // Log.d(TAG, "onFailure");
 
                 }
             });
         } catch (MqttException e) {
             e.printStackTrace();
         }
-
-
     }
-
-
 
     public void disconnect(){
         try {
@@ -491,7 +444,6 @@ public class Homepage extends AppCompatActivity
 
     public void publishMessage(String message) {
 
-        //String message = text.getText().toString();
         try {
             byte[] ss= message.getBytes();
             client.publish(Action.serverTopic, message.getBytes(), 0, false);
@@ -519,19 +471,10 @@ public class Homepage extends AppCompatActivity
                 String strMessage = new String(message.getPayload());
                 swipeRefreshLayout.setRefreshing(false);
                 GsonBuilder builder = new GsonBuilder();
-
                 builder.serializeNulls();
-
                 Gson gson = builder.create();
                 String decoded = Action.hexToAscii(strMessage);
-
                 EncodedApplicationEvent[] result = gson.fromJson(decoded,EncodedApplicationEvent[].class);
-
-                //Gson gson2 = new Gson();
-                //ApplicationEvent[] result2 = gson.fromJson(decoded,ApplicationEvent[].class);
-
-
-                String ss = "";
                 ArrayList<EncodedApplicationEvent> arrList1 = new ArrayList<>(Arrays.asList(result));
                 final ArrayList<ApplicationEvent> arrList = new ArrayList<ApplicationEvent>();
 
@@ -553,36 +496,27 @@ public class Homepage extends AppCompatActivity
                         intent.putExtra("FROM", "");
                         intent.putExtra("REGISTRATION", new EventRegistration());
 
-                        try {
+                        /*try {
                             client.disconnect();
                         } catch (MqttException e) {
                             e.printStackTrace();
-                        }
-
+                        }*/
                         startActivity(intent);
-                        //Toast.makeText(getApplicationContext(), "row:" + i, Toast.LENGTH_LONG).show();
-                        //Object test  = adapterView.getItemAtPosition(i);
-                        String ss = "";
                     }
                 });
 
-
                 swipeRefreshLayout.setRefreshing(false);
-                String s = "";
-                //vibrator.vibrate(300);
-                //ringtone.play();
             }
 
             @Override
             public void deliveryComplete(IMqttDeliveryToken token) {
-                Toast.makeText(Homepage.this, "All message received!!", Toast.LENGTH_LONG).show();
+                //Toast.makeText(Homepage.this, "All message received!!", Toast.LENGTH_LONG).show();
                 String str = "";
                 try {
                     str = new String(token.getMessage().getPayload());
                 } catch (MqttException e) {
                     e.printStackTrace();
                 }
-                String sssss =  "";
             }
         });
 
@@ -629,8 +563,6 @@ public class Homepage extends AppCompatActivity
 
 
     public void readEvent(){
-        // setSubscription(Action.topic);
-        //conn();
         JSONObject obj = new JSONObject();
         Spinner spinner = (Spinner)findViewById(R.id.eventSpinner);
         String jsonString = "";
@@ -641,11 +573,8 @@ public class Homepage extends AppCompatActivity
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         publishMessage(Action.combineMessage("001609",Action.asciiToHex(jsonString)));
         subscribeEventMessage();
-
-        //unsubscribeTopic(Action.clientTopic);
     }
 
     public void subscribeSubscriptionMessage(){
@@ -656,7 +585,6 @@ public class Homepage extends AppCompatActivity
             @Override
             public void connectionLost(Throwable cause) {
 
-                String s = "";
             }
 
             @Override
@@ -670,13 +598,12 @@ public class Homepage extends AppCompatActivity
                 Gson gson = new Gson();
                 String[] ress = gson.fromJson(strArr,String[].class);
                 buildSubscriptionDialog(ress);
-                //vibrator.vibrate(300);
-                //ringtone.play();
+
             }
 
             @Override
             public void deliveryComplete(IMqttDeliveryToken token) {
-                Toast.makeText(Homepage.this, "All message received!!", Toast.LENGTH_LONG).show();
+                //Toast.makeText(Homepage.this, "All message received!!", Toast.LENGTH_LONG).show();
                 String str = "";
                 try {
                     str = new String(token.getMessage().getPayload());
@@ -717,9 +644,6 @@ public class Homepage extends AppCompatActivity
 
         publishMessage(Action.combineMessage("001609",Action.asciiToHex(jsonString)));
         subscribeEventMessage();
-
-
-
     }
 
     @Override

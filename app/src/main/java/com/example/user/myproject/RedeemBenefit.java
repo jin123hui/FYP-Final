@@ -7,19 +7,26 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.user.myproject.Modal.Action;
@@ -29,7 +36,9 @@ import com.example.user.myproject.Modal.EncodedApplicationEvent;
 import com.example.user.myproject.Modal.EncodedAttendance;
 import com.example.user.myproject.Modal.EncodedEventRegistration;
 import com.example.user.myproject.Modal.EventRegistration;
+import com.example.user.myproject.Modal.Homepage;
 import com.example.user.myproject.Modal.RedeemListAdapter;
+import com.example.user.myproject.Modal.SessionManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.zxing.BarcodeFormat;
@@ -56,13 +65,13 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-public class RedeemBenefit extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class RedeemBenefit extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
 
     private ListView redeemListV;
     private List<EventRegistration> redeemList;
     private SwipeRefreshLayout swipeRefreshLayout;
     private MqttAndroidClient client;
-    private String studentId = "16wmu10392";
+    private String studentId = "";
     private Context context;
     public final static int WHITE = 0xFFFFFFFF;
     public final static int BLACK = 0xFF000000;
@@ -75,7 +84,22 @@ public class RedeemBenefit extends AppCompatActivity implements SwipeRefreshLayo
         setContentView(R.layout.activity_redeem_benefit);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        studentId = new SessionManager(this).getUserDetails().get("id");
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        View hView =  navigationView.getHeaderView(0);
+        TextView appDrawerName = (TextView) hView.findViewById(R.id.appDrawerName);
+        appDrawerName.setText(new SessionManager(this).getUserDetails().get("id"));
 
         redeemListV = (ListView) findViewById(R.id.benefitlist);
         redeemList = new ArrayList<>();
@@ -97,9 +121,17 @@ public class RedeemBenefit extends AppCompatActivity implements SwipeRefreshLayo
 
     }
 
+    public void onBackPressed() {
+        Intent startMain = new Intent(context, Homepage.class);
+        startMain.addCategory(Intent.CATEGORY_HOME);
+        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(startMain);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
+        studentId = new SessionManager(this).getUserDetails().get("id");
         swipeRefreshLayout.setRefreshing(true);
         conn();
     }
@@ -195,9 +227,6 @@ public class RedeemBenefit extends AppCompatActivity implements SwipeRefreshLayo
                 redeemListV.setEmptyView(findViewById(R.id.empty));
                 final RedeemListAdapter adapter = new RedeemListAdapter(context, R.layout.content_redeem_benefit, arrList);
                 redeemListV.setAdapter(adapter);
-
-
-                //settingsDialog.show();
 
                 redeemListV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -319,5 +348,37 @@ public class RedeemBenefit extends AppCompatActivity implements SwipeRefreshLayo
     @Override
     public void onRefresh() {
         loadBenefit();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.nav_home) {
+            Intent intent = new Intent(this, Homepage.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_incomingEvent) {
+            Intent intent = new Intent(this, Upcoming.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_waitingList) {
+            Intent intent = new Intent(this, Waiting.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_pastJoinedEvent) {
+            Intent intent = new Intent(this, PastJoined.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_walkinRegistration) {
+            Intent intent = new Intent(this, WalkInRegistrationActivity.class);
+            startActivity(intent);
+        }else if (id == R.id.nav_redeemBenefits){
+            Intent intent = new Intent(this, RedeemBenefit.class);
+            startActivity(intent);
+        } else if(id == R.id.nav_softskill) {
+            Intent intent = new Intent(this, SoftSkill.class);
+            startActivity(intent);
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }

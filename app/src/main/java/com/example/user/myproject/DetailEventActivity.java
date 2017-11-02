@@ -34,6 +34,7 @@ import com.example.user.myproject.Modal.Action;
 import com.example.user.myproject.Modal.ApplicationEvent;
 import com.example.user.myproject.Modal.EncodedApplicationEvent;
 import com.example.user.myproject.Modal.EventRegistration;
+import com.example.user.myproject.Modal.SessionManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -69,7 +70,7 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
     float latitude ;
     String locationName;
     EncodedApplicationEvent event;
-    String studentId = "16war10395";
+    String studentId = "";
     String studentName = "desmond";
     private ArrayList<String> files_on_server = new ArrayList<>();
     String from;
@@ -86,14 +87,14 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-
+        studentId = new SessionManager(this).getUserDetails().get("id");
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        studentId = new SessionManager(this).getUserDetails().get("id");
         pd = new ProgressDialog(DetailEventActivity.this);
         pd.setMessage("Loading");
         pd.show();
@@ -228,7 +229,6 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
 
         if(event == null)
             return;
-
 
         if(Integer.parseInt(event.getCurrentGroup()) >= Integer.parseInt(event.getMaxGroup())){
             Toast.makeText(getApplicationContext(),"Cannot perform group registration because event full!",Toast.LENGTH_LONG).show();;
@@ -393,7 +393,7 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
             token.setActionCallback(new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
-                    Toast.makeText(DetailEventActivity.this, "Connected!!", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(DetailEventActivity.this, "Connected!!", Toast.LENGTH_LONG).show();
                     try {
                         client.subscribe(Action.clientTopic, 1);
 
@@ -432,7 +432,7 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
         try {
             byte[] ss= message.getBytes();
             client.publish(Action.serverTopic, message.getBytes(), 0, false);
-            Toast.makeText(DetailEventActivity.this, "publish success !!", Toast.LENGTH_LONG).show();
+            //Toast.makeText(DetailEventActivity.this, "publish success !!", Toast.LENGTH_LONG).show();
         } catch (MqttException e) {
             e.printStackTrace();
         }
@@ -477,7 +477,7 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
 
 
                 }else{
-                    Toast.makeText(getApplicationContext(),"Data retrieve failed!! Please contact admin.",Toast.LENGTH_LONG).show();;
+                    //Toast.makeText(getApplicationContext(),"Data retrieve failed!! Please contact admin.",Toast.LENGTH_LONG).show();;
                     finish();
 
                 }
@@ -602,10 +602,10 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
                     Toast.makeText(getApplicationContext(),"No brochure found in database!",Toast.LENGTH_LONG).show();
                     return;
                 }else {
-                    Toast.makeText(getApplicationContext(),event.getEventBrochure(),Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(),event.getEventBrochure(),Toast.LENGTH_LONG).show();
 
                     DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-                    Uri uri = Uri.parse("http://c3091b38.ngrok.io/phpMQTT-master/files/downloadBrochure.php?files="+event.getEventBrochure());
+                    Uri uri = Uri.parse("http://"+new SessionManager(getApplicationContext()).getUserDetails().get("address")+".ngrok.io/phpMQTT-master/files/downloadBrochure.php?files="+event.getEventBrochure());
                     DownloadManager.Request request = new DownloadManager.Request(uri);
                     request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
                     Long reference = downloadManager.enqueue(request);
@@ -631,7 +631,7 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
         protected Bitmap doInBackground(Integer... params) {
             Bitmap myBitmap = null;
             try {
-                URL url = new URL("+/phpMQTT-master/files/get_image.php?timetableId="+params[0]);// + evt.getTimetableId());
+                URL url = new URL("http://"+new SessionManager(getApplicationContext()).getUserDetails().get("address")+".ngrok.io/phpMQTT-master/files/get_image.php?timetableId="+params[0]);// + evt.getTimetableId());
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setDoInput(true);
                 connection.connect();

@@ -25,11 +25,6 @@
             android:label="TARUC ERS">
 
         </activity>
-        <activity
-            android:name=".MainActivity"
-            android:label="testing" >
-
-            </activity>
 
         <activity
             android:name=".Modal.Homepage"
@@ -37,11 +32,13 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity
+            android:name=".MainActivity"
+            android:label="testing" >
+        </activity>
 
         <activity
             android:name=".DetailEventActivity"
@@ -60,7 +57,7 @@
 
         <activity
             android:name=".WalkInRegistrationActivity"
-            android:label="@string/title_activity_walk_in_registration"
+            android:label="Walk-In Registration"
             android:parentActivityName=".Modal.Homepage"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
@@ -87,7 +84,7 @@
         </activity>
         <activity
             android:name=".Waiting"
-            android:label="Waiting Event List"
+            android:label="Event Waiting List"
             android:parentActivityName=".Modal.Homepage"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

@@ -40,9 +40,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.user.myproject.Modal.Action;
 import com.example.user.myproject.Modal.Homepage;
 import com.example.user.myproject.Modal.SessionManager;
 
+import org.eclipse.paho.android.service.MqttAndroidClient;
+import org.eclipse.paho.client.mqttv3.IMqttActionListener;
+import org.eclipse.paho.client.mqttv3.IMqttToken;
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.ArrayList;
@@ -50,35 +56,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static android.Manifest.permission.READ_CONTACTS;
-
-/**
- * A login screen that offers login via email/password.
- */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
-    /**
-     * Id to identity READ_CONTACTS permission request.
-     */
-    private static final int REQUEST_READ_CONTACTS = 0;
-    private static final String USERNAME = "username";
-
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
     private UserLoginTask mAuthTask = null;
-
-    // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
     private ProgressDialog pDialog;
+    private MqttAndroidClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,7 +152,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         boolean cancel = false;
         View focusView = null;
 
-        if (!TextUtils.isEmpty(password)) {
+        /*if (!TextUtils.isEmpty(password)) {
             mPasswordView.setError("Enter ngrok Server Address");
             focusView = mPasswordView;
             cancel = true;
@@ -176,12 +162,48 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mEmailView.setError("Enter Student Id");
             focusView = mEmailView;
             cancel = true;
-        }
+        }*/
 
         if (cancel) {
             focusView.requestFocus();
         } else {
             pDialog = ProgressDialog.show(LoginActivity.this, "", "Login...");
+
+            String clientId = MqttClient.generateClientId();
+            client = new MqttAndroidClient(this.getApplicationContext(), Action.mqttTest,
+                    clientId);
+
+            try {
+                IMqttToken token = client.connect();
+                token.setActionCallback(new IMqttActionListener() {
+                    @Override
+                    public void onSuccess(IMqttToken asyncActionToken) {
+                        Toast.makeText(LoginActivity.this, "Connected!!", Toast.LENGTH_LONG).show();
+                        try {
+                            client.subscribe(Action.clientTopic, 1);
+
+                            //readEvent();
+                        } catch (MqttException ex) {
+                            ex.printStackTrace();
+                        }
+
+                        // We are connected
+                        //Log.d(TAG, "onSuccess");
+                    }
+
+                    @Override
+                    public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                        Toast.makeText(LoginActivity.this, "Connection fail!!", Toast.LENGTH_LONG).show();
+                        // Something went wrong e.g. connection timeout or firewall problems
+                        // Log.d(TAG, "onFailure");
+
+                    }
+                });
+            } catch (MqttException e) {
+                e.printStackTrace();
+            }
+
+
             //mAuthTask = new UserLoginTask(email.toLowerCase(), password, this);
             //mAuthTask.execute((Void) null);
             SessionManager sess = new SessionManager(this);

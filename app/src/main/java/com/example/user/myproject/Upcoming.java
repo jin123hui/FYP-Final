@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.example.user.myproject.Modal.Action;
 import com.example.user.myproject.Modal.ApplicationEvent;
@@ -24,6 +25,7 @@ import com.example.user.myproject.Modal.DetailedListAdapter;
 import com.example.user.myproject.Modal.EncodedApplicationEvent;
 import com.example.user.myproject.Modal.EventRegistration;
 import com.example.user.myproject.Modal.Homepage;
+import com.example.user.myproject.Modal.SessionManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.eclipse.paho.android.service.MqttAndroidClient;
@@ -56,7 +58,7 @@ public class Upcoming extends AppCompatActivity implements NavigationView.OnNavi
     private List<EventRegistration> regList;
     private SwipeRefreshLayout swipeRefreshLayout;
     private MqttAndroidClient client;
-    private String studentId = "16wmu10392";
+    private String studentId = "";
     private Context context;
 
 
@@ -66,6 +68,8 @@ public class Upcoming extends AppCompatActivity implements NavigationView.OnNavi
         setContentView(R.layout.activity_upcoming);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        studentId = new SessionManager(this).getUserDetails().get("id");
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -77,15 +81,17 @@ public class Upcoming extends AppCompatActivity implements NavigationView.OnNavi
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        View hView =  navigationView.getHeaderView(0);
+        TextView appDrawerName = (TextView) hView.findViewById(R.id.appDrawerName);
+        appDrawerName.setText(new SessionManager(this).getUserDetails().get("id"));
+
         incomingList = (ListView) findViewById(R.id.incominglist);
         incomingEvtList = new ArrayList<>();
         regList = new ArrayList<>();
 
         context = this;
-        //conn();
-        //loadEvent();
-        //regList.clear();
-        //incomingEvtList.clear();
+
+
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -99,6 +105,15 @@ public class Upcoming extends AppCompatActivity implements NavigationView.OnNavi
                                     }
                                 }
         );
+
+
+    }
+
+    public void onBackPressed() {
+        Intent startMain = new Intent(context, Homepage.class);
+        startMain.addCategory(Intent.CATEGORY_HOME);
+        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(startMain);
     }
 
     private void readEvent() {
@@ -109,6 +124,7 @@ public class Upcoming extends AppCompatActivity implements NavigationView.OnNavi
     @Override
     protected void onStart() {
         super.onStart();
+        studentId = new SessionManager(this).getUserDetails().get("id");
         swipeRefreshLayout.setRefreshing(true);
         conn();
     }
@@ -279,37 +295,24 @@ public class Upcoming extends AppCompatActivity implements NavigationView.OnNavi
         if (id == R.id.nav_home) {
             Intent intent = new Intent(this, Homepage.class);
             startActivity(intent);
-            //return true;
-        } else if (id == R.id.nav_subscriptionCategory) {
-            Intent intent = new Intent(this, Homepage.class);
-            startActivity(intent);
         } else if (id == R.id.nav_incomingEvent) {
             Intent intent = new Intent(this, Upcoming.class);
             startActivity(intent);
-            //return true;
         } else if (id == R.id.nav_waitingList) {
             Intent intent = new Intent(this, Waiting.class);
             startActivity(intent);
-            //return true;
         } else if (id == R.id.nav_pastJoinedEvent) {
             Intent intent = new Intent(this, PastJoined.class);
             startActivity(intent);
-            //return true;
         } else if (id == R.id.nav_walkinRegistration) {
-            Intent intent = new Intent(getApplicationContext(), WalkInRegistrationActivity.class);
+            Intent intent = new Intent(this, WalkInRegistrationActivity.class);
             startActivity(intent);
         }else if (id == R.id.nav_redeemBenefits){
             Intent intent = new Intent(this, RedeemBenefit.class);
             startActivity(intent);
-            //return true;
-        //} else if(id == R.id.nav_mark) {
-          //  Intent intent = new Intent(getApplicationContext(), MarkAttendance.class);
-            //startActivity(intent);
-            //return true;
         } else if(id == R.id.nav_softskill) {
             Intent intent = new Intent(this, SoftSkill.class);
             startActivity(intent);
-            //return true;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
