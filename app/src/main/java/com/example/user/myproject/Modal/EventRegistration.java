@@ -82,6 +82,19 @@ public class EventRegistration implements Serializable{
         this.waitingListStatus = waitingListStatus;
     }
 
+    public EventRegistration(){
+        registrationId = 0;
+        timetableId = 0;
+        registerDate = new GregorianCalendar();
+        studentId = "";
+        status = "";
+        leaderId = "";
+        description = "";
+        notificationStatus = "";
+        waitingListStatus = "";
+
+    }
+
     public int getRegistrationId() {
         return registrationId;
     }

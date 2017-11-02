@@ -16,10 +16,38 @@ public class EncodedApplicationEvent {
     private String eventStartTime;
     private String eventEndTime;
     private String eventId;
+
+    public String getCurrentGroup() {
+        return currentGroup;
+    }
+
+    public void setCurrentGroup(String currentGroup) {
+        this.currentGroup = currentGroup;
+    }
+
+    public String getMaxGroup() {
+        return maxGroup;
+    }
+
+    public void setMaxGroup(String maxGroup) {
+        this.maxGroup = maxGroup;
+    }
+
+    public String getGroupMemberAvailable() {
+        return groupMemberAvailable;
+    }
+
+    public void setGroupMemberAvailable(String groupMemberAvailable) {
+        this.groupMemberAvailable = groupMemberAvailable;
+    }
+
     private String eventTitle;
     private String eventDescription;
     private String eventBrochure;
     private String noOfParticipants;
+    private String currentGroup;
+    private String maxGroup;
+    private String groupMemberAvailable;
 
     public String getSoftSkillPoint() {
         return softSkillPoint;
