@@ -10,6 +10,7 @@ import android.provider.CalendarContract;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -26,6 +27,8 @@ import com.example.user.myproject.Modal.EncodedAttendance;
 import com.example.user.myproject.Modal.EncodedEventRegistration;
 import com.example.user.myproject.Modal.EventRegistration;
 import com.example.user.myproject.Modal.SessionManager;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -42,6 +45,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -309,6 +313,7 @@ public class Ticket extends AppCompatActivity {
                     registration.setRedeemedStatus(obj.getString("redeemedStatus"));
                     registration.setStatus(obj.getString("status"));
                     registration.setDescription(obj.getString("description"));
+                    registration.setLeaderId(obj.getString("leaderId"));
 
                     //reg.setRegistrationId(Integer.parseInt(registration.getRegistrationId()));
                     reg.setTimetableId(Integer.parseInt(registration.getTimetableId()));
@@ -316,6 +321,7 @@ public class Ticket extends AppCompatActivity {
                     reg.setRedeemedStatus(registration.getRedeemedStatus());
                     reg.setStatus(registration.getStatus());
                     reg.setDescription(registration.getDescription());
+                    reg.setLeaderId(registration.getLeaderId());
 
                     TextView tvStatus = (TextView) findViewById(R.id.reg_status);
                     TextView tvRegId = (TextView) findViewById(R.id.reg_id);
@@ -338,6 +344,97 @@ public class Ticket extends AppCompatActivity {
                             btnCancel.setVisibility(View.INVISIBLE);
                             tvTicket.setVisibility(View.INVISIBLE);
                         }
+                    }
+
+                    Button btnGroupInfo = (Button) findViewById(R.id.groupinfo_btn);
+                    if(reg.getLeaderId().isEmpty()) {
+                        btnGroupInfo.setVisibility(View.INVISIBLE);
+                    } else {
+                        btnGroupInfo.setVisibility(View.VISIBLE);
+                        btnGroupInfo.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                pd = new ProgressDialog(Ticket.this);
+                                pd.setMessage("Loading group data...");
+                                pd.show();
+                                JSONObject obj = new JSONObject();
+                                try {
+                                    obj.put("leaderId", reg.getLeaderId());
+                                    obj.put("timetableId", reg.getTimetableId());
+
+                                    publishMessage(Action.combineMessage("001644",Action.asciiToHex(obj.toString())));
+
+                                    if (client == null ){
+                                        Toast.makeText(Ticket.this, "Retrieve group information failed", Toast.LENGTH_LONG).show();
+                                    }
+                                    client.setCallback(new MqttCallback() {
+                                        @Override
+                                        public void connectionLost(Throwable cause) {
+                                        }
+
+                                        @Override
+                                        public void messageArrived(String topic, MqttMessage message) throws Exception {
+                                            String strMessage = new String(message.getPayload());
+                                            GsonBuilder gBuilder = new GsonBuilder();
+                                            gBuilder.serializeNulls();
+                                            Gson gson = gBuilder.create();
+                                            String decoded = Action.hexToAscii(strMessage);
+                                            EncodedEventRegistration[] result = gson.fromJson(decoded,EncodedEventRegistration[].class);
+                                            ArrayList<EncodedEventRegistration> arrList1 = new ArrayList<>(Arrays.asList(result));
+
+                                            String ldrId = "";
+                                            String memId = "";
+                                            int no = 0;
+
+                                            for(EncodedEventRegistration e : arrList1){
+                                                if(e.getLeaderId().equals(studentId)) {
+                                                    ldrId = e.getLeaderId()+" (Me)";
+                                                    //memId += no+". "+e.getStudentId()+" (Me)\n";
+                                                } else {
+                                                    ldrId = e.getLeaderId();
+                                                }
+                                                if(!e.getStudentId().equals(e.getLeaderId())) {
+                                                    no++;
+                                                    if (e.getStudentId().equals(studentId)) {
+                                                        memId += no + ". " + e.getStudentId() + " (Me)\n";
+                                                    } else {
+                                                        memId += no + ". " + e.getStudentId();
+                                                    }
+                                                }
+                                            }
+
+                                            if(no==0) {
+                                                memId += "Only me.";
+                                            }
+
+                                            final AlertDialog.Builder builder = new AlertDialog.Builder(Ticket.this);
+                                            builder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            });
+                                            LayoutInflater inflater = getLayoutInflater();
+                                            View dialoglayout = inflater.inflate(R.layout.group_info_layout, null);
+                                            builder.setView(dialoglayout);
+                                            TextView grpLdr = (TextView) dialoglayout.findViewById(R.id.grpLdr);
+                                            TextView grpMem = (TextView) dialoglayout.findViewById(R.id.grpMem);
+                                            grpLdr.setText(ldrId);
+                                            grpMem.setText(memId);
+                                            builder.show();
+                                            pd.dismiss();
+                                        }
+
+                                        @Override
+                                        public void deliveryComplete(IMqttDeliveryToken token) {
+                                            // Toast.makeText(Homepage.this, "All message received!!", Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                }catch (Exception ex){
+                                    ex.printStackTrace();
+                                }
+                            }
+                        });
                     }
 
                     tvRegId.setText(registration.getRegistrationId());

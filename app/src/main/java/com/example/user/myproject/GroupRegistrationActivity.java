@@ -87,6 +87,8 @@ public class GroupRegistrationActivity extends AppCompatActivity {
         if(!bundle.isEmpty()){
             try {
                 seatAvailable = Integer.parseInt(bundle.getString("SEATAVAILABLE"))-1;
+                if(seatAvailable < 0)
+                    seatAvailable = 0;
             }catch (Exception ex){
                 seatAvailable = 0;
             }
@@ -249,6 +251,9 @@ public class GroupRegistrationActivity extends AppCompatActivity {
                 if(arrayList.size() < seatAvailable){
                     Toast.makeText(getApplicationContext(),"Cannot perform group registration because the team do not reach maximum amount of student!",Toast.LENGTH_LONG).show();
                     break ;
+                }else if(seatAvailable == 0){
+                    Toast.makeText(getApplicationContext(),"Cannot register because it is empty!!",Toast.LENGTH_LONG).show();
+                    break ;
                 }
                 ArrayList<EventRegistration> arrEventReg = new ArrayList<>();
 
@@ -300,6 +305,8 @@ public class GroupRegistrationActivity extends AppCompatActivity {
 
                         int response = obj.getInt("rowAffected");
                         Toast.makeText(getApplicationContext(),"Number of record inserted: "+response,Toast.LENGTH_LONG).show();
+
+
                         Intent intent = new Intent(getApplicationContext(), Homepage.class);
                         intent.putExtra("lastActivity", "third");
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -431,9 +438,9 @@ public class GroupRegistrationActivity extends AppCompatActivity {
                             arrayList.add(new Student(studentId,studentName));
                             studentListView.notifyDataSetChanged();
                             Toast.makeText(getApplicationContext(),"Student added successful!!",Toast.LENGTH_LONG).show();
-                          //  tempDialog.cancel();
+                            //  tempDialog.cancel();
                         }
-
+                        slotCountRefresh();
                         String s = "";
                     }
 
@@ -513,7 +520,7 @@ public class GroupRegistrationActivity extends AppCompatActivity {
         try {
             byte[] ss= message.getBytes();
             client.publish(Action.serverTopic, message.getBytes(), 0, false);
-           // Toast.makeText(getApplicationContext(), "publish success l!!", Toast.LENGTH_LONG).show();
+            // Toast.makeText(getApplicationContext(), "publish success l!!", Toast.LENGTH_LONG).show();
         } catch (MqttException e) {
             e.printStackTrace();
         }
@@ -566,7 +573,7 @@ public class GroupRegistrationActivity extends AppCompatActivity {
         });
 
 
-        }
+    }
 
 
 

@@ -64,6 +64,8 @@ import java.util.ArrayList;
 public class DetailEventActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     int timetableId  = 0;
+    String registrationStatus = "";
+
     private GoogleMap map;
     MqttAndroidClient client;
     float longitude ;
@@ -126,8 +128,10 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
             timetableId = bundle.getInt("TIMETABLEID");
             from = bundle.getString("FROM");
             reg = (EventRegistration) bundle.getSerializable("REGISTRATION");
+            studentId = bundle.getString("STUDENTID");
         }else{
             timetableId = 0 ;
+            studentId = "";
             from = "";
         }
 
@@ -230,6 +234,13 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
         if(event == null)
             return;
 
+        if(registrationStatus.equals("") || registrationStatus.equals("0")){
+            Toast.makeText(getApplicationContext(),"Student is registered for the event!!",Toast.LENGTH_LONG).show();
+            return;
+
+        }
+
+
         if(Integer.parseInt(event.getCurrentGroup()) >= Integer.parseInt(event.getMaxGroup())){
             Toast.makeText(getApplicationContext(),"Cannot perform group registration because event full!",Toast.LENGTH_LONG).show();;
 
@@ -251,6 +262,12 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
     public void onIndividualClick(View v) {
         if(event == null)
             return;
+
+        if(registrationStatus.equals("") || registrationStatus.equals("0")){
+            Toast.makeText(getApplicationContext(),"Student is registered for the event!!",Toast.LENGTH_LONG).show();
+            return;
+
+        }
 
         String reserveMessage = "";
         AlertDialog.Builder alert = new AlertDialog.Builder(DetailEventActivity.this);
@@ -294,8 +311,15 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
                         String success = obj.getString("success");
                         String messages = obj.getString("message");
 
-                        Toast.makeText(DetailEventActivity.this, messages, Toast.LENGTH_LONG).show();
-                        finish();
+                        if(success.equals("1")){
+
+                            Toast.makeText(DetailEventActivity.this, messages, Toast.LENGTH_LONG).show();
+                            finish();
+                        }else{
+                            Toast.makeText(getApplicationContext(),messages,Toast.LENGTH_LONG).show();
+                        }
+
+
 
                     }
 
@@ -400,6 +424,7 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
                         JSONObject obj = new JSONObject();
                         try{
                             obj.put("timetableId",timetableId);
+                            obj.put("studentId",studentId);
                         }catch (Exception ex){
                             ex.printStackTrace();
                         }
@@ -481,6 +506,10 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
                     finish();
 
                 }
+
+
+
+                registrationStatus = obj.getString("successStatus");
 
 
 

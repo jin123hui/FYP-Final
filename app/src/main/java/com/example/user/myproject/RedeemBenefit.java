@@ -278,7 +278,6 @@ public class RedeemBenefit extends AppCompatActivity implements NavigationView.O
                         //Toast.makeText(RedeemBenefit.this, arrList.get(i).getEventTitle(), Toast.LENGTH_LONG).show();
 
                         final AlertDialog.Builder builder = new AlertDialog.Builder(RedeemBenefit.this);
-                        //Yes Button
                         builder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

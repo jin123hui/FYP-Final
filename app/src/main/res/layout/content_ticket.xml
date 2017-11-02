@@ -99,6 +99,23 @@
                 android:textSize="18dp"
                 android:textStyle="bold" />
 
+            <Button
+                android:id="@+id/groupinfo_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="3dp"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp"
+                android:layout_marginTop="3dp"
+                android:layout_weight="0"
+                android:background="@android:color/holo_blue_bright"
+                android:minHeight="0dp"
+                android:text="Group Info"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
         </LinearLayout>
 
         <LinearLayout
