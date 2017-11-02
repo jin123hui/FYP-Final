@@ -163,6 +163,7 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
             eventRegistrationDescription.setText(reg.getDescription());
             eventRegistrationDescription.setEnabled(false);
             studentId = new SessionManager(this).getUserDetails().get("id");
+            //timetableId = reg.getTimetableId();
         } else if(from.equals("past")) {
             groupRegistration.setVisibility(View.INVISIBLE);
             individualRegistrationButton.setText("Participated");
@@ -172,6 +173,7 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
             txtGroupInfo.setVisibility(View.INVISIBLE);
             eventRegistrationDescription.setText(reg.getDescription());
             eventRegistrationDescription.setEnabled(false);
+            //timetableId = reg.getTimetableId();
             studentId = new SessionManager(this).getUserDetails().get("id");
         }
     }
