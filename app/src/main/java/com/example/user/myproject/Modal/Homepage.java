@@ -6,6 +6,8 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -86,51 +88,67 @@ public class Homepage extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        new SessionManager(this).checkLogin();
+        boolean connected = false;
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            connected = true;
+        }
+        else {
+            connected = false;
+        }
 
-        studentId = new SessionManager(this).getUserDetails().get("id");
+        if(connected) {
 
+            new SessionManager(this).checkLogin();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+            studentId = new SessionManager(this).getUserDetails().get("id");
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.setDrawerListener(toggle);
+            toggle.syncState();
 
-        View hView =  navigationView.getHeaderView(0);
-        TextView appDrawerName = (TextView) hView.findViewById(R.id.appDrawerName);
-        appDrawerName.setText(new SessionManager(this).getUserDetails().get("id"));
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            navigationView.setNavigationItemSelectedListener(this);
 
-        //Toast.makeText(Homepage.this, new SessionManager(this).getUserDetails().get("address"), Toast.LENGTH_LONG).show();
-        context = this;
+            View hView = navigationView.getHeaderView(0);
+            TextView appDrawerName = (TextView) hView.findViewById(R.id.appDrawerName);
+            appDrawerName.setText(new SessionManager(this).getUserDetails().get("id"));
 
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+            //Toast.makeText(Homepage.this, new SessionManager(this).getUserDetails().get("address"), Toast.LENGTH_LONG).show();
+            context = this;
 
-        swipeRefreshLayout.setOnRefreshListener(this);
-        swipeRefreshLayout.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        // swipeRefreshLayout.setRefreshing(true);
-                                        // readQuestion();
-                                        //readEvent();
+            swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+
+            swipeRefreshLayout.setOnRefreshListener(this);
+            swipeRefreshLayout.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            // swipeRefreshLayout.setRefreshing(true);
+                                            // readQuestion();
+                                            //readEvent();
+                                        }
                                     }
-                                }
 
-        );
+            );
 
-        Spinner spinner = (Spinner)findViewById(R.id.eventSpinner);
+            Spinner spinner = (Spinner) findViewById(R.id.eventSpinner);
 
-        spinner.setOnItemSelectedListener(this);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.eventCategory, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+            spinner.setOnItemSelectedListener(this);
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                    R.array.eventCategory, android.R.layout.simple_spinner_item);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(adapter);
 
-        swipeRefreshLayout.setRefreshing(true);
-        conn();
+            swipeRefreshLayout.setRefreshing(true);
+
+            conn();
+        } else {
+            Toast.makeText(Homepage.this, "No internet connection!", Toast.LENGTH_LONG).show();
+        }
+
     }
 
     public void buildSubscriptionDialog(String[] category){
@@ -388,7 +406,7 @@ public class Homepage extends AppCompatActivity
 
         String clientId = MqttClient.generateClientId();
         client = new MqttAndroidClient(this.getApplicationContext(), Action.mqttTest,
-                        clientId);
+                clientId);
 
         try {
             IMqttToken token = client.connect();

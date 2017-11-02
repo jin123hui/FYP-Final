@@ -4,30 +4,36 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
+            android:icon="@drawable/ic_action_home"
             android:title="Home" />
         <item
             android:id="@+id/nav_incomingEvent"
+            android:icon="@drawable/ic_event_available_black_24dp"
             android:title="Upcoming Events" />
         <item
             android:id="@+id/nav_waitingList"
+            android:icon="@drawable/ic_date_range_black_24dp"
             android:title="Event Waiting List" />
 
         <item
             android:id="@+id/nav_pastJoinedEvent"
+            android:icon="@drawable/ic_event_note_black_24dp"
             android:title="Past Joined Events" />
 
         <item
             android:id="@+id/nav_walkinRegistration"
+            android:icon="@drawable/ic_directions_walk_black_24dp"
             android:title="Walk-In Registration" />
 
         <item
             android:id="@+id/nav_redeemBenefits"
-            android:title="Redeem Benefits"
-            />
+            android:icon="@drawable/ic_move_to_inbox_black_24dp"
+            android:title="Redeem Benefits" />
 
         <item
             android:id="@+id/nav_softskill"
-            android:title="Soft Skill Point"/>
+            android:icon="@drawable/ic_sentiment_satisfied_black_24dp"
+            android:title="Soft Skill Point" />
 
     </group>
 

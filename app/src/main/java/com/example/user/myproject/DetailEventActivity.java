@@ -152,6 +152,7 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
                 }
             });
             eventRegistrationDescription.setText(reg.getDescription());
+            studentId = new SessionManager(this).getUserDetails().get("id");
         } else if(from.equals("waiting")) {
             groupRegistration.setVisibility(View.INVISIBLE);
             individualRegistrationButton.setText("Reserved in Waiting List");
@@ -161,6 +162,7 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
             txtGroupInfo.setVisibility(View.INVISIBLE);
             eventRegistrationDescription.setText(reg.getDescription());
             eventRegistrationDescription.setEnabled(false);
+            studentId = new SessionManager(this).getUserDetails().get("id");
         } else if(from.equals("past")) {
             groupRegistration.setVisibility(View.INVISIBLE);
             individualRegistrationButton.setText("Participated");
@@ -170,6 +172,7 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
             txtGroupInfo.setVisibility(View.INVISIBLE);
             eventRegistrationDescription.setText(reg.getDescription());
             eventRegistrationDescription.setEnabled(false);
+            studentId = new SessionManager(this).getUserDetails().get("id");
         }
     }
 
@@ -423,8 +426,8 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
 
                         JSONObject obj = new JSONObject();
                         try{
-                            obj.put("timetableId",timetableId);
                             obj.put("studentId",studentId);
+                            obj.put("timetableId",timetableId);
                         }catch (Exception ex){
                             ex.printStackTrace();
                         }
