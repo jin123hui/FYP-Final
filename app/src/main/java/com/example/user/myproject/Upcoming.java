@@ -181,7 +181,7 @@ public class Upcoming extends AppCompatActivity implements NavigationView.OnNavi
                 public void onSuccess(IMqttToken asyncActionToken) {
                     //Toast.makeText(Upcoming.this, "Connected!!", Toast.LENGTH_LONG).show();
                     try {
-                        client.subscribe(Action.clientTopic, 1);
+                        client.subscribe(Action.clientTopic+studentId, 1);
                         //Toast.makeText(Upcoming.this, "Connected!!", Toast.LENGTH_LONG).show();
 
                         loadEvent();
