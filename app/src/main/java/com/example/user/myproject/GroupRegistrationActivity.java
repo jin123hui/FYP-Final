@@ -1,5 +1,6 @@
 package com.example.user.myproject;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -50,6 +51,7 @@ public class GroupRegistrationActivity extends AppCompatActivity {
     int seatAvailable = 0;
     int timetableId = 0;
     String registrationDescription = "";
+    ProgressDialog pd;
 
 
     MqttAndroidClient client;
@@ -287,7 +289,7 @@ public class GroupRegistrationActivity extends AppCompatActivity {
                     ex.printStackTrace();
                 }
 
-                Toast.makeText(this, jsonArr.toString(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, jsonArr.toString(), Toast.LENGTH_SHORT).show();
                 publishMessage(Action.combineMessage("001616", Action.asciiToHex(jsonArr.toString())));
                 if (client == null ){
                     Toast.makeText(getApplicationContext(), "Connection fail!!", Toast.LENGTH_LONG).show();
@@ -386,13 +388,19 @@ public class GroupRegistrationActivity extends AppCompatActivity {
         alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
 
+                pd = new ProgressDialog(GroupRegistrationActivity.this);
+                pd.setMessage("Loading");
+                pd.show();
+
                 if(leaderId.equals(edit.getText().toString())){
                     Toast.makeText(getApplicationContext(),"You cannot add leader id into member list again.",Toast.LENGTH_LONG).show();
+                    pd.dismiss();
                     return ;
                 }
 
                 if(arrayList.contains(new Student(edit.getText().toString()))){
                     Toast.makeText(getApplicationContext(),"The student information is in the list!! Cannot added anymore",Toast.LENGTH_LONG).show();
+                    pd.dismiss();
                     return ;
                 }
 
@@ -440,6 +448,7 @@ public class GroupRegistrationActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),"Student added successful!!",Toast.LENGTH_LONG).show();
                             //  tempDialog.cancel();
                         }
+                        pd.dismiss();
                         slotCountRefresh();
                         String s = "";
                     }

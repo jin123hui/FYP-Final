@@ -289,6 +289,9 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                pd = new ProgressDialog(DetailEventActivity.this);
+                pd.setMessage("Registering...");
+                pd.show();
                 EditText eventRegistrationDescription = (EditText)findViewById(R.id.eventRegistrationDescription);
                 JSONObject obj = new JSONObject();
                 try{
@@ -317,7 +320,7 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
                         String messages = obj.getString("message");
 
                         if(success.equals("1")){
-
+                            pd.dismiss();
                             Toast.makeText(DetailEventActivity.this, messages, Toast.LENGTH_LONG).show();
                             finish();
                         }else{

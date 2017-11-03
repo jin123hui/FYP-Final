@@ -396,9 +396,9 @@ public class Ticket extends AppCompatActivity {
                                                 if(!e.getStudentId().equals(e.getLeaderId())) {
                                                     no++;
                                                     if (e.getStudentId().equals(studentId)) {
-                                                        memId += no + ". " + e.getStudentId() + " (Me)\n";
+                                                        memId += no + ". " + e.getStudentId() + " (Me)" + System.getProperty("line.separator");
                                                     } else {
-                                                        memId += no + ". " + e.getStudentId();
+                                                        memId += no + ". " + e.getStudentId() + System.getProperty("line.separator");
                                                     }
                                                 }
                                             }

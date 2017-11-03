@@ -152,6 +152,8 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements Nav
                     try{
                         obj.put("studentId",studentId);
                         obj.put("timetableId",timetableId);
+                        obj.put("description", "");
+                        obj.put("waitingListStatus", "");
 
                     }catch(Exception ex){
                         ex.printStackTrace();
