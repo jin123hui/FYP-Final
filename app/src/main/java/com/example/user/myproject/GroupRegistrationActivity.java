@@ -257,6 +257,10 @@ public class GroupRegistrationActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"Cannot register because it is empty!!",Toast.LENGTH_LONG).show();
                     break ;
                 }
+
+                pd = new ProgressDialog(GroupRegistrationActivity.this);
+                pd.setMessage("Loading");
+                pd.show();
                 ArrayList<EventRegistration> arrEventReg = new ArrayList<>();
 
                 final EventRegistration leaderReg = new EventRegistration();
@@ -308,7 +312,7 @@ public class GroupRegistrationActivity extends AppCompatActivity {
                         int response = obj.getInt("rowAffected");
                         Toast.makeText(getApplicationContext(),"Number of record inserted: "+response,Toast.LENGTH_LONG).show();
 
-
+                        pd.dismiss();
                         Intent intent = new Intent(getApplicationContext(), Homepage.class);
                         intent.putExtra("lastActivity", "third");
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

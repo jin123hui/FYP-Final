@@ -90,6 +90,7 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
     ProgressDialog pd;
     private Animator mCurrentAnimator;
     private int mShortAnimationDuration;
+    private ScrollView svdetail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,49 +106,31 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
     }
 
     private void zoomImageFromThumb(final View thumbView, Bitmap imageResId) {
-        // If there's an animation in progress, cancel it
-        // immediately and proceed with this one.
         if (mCurrentAnimator != null) {
             mCurrentAnimator.cancel();
         }
-
-        // Load the high-resolution "zoomed-in" image.
         final ImageView expandedImageView = (ImageView) findViewById(
                 R.id.expanded_image);
         expandedImageView.setImageBitmap(imageResId);
-
-        // Calculate the starting and ending bounds for the zoomed-in image.
-        // This step involves lots of math. Yay, math.
         final Rect startBounds = new Rect();
         final Rect finalBounds = new Rect();
         final Point globalOffset = new Point();
 
-        // The start bounds are the global visible rectangle of the thumbnail,
-        // and the final bounds are the global visible rectangle of the container
-        // view. Also set the container view's offset as the origin for the
-        // bounds, since that's the origin for the positioning animation
-        // properties (X, Y).
         thumbView.getGlobalVisibleRect(startBounds);
         findViewById(R.id.container)
                 .getGlobalVisibleRect(finalBounds, globalOffset);
         startBounds.offset(-globalOffset.x, -globalOffset.y);
         finalBounds.offset(-globalOffset.x, -globalOffset.y);
 
-        // Adjust the start bounds to be the same aspect ratio as the final
-        // bounds using the "center crop" technique. This prevents undesirable
-        // stretching during the animation. Also calculate the start scaling
-        // factor (the end scaling factor is always 1.0).
         float startScale;
         if ((float) finalBounds.width() / finalBounds.height()
                 > (float) startBounds.width() / startBounds.height()) {
-            // Extend start bounds horizontally
             startScale = (float) startBounds.height() / finalBounds.height();
             float startWidth = startScale * finalBounds.width();
             float deltaWidth = (startWidth - startBounds.width()) / 2;
             startBounds.left -= deltaWidth;
             startBounds.right += deltaWidth;
         } else {
-            // Extend start bounds vertically
             startScale = (float) startBounds.width() / finalBounds.width();
             float startHeight = startScale * finalBounds.height();
             float deltaHeight = (startHeight - startBounds.height()) / 2;
@@ -155,22 +138,14 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
             startBounds.bottom += deltaHeight;
         }
 
-        // Hide the thumbnail and show the zoomed-in view. When the animation
-        // begins, it will position the zoomed-in view in the place of the
-        // thumbnail.
         thumbView.setAlpha(0f);
         expandedImageView.setVisibility(View.VISIBLE);
         ScrollView sv = (ScrollView) findViewById(R.id.ScrollView01);
         sv.setEnabled(false);
 
-        // Set the pivot point for SCALE_X and SCALE_Y transformations
-        // to the top-left corner of the zoomed-in view (the default
-        // is the center of the view).
         expandedImageView.setPivotX(0f);
         expandedImageView.setPivotY(0f);
 
-        // Construct and run the parallel animation of the four translation and
-        // scale properties (X, Y, SCALE_X, and SCALE_Y).
         AnimatorSet set = new AnimatorSet();
         set
                 .play(ObjectAnimator.ofFloat(expandedImageView, View.X,
@@ -196,9 +171,6 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
         set.start();
         mCurrentAnimator = set;
 
-        // Upon clicking the zoomed-in image, it should zoom back down
-        // to the original bounds and show the thumbnail instead of
-        // the expanded image.
         final float startScaleFinal = startScale;
         expandedImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -210,8 +182,6 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
                 ScrollView sv = (ScrollView) findViewById(R.id.ScrollView01);
                 sv.setEnabled(true);
 
-                // Animate the four positioning/sizing properties in parallel,
-                // back to their original values.
                 AnimatorSet set = new AnimatorSet();
                 set.play(ObjectAnimator
                         .ofFloat(expandedImageView, View.X, startBounds.left))
@@ -251,6 +221,8 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
     protected void onStart() {
         super.onStart();
         studentId = new SessionManager(this).getUserDetails().get("id");
+        svdetail = (ScrollView) findViewById(R.id.ScrollView01);
+        svdetail.setVisibility(View.INVISIBLE);
         pd = new ProgressDialog(DetailEventActivity.this);
         pd.setMessage("Loading");
         pd.show();
@@ -696,6 +668,7 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
 
                 TextView txtGroupInfo = (TextView)findViewById(R.id.txtGroupInfo);
                 txtGroupInfo.setText("Group Available: " + event.getCurrentGroup() + " / "+ event.getMaxGroup());
+                svdetail.setVisibility(View.VISIBLE);
                 pd.dismiss();
 
                 ImageButton image = (ImageButton)findViewById(R.id.imageDetailEvent);
@@ -733,8 +706,8 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
 
                 setMapLocation(event.getLat(), event.getLong(),event.getVenueName(),10);
 
-                ScrollView view = (ScrollView)findViewById(R.id.ScrollView01);
-                view.setVisibility(View.VISIBLE);
+                //ScrollView view = (ScrollView)findViewById(R.id.ScrollView01);
+                //view.setVisibility(View.VISIBLE);
 
 
                 String s = "";

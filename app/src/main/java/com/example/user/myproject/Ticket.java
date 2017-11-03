@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +65,7 @@ public class Ticket extends AppCompatActivity {
     private String studentId = "";
     private Context context;
     private ProgressDialog pd;
+    private ScrollView svupcome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +74,9 @@ public class Ticket extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        svupcome = (ScrollView) findViewById(R.id.svupcome);
+        svupcome.setVisibility(View.INVISIBLE);
 
         studentId = new SessionManager(this).getUserDetails().get("id");
 
@@ -522,6 +527,7 @@ public class Ticket extends AppCompatActivity {
 
                 TextView tvAttdStatus = (TextView) findViewById(R.id.attd_status);
                 tvAttdStatus.setText(status);
+                svupcome.setVisibility(View.VISIBLE);
                 pd.dismiss();
             }
 

@@ -13,7 +13,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +49,7 @@ public class WaitingInfo extends AppCompatActivity {
     private ProgressDialog pd;
     private Context context;
     private MqttAndroidClient client;
+    private LinearLayout waitingInfoLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,9 @@ public class WaitingInfo extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        waitingInfoLayout = (LinearLayout) findViewById(R.id.waitingInfo);
+        waitingInfoLayout.setVisibility(View.INVISIBLE);
 
         pd = new ProgressDialog(WaitingInfo.this);
         pd.setMessage("Loading");
@@ -310,6 +316,7 @@ public class WaitingInfo extends AppCompatActivity {
                     tvStatus.setText(obj.getString("message"));
                 }
 
+                waitingInfoLayout.setVisibility(View.VISIBLE);
                 pd.dismiss();
             }
 
