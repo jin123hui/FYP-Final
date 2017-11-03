@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/container"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.user.myproject.DetailEventActivity"
     tools:showIn="@layout/activity_detail_event">
+
+
 
     <ScrollView
         android:id="@+id/ScrollView01"
         android:layout_width="fill_parent"
         android:layout_height="match_parent">
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,7 +24,7 @@
             android:focusableInTouchMode="true"
             android:orientation="vertical">
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/imageDetailEvent"
                 android:layout_width="150dp"
                 android:layout_height="100dp"
@@ -31,8 +33,9 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                app:srcCompat="@mipmap/ic_noimage" />
-
+                android:scaleType="fitCenter"
+                android:background="@android:color/white"
+                app:srcCompat="@mipmap/ic_noimage" ></ImageButton>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -204,6 +207,10 @@
 
 
     </ScrollView>
+    <ImageView
+        android:id="@+id/expanded_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible" />
 
-
-</LinearLayout>
+</FrameLayout>
