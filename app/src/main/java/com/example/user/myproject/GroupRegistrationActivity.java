@@ -355,7 +355,7 @@ public class GroupRegistrationActivity extends AppCompatActivity {
 
 
         final EditText edit = new EditText(this);
-        edit.setHint("eg 1611111");
+        edit.setHint("eg 16war11111");
         String studentID = edit.getText().toString();
 
         TextView tv1 = new TextView(this);

@@ -509,6 +509,7 @@ public class Homepage extends AppCompatActivity
                         intent.putExtra("TIMETABLEID", arrList.get(i).getTimetableId());
                         intent.putExtra("FROM", "");
                         intent.putExtra("REGISTRATION", new EventRegistration());
+                        intent.putExtra("STUDENTID", studentId);
 
                         /*try {
                             client.disconnect();
