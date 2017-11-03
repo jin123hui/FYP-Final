@@ -160,6 +160,8 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
         // thumbnail.
         thumbView.setAlpha(0f);
         expandedImageView.setVisibility(View.VISIBLE);
+        ScrollView sv = (ScrollView) findViewById(R.id.ScrollView01);
+        sv.setEnabled(false);
 
         // Set the pivot point for SCALE_X and SCALE_Y transformations
         // to the top-left corner of the zoomed-in view (the default
@@ -204,6 +206,9 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
                 if (mCurrentAnimator != null) {
                     mCurrentAnimator.cancel();
                 }
+
+                ScrollView sv = (ScrollView) findViewById(R.id.ScrollView01);
+                sv.setEnabled(true);
 
                 // Animate the four positioning/sizing properties in parallel,
                 // back to their original values.

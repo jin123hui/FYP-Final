@@ -2,6 +2,7 @@ package com.example.user.myproject;
 
 import android.app.Activity;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -60,6 +61,7 @@ public class Waiting extends AppCompatActivity implements NavigationView.OnNavig
     private MqttAndroidClient client;
     private String studentId = "";
     private Context context;
+    private  ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -233,8 +235,6 @@ public class Waiting extends AppCompatActivity implements NavigationView.OnNavig
                 final DetailedListAdapter adapter = new DetailedListAdapter(context, R.layout.content_waiting, arrList);
                 waitingList.setAdapter(adapter);
 
-
-
                 waitingList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView adapterView, View view, int i, long l) {
@@ -245,6 +245,68 @@ public class Waiting extends AppCompatActivity implements NavigationView.OnNavig
                         startActivity(intent);
                     }
                 });
+
+                waitingList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> av, View v, final int pos, final long id) {
+                        AlertDialog.Builder alert = new AlertDialog.Builder(Waiting.this);
+                        alert.setTitle("Cancel Waiting List");
+                        alert.setMessage("Confirm to cancel your reservation in waiting list?");
+                        alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                pd = new ProgressDialog(Waiting.this);
+                                pd.setMessage("Loading");
+                                pd.show();
+                                JSONObject obj = new JSONObject();
+                                try{
+                                    obj.put("registrationId", regList.get(pos).getRegistrationId());
+                                }catch(Exception ex){
+                                    ex.printStackTrace();
+                                }
+
+                                publishMessage(Action.combineMessage("001636",Action.asciiToHex(obj.toString())));
+                                if (client == null ){
+                                    Toast.makeText(Waiting.this, "Connection fail!!", Toast.LENGTH_LONG).show();
+                                }
+                                client.setCallback(new MqttCallback() {
+                                    @Override
+                                    public void connectionLost(Throwable cause) {
+                                    }
+
+                                    @Override
+                                    public void messageArrived(String topic, MqttMessage message) throws Exception {
+                                        String strMessage = new String(message.getPayload());
+                                        strMessage = Action.hexToAscii(strMessage);
+                                        JSONObject obj = new JSONObject(strMessage);
+                                        String messages = obj.getString("message");
+
+                                        Toast.makeText(Waiting.this, messages, Toast.LENGTH_LONG).show();
+                                        pd.dismiss();
+                                        swipeRefreshLayout.setRefreshing(true);
+                                        onRefresh();
+                                        //finish();
+                                    }
+                                    @Override
+                                    public void deliveryComplete(IMqttDeliveryToken token) {
+                                        // Toast.makeText(Ticket.this, "All message received!!", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                                dialog.dismiss();
+                            }
+                        });
+
+                        alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        alert.show();
+                        return true;
+                    }
+                 });
 
                 swipeRefreshLayout.setRefreshing(false);
             }

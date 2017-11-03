@@ -1,5 +1,6 @@
 package com.example.user.myproject;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -63,7 +64,7 @@ public class Upcoming extends AppCompatActivity implements NavigationView.OnNavi
     private MqttAndroidClient client;
     private String studentId = "";
     private Context context;
-
+    private  ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -294,6 +295,71 @@ public class Upcoming extends AppCompatActivity implements NavigationView.OnNavi
                         intent.putExtra("REGISTRATION", regList.get(i));
                         intent.putExtra("EVENT", incomingEvtList.get(i));
                         startActivity(intent);
+                    }
+                });
+
+                incomingList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> av, View v, final int pos, final long id)
+                    {
+                        //Toast.makeText(Upcoming.this, "LongClick", Toast.LENGTH_LONG).show();
+                        AlertDialog.Builder alert = new AlertDialog.Builder(Upcoming.this);
+                        alert.setTitle("Cancel Registration");
+                        alert.setMessage("Confirm to cancel your registration?");
+                        alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                pd = new ProgressDialog(Upcoming.this);
+                                pd.setMessage("Loading");
+                                pd.show();
+
+                                JSONObject obj = new JSONObject();
+                                try{
+                                    obj.put("registrationId", regList.get(pos).getRegistrationId());
+                                }catch(Exception ex){
+                                    ex.printStackTrace();
+                                }
+
+                                publishMessage(Action.combineMessage("001634",Action.asciiToHex(obj.toString())));
+                                if (client == null ){
+                                    Toast.makeText(Upcoming.this, "Connection fail!!", Toast.LENGTH_LONG).show();
+                                }
+                                client.setCallback(new MqttCallback() {
+                                    @Override
+                                    public void connectionLost(Throwable cause) {
+                                    }
+
+                                    @Override
+                                    public void messageArrived(String topic, MqttMessage message) throws Exception {
+                                        String strMessage = new String(message.getPayload());
+                                        strMessage = Action.hexToAscii(strMessage);
+                                        JSONObject obj = new JSONObject(strMessage);
+                                        String messages = obj.getString("message");
+
+                                        Toast.makeText(Upcoming.this, messages, Toast.LENGTH_LONG).show();
+                                        pd.dismiss();
+                                        //finish();
+                                        swipeRefreshLayout.setRefreshing(true);
+                                        onRefresh();
+                                    }
+                                    @Override
+                                    public void deliveryComplete(IMqttDeliveryToken token) {
+                                        // Toast.makeText(Ticket.this, "All message received!!", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                                dialog.dismiss();
+                            }
+                        });
+
+                        alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        alert.show();
+                        return true;
                     }
                 });
 
