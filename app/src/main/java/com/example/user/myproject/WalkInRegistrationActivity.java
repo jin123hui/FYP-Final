@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.example.user.myproject.Modal.Action;
 import com.example.user.myproject.Modal.ApplicationEvent;
+import com.example.user.myproject.Modal.CaptureActivityPortrait;
 import com.example.user.myproject.Modal.EncodedApplicationEvent;
 import com.example.user.myproject.Modal.Homepage;
 import com.example.user.myproject.Modal.SessionManager;
@@ -153,7 +154,7 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements Nav
                         obj.put("studentId",studentId);
                         obj.put("timetableId",timetableId);
                         obj.put("description", "");
-                        obj.put("waitingListStatus", "");
+                        obj.put("waitinglistStatus", "");
 
                     }catch(Exception ex){
                         ex.printStackTrace();
@@ -202,10 +203,12 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements Nav
     public void runQrCodeScanner(View view){
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
-        integrator.setOrientationLocked(true);
+        integrator.setPrompt("Scan");
         integrator.setCameraId(0);
-        integrator.setBeepEnabled(false);
+        integrator.setBeepEnabled(true);
+        integrator.setOrientationLocked(true);
         integrator.setBarcodeImageEnabled(false);
+        integrator.setCaptureActivity(CaptureActivityPortrait.class);
         integrator.initiateScan();
     }
 
@@ -400,6 +403,8 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements Nav
                                     try{
                                         obj.put("studentId",studentId);
                                         obj.put("timetableId",timetableId);
+                                        obj.put("description", "");
+                                        obj.put("waitinglistStatus", "");
 
                                     }catch(Exception ex){
                                         ex.printStackTrace();
