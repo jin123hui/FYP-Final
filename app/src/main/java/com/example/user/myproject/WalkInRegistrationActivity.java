@@ -273,6 +273,7 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements Nav
                         msg.setText("");
                         //eventCategory.setText("");
                         availableSeat.setText("");
+                        ListView list = (ListView) findViewById(R.id.list);
 
                         if(success.equals("1")){
 
@@ -305,7 +306,7 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements Nav
                             //
                             ArrayList<ApplicationEvent> evt = new ArrayList<>();
                             evt.add(trueEvent);
-                            ListView list = (ListView) findViewById(R.id.list);
+
                             final BasicListAdapter adapter = new BasicListAdapter(getApplicationContext(), R.layout.content_ticket, evt);
                             list.setAdapter(adapter);
                             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -343,6 +344,7 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements Nav
                         }else{
                             registerButton.setVisibility(View.GONE);
                             timetableId = 0;
+                            list.setAdapter(new BasicListAdapter(getApplicationContext(), R.layout.content_ticket, new ArrayList<ApplicationEvent>()));
                             //ImageView image = (ImageView)findViewById(R.id.imageViewWalkIn);
                             //image.setVisibility(View.GONE);
                             //image.setImageResource(R.mipmap.ic_noimage);
