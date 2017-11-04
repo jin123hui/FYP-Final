@@ -19,7 +19,7 @@
     <TextView
         android:text="LEADER"
         android:id="@+id/grpLdr"
-        android:textColor="@android:color/holo_red_dark"
+        android:textColor="@color/colorPrimaryDark"
         android:layout_marginTop="6dp"
         android:layout_marginBottom="6dp"
         android:layout_marginLeft="0dp"
@@ -55,7 +55,7 @@
     <TextView
         android:text="MEMBER"
         android:id="@+id/grpMem"
-        android:textColor="@android:color/holo_red_light"
+        android:textColor="@color/colorPrimary"
         android:layout_marginTop="6dp"
         android:layout_marginBottom="6dp"
         android:layout_marginLeft="0dp"

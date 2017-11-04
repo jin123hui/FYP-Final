@@ -308,6 +308,8 @@ public class PastJoined extends AppCompatActivity implements NavigationView.OnNa
             });
             alert.show();
         } else if(id == R.id.action_about) {
+            Intent intent = new Intent(getApplicationContext(), About.class);
+            startActivity(intent);
             return true;
         }
 

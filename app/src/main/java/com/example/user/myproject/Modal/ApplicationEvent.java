@@ -186,10 +186,16 @@ public class ApplicationEvent implements Serializable {
 
 
     public static String displayTime(GregorianCalendar gc){
-        String dateString = String.format("%02d", gc.get(Calendar.HOUR))
-                + ":" + String.format("%02d", (gc.get(Calendar.MINUTE))) + " ";
 
         int ampm = gc.get(Calendar.AM_PM);
+        String dateString = "";
+
+        if(String.format("%02d", gc.get(Calendar.HOUR_OF_DAY)).equals("12") || String.format("%02d", gc.get(Calendar.HOUR_OF_DAY)).equals("00")) {
+            dateString = "12:" + String.format("%02d", (gc.get(Calendar.MINUTE))) + " ";
+        } else {
+            dateString = String.format("%02d", gc.get(Calendar.HOUR))
+                    + ":" + String.format("%02d", (gc.get(Calendar.MINUTE))) + " ";
+        }
 
         if(ampm == Calendar.AM){
             dateString  += "AM";

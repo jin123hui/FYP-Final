@@ -224,7 +224,7 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
         svdetail = (ScrollView) findViewById(R.id.ScrollView01);
         svdetail.setVisibility(View.INVISIBLE);
         pd = new ProgressDialog(DetailEventActivity.this);
-        pd.setMessage("Loading");
+        pd.setMessage("Loading event details...");
         pd.show();
 
         conn();

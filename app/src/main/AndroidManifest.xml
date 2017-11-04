@@ -14,7 +14,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcherlogo"
+        android:icon="@mipmap/ic_launchererslogo"
         android:label="TARUC ERS"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -22,24 +22,20 @@
 
         <activity
             android:name=".LoginActivity"
-            android:label="TARUC ERS">
-
-        </activity>
-
+            android:label="TARUC ERS"></activity>
         <activity
             android:name=".Modal.Homepage"
             android:label="TARUC ERS"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
-            android:label="testing" >
-        </activity>
-
+            android:label="testing"></activity>
         <activity
             android:name=".DetailEventActivity"
             android:label="@string/title_activity_detail_event"
@@ -151,6 +147,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.user.myproject.Modal.Homepage" />
         </activity>
+        <activity
+            android:name=".About"
+            android:label="About Us"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

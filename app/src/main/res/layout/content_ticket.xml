@@ -62,7 +62,7 @@
                 android:layout_marginRight="3dp"
                 android:layout_marginTop="3dp"
                 android:layout_weight="0"
-                android:background="@android:color/holo_red_light"
+                android:background="@color/colorPrimary"
                 android:minHeight="0dp"
                 android:text="Reminder"
                 android:textAllCaps="false"

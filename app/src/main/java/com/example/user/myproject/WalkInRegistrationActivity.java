@@ -4,6 +4,9 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -18,14 +21,21 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.user.myproject.Modal.Action;
 import com.example.user.myproject.Modal.ApplicationEvent;
+import com.example.user.myproject.Modal.BasicListAdapter;
 import com.example.user.myproject.Modal.CaptureActivityPortrait;
 import com.example.user.myproject.Modal.EncodedApplicationEvent;
+import com.example.user.myproject.Modal.EventRegistration;
 import com.example.user.myproject.Modal.Homepage;
 import com.example.user.myproject.Modal.SessionManager;
 import com.google.zxing.Result;
@@ -41,6 +51,14 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.ref.WeakReference;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -119,6 +137,8 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements Nav
             });
             alert.show();
         } else if(id == R.id.action_about) {
+            Intent intent = new Intent(getApplicationContext(), About.class);
+            startActivity(intent);
             return true;
         }
 
@@ -138,9 +158,9 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements Nav
             public void onClick(View view) {
 
                 if (timetableId == 0){
-
-
-                    Toast.makeText(getApplicationContext(),"Please scan an event before register!",Toast.LENGTH_LONG).show();
+                    TextView msg = (TextView)findViewById(R.id.textViewWalkInError);
+                    msg.setText("Please scan an event before register!");
+                    // Toast.makeText(getApplicationContext(),"Please scan an event before register!",Toast.LENGTH_LONG).show();
 
                 }else{
 
@@ -239,49 +259,95 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements Nav
                         String success = obj.getString("success");
                         String messages = obj.getString("message");
 
-                        TextView eventTitle = (TextView)findViewById(R.id.textViewEventName);
-                        TextView eventStartDate = (TextView) findViewById(R.id.textViewEventStartDate);
-                        TextView eventStartTime = (TextView)findViewById(R.id.textViewEventStartTime);
+                        //TextView eventTitle = (TextView)findViewById(R.id.textViewEventName);
+                        //TextView eventStartDate = (TextView) findViewById(R.id.textViewEventStartDate);
+                        //TextView eventStartTime = (TextView)findViewById(R.id.textViewEventStartTime);
                         TextView msg = (TextView)findViewById(R.id.textViewWalkInError);
                         TextView availableSeat = (TextView)findViewById(R.id.textViewAvailableSeat);
                         Button registerButton = (Button)findViewById(R.id.buttonWalkInRegistration);
+                        //TextView eventCategory = (TextView)findViewById(R.id.textviewCategory);
 
-                        EncodedApplicationEvent encodApp = new EncodedApplicationEvent();
-                        encodApp.setTimetableId(obj.getString("timetableId"));
-                        encodApp.setEventTitle(obj.getString("eventTitle"));
-                        encodApp.setEventStartTime(obj.getString("eventStartTime"));
-                        encodApp.setEventEndTime(obj.getString("eventEndTime"));
-                        encodApp.setCurrentParticipants(obj.getString("availableSeat"));
-                        encodApp.setNoOfParticipants(obj.getString("noOfParticipants"));
-
-
-                        eventTitle.setText("");
-                        eventStartDate.setText("");
-                        eventStartTime.setText("");
+                        //eventTitle.setText("");
+                        //eventStartDate.setText("");
+                        //eventStartTime.setText("");
                         msg.setText("");
+                        //eventCategory.setText("");
                         availableSeat.setText("");
 
-
-
                         if(success.equals("1")){
-                            eventTitle.setText(obj.getString("eventTitle"));
+
+                            EncodedApplicationEvent encodApp = new EncodedApplicationEvent();
+                            encodApp.setTimetableId(obj.getString("timetableId"));
+                            encodApp.setEventTitle(obj.getString("eventTitle"));
+                            encodApp.setEventStartTime(obj.getString("eventStartTime"));
+                            encodApp.setEventEndTime(obj.getString("eventEndTime"));
+                            encodApp.setCurrentParticipants(obj.getString("availableSeat"));
+                            encodApp.setNoOfParticipants(obj.getString("noOfParticipants"));
+                            encodApp.setActivityType(obj.getString("activityType"));
+
+
+                            //eventTitle.setText(obj.getString("eventTitle"));
                             ApplicationEvent trueEvent = encodApp.getApplicationEvent();
 
                             timetableId = trueEvent.getTimetableId();
                             String mssg = "Date: "+ Action.displayDate(trueEvent.getStartTime());
-                            eventStartDate.setText(mssg);
+                            //eventStartDate.setText(mssg);
 
-                            eventStartTime.setText("Time:" + ApplicationEvent.displayTime(trueEvent.getStartTime())
-                                    + " - "  + ApplicationEvent.displayTime(trueEvent.getEndTime()) );
+                            //eventStartTime.setText("Time:" + ApplicationEvent.displayTime(trueEvent.getStartTime())
+                                  //  + " - "  + ApplicationEvent.displayTime(trueEvent.getEndTime()) );
 
-                            availableSeat.setText(encodApp.getCurrentParticipants()+" / " + encodApp.getNoOfParticipants());
+                            availableSeat.setText("Seat available : " + encodApp.getCurrentParticipants()+" / " + encodApp.getNoOfParticipants());
                             registerButton.setVisibility(View.VISIBLE);
+
+
+                            //eventCategory.setText(encodApp.getActivityType());
+
+                            //
+                            ArrayList<ApplicationEvent> evt = new ArrayList<>();
+                            evt.add(trueEvent);
+                            ListView list = (ListView) findViewById(R.id.list);
+                            final BasicListAdapter adapter = new BasicListAdapter(getApplicationContext(), R.layout.content_ticket, evt);
+                            list.setAdapter(adapter);
+                            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView adapterView, View view, int i, long l) {
+                                    Intent intent = new Intent(view.getContext(), DetailEventActivity.class);
+                                    intent.putExtra("TIMETABLEID", timetableId);
+                                    intent.putExtra("FROM", "");
+                                    intent.putExtra("REGISTRATION", new EventRegistration());
+                                    intent.putExtra("STUDENTID", studentId);
+                                    startActivity(intent);
+                                }
+                            });
+                            //
+
+                            /*ImageView image = (ImageView)findViewById(R.id.imageViewWalkIn);
+                            image.setVisibility(View.VISIBLE);
+                            ImageTask task = new ImageTask(image);
+
+
+
+
+                            int tempTimetable = 0;
+                            try {
+                                tempTimetable = Integer.parseInt(encodApp.getTimetableId());
+                            }catch (Exception ex){
+                                ex.printStackTrace();
+                                tempTimetable = 0;
+                            }
+
+
+                            task.execute(tempTimetable);*/
 
 
                         }else{
                             registerButton.setVisibility(View.GONE);
-
+                            timetableId = 0;
+                            //ImageView image = (ImageView)findViewById(R.id.imageViewWalkIn);
+                            //image.setVisibility(View.GONE);
+                            //image.setImageResource(R.mipmap.ic_noimage);
                             msg.setText(obj.getString("message"));
+                            // Toast.makeText(getApplicationContext(),obj.getString("message"),Toast.LENGTH_LONG).show();
 
                         }
 
@@ -310,8 +376,16 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements Nav
         if(scannerView != null)
             scannerView.stopCamera();
 
+
+
+
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disconnect();
+    }
 
     @Override
     public void handleResult(Result result) {
@@ -342,9 +416,9 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements Nav
                 String success = obj.getString("success");
                 String messages = obj.getString("message");
 
-                TextView eventTitle = (TextView)findViewById(R.id.textViewEventName);
-                TextView eventStartDate = (TextView) findViewById(R.id.textViewEventStartDate);
-                TextView eventStartTime = (TextView)findViewById(R.id.textViewEventStartTime);
+                //TextView eventTitle = (TextView)findViewById(R.id.textViewEventName);
+                //TextView eventStartDate = (TextView) findViewById(R.id.textViewEventStartDate);
+                //TextView eventStartTime = (TextView)findViewById(R.id.textViewEventStartTime);
                 TextView msg = (TextView)findViewById(R.id.textViewWalkInError);
                 TextView availableSeat = (TextView)findViewById(R.id.textViewAvailableSeat);
                 Button registerButton = (Button)findViewById(R.id.buttonWalkInRegistration);
@@ -358,22 +432,22 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements Nav
                 encodApp.setNoOfParticipants(obj.getString("noOfParticipants"));
 
 
-                eventTitle.setText("");
-                eventStartDate.setText("");
-                eventStartTime.setText("");
+                //eventTitle.setText("");
+                //.setText("");
+                //eventStartTime.setText("");
                 msg.setText("");
                 availableSeat.setText("");
 
                 if(success.equals("1")){
-                    eventTitle.setText(obj.getString("eventTitle"));
+                    //eventTitle.setText(obj.getString("eventTitle"));
                     ApplicationEvent trueEvent = encodApp.getApplicationEvent();
 
                     timetableId = trueEvent.getTimetableId();
                     String mssg = "Date: "+ Action.displayDate(trueEvent.getStartTime());
-                    eventStartDate.setText(mssg);
+                    //eventStartDate.setText(mssg);
 
-                    eventStartTime.setText("Time:" + ApplicationEvent.displayTime(trueEvent.getStartTime())
-                            + " - "  + ApplicationEvent.displayTime(trueEvent.getEndTime()) );
+                    //eventStartTime.setText("Time:" + ApplicationEvent.displayTime(trueEvent.getStartTime())
+                     //       + " - "  + ApplicationEvent.displayTime(trueEvent.getEndTime()) );
 
                     availableSeat.setText(encodApp.getCurrentParticipants()+" / " + encodApp.getNoOfParticipants());
                     registerButton.setVisibility(View.VISIBLE);
@@ -603,5 +677,76 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements Nav
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    public void disconnect(){
+        try {
+            IMqttToken disconToken = client.disconnect();
+            disconToken.setActionCallback(new IMqttActionListener() {
+                @Override
+                public void onSuccess(IMqttToken asyncActionToken) {
+                    Toast.makeText(getApplicationContext(), "disconnected!!", Toast.LENGTH_LONG).show();
+                    // we are now successfully disconnected
+                }
+
+                @Override
+                public void onFailure(IMqttToken asyncActionToken,
+                                      Throwable exception) {
+                    Toast.makeText(getApplicationContext(), "Disconnect fail!!", Toast.LENGTH_LONG).show();
+                    // something went wrong, but probably we are disconnected anyway
+                }
+            });
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
+
+    private class ImageTask extends AsyncTask<Integer, Void, Bitmap>
+    {
+        private final WeakReference<ImageView> imageViewReference;
+
+        public ImageTask(ImageView imageView) {
+
+            imageViewReference = new WeakReference<ImageView>(imageView);
+        }
+
+        protected void onPreExecute() {
+        }
+
+        protected Bitmap doInBackground(Integer... params) {
+            Bitmap myBitmap = null;
+            try {
+                URL url = new URL("http://"+new SessionManager(getApplicationContext()).getUserDetails().get("address")+".ngrok.io/phpMQTT-master/files/get_image.php?timetableId="+params[0]);// + evt.getTimetableId());
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                myBitmap = BitmapFactory.decodeStream(input);
+
+            } catch (IOException e) {
+                //e.printStackTrace();
+                //e.getMessage();
+            }
+            return myBitmap;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            if (imageViewReference != null && result != null) {
+                final ImageView imageView = imageViewReference.get();
+                if (imageView != null) {
+                    imageView.setImageBitmap(result);
+                    imageView.setTag(result);
+                } else {
+                    // if you see  dao then change to icnoimage icon
+                    imageView.setImageResource(R.mipmap.ic_noimage);
+                    //imageView.setTag(result);
+                }
+            }
+        }
+    }
+
 
 }

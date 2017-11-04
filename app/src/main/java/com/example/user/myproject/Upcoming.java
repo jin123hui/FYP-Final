@@ -163,6 +163,8 @@ public class Upcoming extends AppCompatActivity implements NavigationView.OnNavi
             });
             alert.show();
         } else if(id == R.id.action_about) {
+            Intent intent = new Intent(getApplicationContext(), About.class);
+            startActivity(intent);
             return true;
         }
 

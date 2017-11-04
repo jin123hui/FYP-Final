@@ -140,6 +140,8 @@ public class SoftSkill extends AppCompatActivity implements NavigationView.OnNav
             });
             alert.show();
         } else if(id == R.id.action_about) {
+            Intent intent = new Intent(getApplicationContext(), About.class);
+            startActivity(intent);
             return true;
         }
 

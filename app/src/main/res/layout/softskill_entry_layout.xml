@@ -6,7 +6,7 @@
         android:id = "@+id/relativeLayout1"
         android:layout_width = "fill_parent"
         android:layout_height = "wrap_content"
-        android:background = "@color/colorCell" >
+        android:background = "@color/colorSearch" >
 
         <TextView
             android:id = "@+id/softSkillEvtTitle"
@@ -18,7 +18,7 @@
             android:ellipsize = "end"
             android:padding = "5dp"
             android:text = "..."
-            android:textColor="@android:color/black"
+            android:textColor="@color/colorWhite"
             android:singleLine = "true" />
 
         <TextView
@@ -30,6 +30,7 @@
             android:ellipsize = "end"
             android:padding = "5dp"
             android:text = "..."
+            android:textColor="@color/colorWhite"
             android:textAlignment="center"
             android:singleLine = "true" />
 
@@ -42,6 +43,7 @@
             android:ellipsize = "end"
             android:padding = "5dp"
             android:text = "..."
+            android:textColor="@color/colorWhite"
             android:textAlignment="center"
             android:singleLine = "true" />
 
@@ -54,6 +56,7 @@
             android:ellipsize = "end"
             android:padding = "5dp"
             android:text = "..."
+            android:textColor="@color/colorWhite"
             android:textAlignment="center"
             android:singleLine = "true" />
 
@@ -65,6 +68,7 @@
             android:background = "@drawable/cell_shape"
             android:ellipsize = "end"
             android:padding = "5dp"
+            android:textColor="@color/colorWhite"
             android:text = "..."
             android:textAlignment="center"
             android:singleLine = "true" />
@@ -78,6 +82,7 @@
             android:ellipsize = "end"
             android:padding = "5dp"
             android:text = "..."
+            android:textColor="@color/colorWhite"
             android:textAlignment="center"
             android:singleLine = "true" />
 
@@ -90,6 +95,7 @@
             android:ellipsize = "end"
             android:padding = "5dp"
             android:text = "..."
+            android:textColor="@color/colorWhite"
             android:textAlignment="center"
             android:singleLine = "true" />
 
@@ -102,6 +108,7 @@
             android:ellipsize = "end"
             android:padding = "5dp"
             android:text = "..."
+            android:textColor="@color/colorWhite"
             android:textAlignment="center"
             android:singleLine = "true" />
     </LinearLayout>

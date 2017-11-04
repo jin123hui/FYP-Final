@@ -1,5 +1,6 @@
 package com.example.user.myproject.Modal;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,6 +27,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.user.myproject.About;
 import com.example.user.myproject.DetailEventActivity;
 import com.example.user.myproject.LoginActivity;
 import com.example.user.myproject.MarkAttendance;
@@ -65,6 +67,7 @@ public class Homepage extends AppCompatActivity
     AlertDialog dialog;
     String studentId = "";
     String studentName = "desmond";
+    ProgressDialog pd;
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -168,6 +171,9 @@ public class Homepage extends AppCompatActivity
         btnSubscribe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                pd = new ProgressDialog(Homepage.this);
+                pd.setMessage("Updating subscription info...");
+                pd.show();
                 ArrayList<String> result = new ArrayList<String>();
                 for(CheckBox temp:checkBoxList){
                     if(temp.isChecked()){
@@ -206,6 +212,7 @@ public class Homepage extends AppCompatActivity
                             String resultMessage = jObj.getString("message");
                             Toast.makeText(Homepage.this, "Result: "+rowChanged + " " + resultMessage, Toast.LENGTH_LONG).show();
                             dialog.cancel();
+                            pd.dismiss();
                         }
 
                         @Override
@@ -230,6 +237,7 @@ public class Homepage extends AppCompatActivity
         mBuilder.setView(mView);
         dialog = mBuilder.create();
         dialog.show();
+        pd.dismiss();
     }
 
 
@@ -300,6 +308,8 @@ public class Homepage extends AppCompatActivity
             });
             alert.show();
         } else if(id == R.id.action_about) {
+            Intent intent = new Intent(getApplicationContext(), About.class);
+            startActivity(intent);
             return true;
         }
 
@@ -315,6 +325,9 @@ public class Homepage extends AppCompatActivity
         if (id == R.id.nav_home) {
             readEvent();
         } else if (id == R.id.nav_subscriptionCategory) {
+            pd = new ProgressDialog(Homepage.this);
+            pd.setMessage("Loading subscription info...");
+            pd.show();
             userEventSubscription();
         } else if (id == R.id.nav_incomingEvent) {
             Intent intent = new Intent(this, Upcoming.class);
@@ -350,7 +363,6 @@ public class Homepage extends AppCompatActivity
     }
 
     public void userEventSubscription(){
-
         try{
             JSONObject jsonObj = new JSONObject();
             jsonObj.put("studentId",studentId);
@@ -580,6 +592,7 @@ public class Homepage extends AppCompatActivity
     }
 
     public void subscribeSubscriptionMessage(){
+
         if (client == null ){
             Toast.makeText(Homepage.this, "Connection fail!!", Toast.LENGTH_LONG).show();
         }
@@ -636,7 +649,7 @@ public class Homepage extends AppCompatActivity
         Spinner spinner = (Spinner)findViewById(R.id.eventSpinner);
         String jsonString = "";
         try {
-            obj.put("studentId",studentId);
+            obj.put("studentId",new SessionManager(this).getUserDetails().get("id"));
             obj.put("criteria",spinner.getSelectedItem().toString());
 
             jsonString = obj.toString();

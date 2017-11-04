@@ -10,89 +10,145 @@
     tools:showIn="@layout/activity_walk_in_registration"
     >
 
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="121dp"
+        android:background="@android:color/white"></ListView>
+
+    <!--<LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/eventScanned"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="400dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:text=""
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:textStyle="italic"
+                android:textSize="14dp"
+                android:textColor="@android:color/holo_red_light"
+                android:layout_width="100dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/textviewCategory"
+                android:maxLength="30" />
+
+            <TextView
+                android:text=""
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:textSize="18dp"
+                android:textColor="@android:color/black"
+                android:layout_width="300dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewEventName"
+                android:maxLength="65"/>
+
+            <TextView
+                android:text=""
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:textSize="16dp"
+                android:textColor="@android:color/holo_blue_dark"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewEventStartDate"
+                android:maxLength="65"/>
+
+            <TextView
+                android:text=""
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:textSize="16dp"
+                android:textColor="@android:color/holo_blue_light"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewEventStartTime"
+                android:maxLength="65"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imageViewWalkIn"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            app:srcCompat="@mipmap/ic_noimage"
+            android:visibility="gone"
+            android:scaleType="fitXY" />
+
+
+    </LinearLayout>-->
+
+
+
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/textViewAvailableSeat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@android:color/black"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        />
+
+
+    <TextView
+        android:id="@+id/textViewWalkInError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/colorRed"
+        android:textSize="18dp"
+        android:textStyle="bold"/>
+
+    <Button
+        android:id="@+id/buttonWalkInRegistration"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="" />
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:textSize="20dp"
+        android:background="@color/colorPrimary"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_gravity="center_horizontal"
+        android:text="Register"
+        android:visibility="gone" />
 
-    <LinearLayout
+
+    <Button
+        android:id="@+id/buttonScanQR"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:textSize="20dp"
+        android:background="@color/colorPrimaryDark"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_gravity="center_horizontal"
+        android:onClick="runQrCodeScanner"
+        android:text="Scan QR code" />
 
 
-        <TextView
-            android:id="@+id/textViewEventName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal" />
 
-
-        <TextView
-            android:id="@+id/textViewEventStartDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            />
-
-        <TextView
-            android:id="@+id/textViewEventStartTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal" />
-
-        <TextView
-            android:id="@+id/textViewAvailableSeat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            />
-
-
-        <TextView
-            android:id="@+id/textViewWalkInError"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textColor="@color/colorRed" />
-
-        <Button
-            android:id="@+id/buttonWalkInRegistration"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textAllCaps="false"
-            android:textSize="20dp"
-            android:background="@android:color/holo_red_light"
-            android:textColor="@android:color/white"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_gravity="center_horizontal"
-            android:text="Register"
-            android:visibility="visible" />
-
-
-        <Button
-            android:id="@+id/buttonScanQR"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textAllCaps="false"
-            android:textSize="20dp"
-            android:background="@android:color/holo_red_light"
-            android:textColor="@android:color/white"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_gravity="center_horizontal"
-            android:onClick="runQrCodeScanner"
-            android:text="Scan QR code" />
-
-
-    </LinearLayout>
 
 </LinearLayout>
