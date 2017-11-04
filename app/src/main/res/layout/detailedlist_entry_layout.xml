@@ -166,6 +166,7 @@
                 android:id="@+id/evt_img"
                 android:layout_width="130dp"
                 android:layout_height="match_parent"
+                android:layout_margin="10dp"
                 android:adjustViewBounds="true"
                 app:srcCompat="@mipmap/ic_noimage"
                 android:scaleType="fitXY" />

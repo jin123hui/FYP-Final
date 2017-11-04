@@ -22,20 +22,28 @@
 
         <activity
             android:name=".LoginActivity"
-            android:label="TARUC ERS"></activity>
+            android:label="TARUC ERS" />
         <activity
-            android:name=".Modal.Homepage"
-            android:label="TARUC ERS"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name=".SplashScreen"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".Modal.Homepage"
+            android:label="TARUC ERS"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
         <activity
             android:name=".MainActivity"
-            android:label="testing"></activity>
+            android:label="testing" />
         <activity
             android:name=".DetailEventActivity"
             android:label="@string/title_activity_detail_event"
@@ -150,7 +158,8 @@
         <activity
             android:name=".About"
             android:label="About Us"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+
     </application>
 
 </manifest>

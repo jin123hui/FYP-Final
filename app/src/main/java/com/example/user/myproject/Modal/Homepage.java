@@ -90,7 +90,9 @@ public class Homepage extends AppCompatActivity
 
         if(connected) {
 
-            new SessionManager(this).checkLogin();
+            if(!new SessionManager(this).checkLogin()) {
+                finish();
+            }
 
             studentId = new SessionManager(this).getUserDetails().get("id");
 
@@ -268,6 +270,17 @@ public class Homepage extends AppCompatActivity
                                 }
                             }).create().show();
                 }
+            } else {
+                new AlertDialog.Builder(this)
+                        .setTitle("Really Exit?")
+                        .setMessage("Are you sure you want to exit?")
+                        .setNegativeButton(android.R.string.no, null)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Homepage.super.onBackPressed();
+                            }
+                        }).create().show();
             }
         }
     }

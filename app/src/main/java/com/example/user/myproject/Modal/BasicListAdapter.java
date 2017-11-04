@@ -94,6 +94,8 @@ public class BasicListAdapter extends ArrayAdapter<ApplicationEvent> {
                     final ImageView imageView = imageViewReference.get();
                     if (imageView != null) {
                         imageView.setImageBitmap(result);
+                        ViewGroup.MarginLayoutParams marginParams = (ViewGroup.MarginLayoutParams) imageView.getLayoutParams();
+                        marginParams.setMargins(25, 25, 25, 25);
                     } else {
                         imageView.setImageResource(R.mipmap.ic_noimage);
                     }

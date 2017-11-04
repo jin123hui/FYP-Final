@@ -36,14 +36,15 @@ public class SessionManager {
         editor.commit();
     }
 
-    public void checkLogin(){
+    public boolean checkLogin(){
         if(!this.isLoggedIn()){
             Intent i = new Intent(_context, LoginActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             _context.startActivity(i);
+            return false;
         }
-
+        return true;
     }
 
     public HashMap<String, String> getUserDetails(){
