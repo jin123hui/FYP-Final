@@ -171,6 +171,12 @@ public class RedeemBenefit extends AppCompatActivity implements NavigationView.O
         conn();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        studentId = new SessionManager(this).getUserDetails().get("id");
+    }
+
     public void conn(){
         String clientId = MqttClient.generateClientId();
         client = new MqttAndroidClient(this.getApplicationContext(), Action.mqttTest,

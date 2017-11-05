@@ -361,9 +361,6 @@ public class Homepage extends AppCompatActivity
             Intent intent = new Intent(this, RedeemBenefit.class);
             startActivity(intent);
             return true;
-       // } else if(id == R.id.nav_mark) {
-            //Intent intent = new Intent(getApplicationContext(), MarkAttendance.class);
-            //startActivity(intent);
         } else if(id == R.id.nav_softskill) {
             Intent intent = new Intent(this, SoftSkill.class);
             startActivity(intent);
@@ -428,6 +425,7 @@ public class Homepage extends AppCompatActivity
                     //Toast.makeText(Homepage.this, "Connected!!", Toast.LENGTH_LONG).show();
                     try {
                         client.subscribe(Action.clientTopic+studentId, 1);
+                        Toast.makeText(Homepage.this, Action.clientTopic+studentId, Toast.LENGTH_LONG).show();
                         readEvent();
                     } catch (MqttException ex) {
                         ex.printStackTrace();
@@ -580,8 +578,6 @@ public class Homepage extends AppCompatActivity
     public void setSubscription(String topicStr) {
         try {
             client.subscribe(topicStr, 1);
-
-
         } catch (MqttException ex) {
             ex.printStackTrace();
         }

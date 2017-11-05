@@ -218,6 +218,12 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        studentId = new SessionManager(this).getUserDetails().get("id");
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         studentId = new SessionManager(this).getUserDetails().get("id");

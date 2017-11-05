@@ -128,6 +128,12 @@ public class Upcoming extends AppCompatActivity implements NavigationView.OnNavi
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        studentId = new SessionManager(this).getUserDetails().get("id");
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.homepage, menu);
         return true;

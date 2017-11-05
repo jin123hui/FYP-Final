@@ -114,6 +114,12 @@ public class PastJoined extends AppCompatActivity implements NavigationView.OnNa
         conn();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        studentId = new SessionManager(this).getUserDetails().get("id");
+    }
+
     public void conn(){
         String clientId = MqttClient.generateClientId();
         client = new MqttAndroidClient(this.getApplicationContext(), Action.mqttTest,

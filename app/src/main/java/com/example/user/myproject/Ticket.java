@@ -212,7 +212,12 @@ public class Ticket extends AppCompatActivity {
         super.onStart();
         studentId = new SessionManager(this).getUserDetails().get("id");
         conn();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        studentId = new SessionManager(this).getUserDetails().get("id");
     }
 
     private void loadEvent() {

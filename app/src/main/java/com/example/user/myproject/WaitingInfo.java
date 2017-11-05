@@ -221,6 +221,12 @@ public class WaitingInfo extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        studentId = new SessionManager(this).getUserDetails().get("id");
+    }
+
     private void loadEvent() {
         final BasicListAdapter adapter = new BasicListAdapter(this, R.layout.content_waiting_info, evtList);
         evtListV.setAdapter(adapter);

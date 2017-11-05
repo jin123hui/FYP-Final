@@ -19,6 +19,7 @@ import com.example.user.myproject.Modal.Action;
 import com.example.user.myproject.Modal.ApplicationEvent;
 import com.example.user.myproject.Modal.CaptureActivityPortrait;
 import com.example.user.myproject.Modal.EncodedApplicationEvent;
+import com.example.user.myproject.Modal.SessionManager;
 import com.google.zxing.Result;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -38,7 +39,8 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 public class MarkAttendance extends AppCompatActivity implements ZXingScannerView.ResultHandler {
 
-    MqttAndroidClient client;
+    private MqttAndroidClient client;
+    private String studentId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,7 @@ public class MarkAttendance extends AppCompatActivity implements ZXingScannerVie
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        studentId = new SessionManager(this).getUserDetails().get("id");
         conn();
     }
 
@@ -56,6 +59,7 @@ public class MarkAttendance extends AppCompatActivity implements ZXingScannerVie
         JSONObject json = new JSONObject();
         RadioGroup radGrp = (RadioGroup) findViewById(R.id.radGrp);
         try{
+            json.put("studentId", studentId);
             if(radGrp.getCheckedRadioButtonId() == R.id.markAtt) {
                 json.put("registrationId","");
                 EditText session = (EditText)findViewById(R.id.txt_session);
@@ -68,9 +72,9 @@ public class MarkAttendance extends AppCompatActivity implements ZXingScannerVie
         }
 
         if(radGrp.getCheckedRadioButtonId() == R.id.markAtt) {
-            publishMessage(Action.combineMessage("001635",Action.asciiToHex(json.toString())));
+            publishMessage(Action.combineMessage("001621",Action.asciiToHex(json.toString())));
         } else if(radGrp.getCheckedRadioButtonId() == R.id.markBenefit) {
-            publishMessage(Action.combineMessage("001641",Action.asciiToHex(json.toString())));
+            publishMessage(Action.combineMessage("001619",Action.asciiToHex(json.toString())));
         }
 
         if (client == null ){
@@ -98,6 +102,12 @@ public class MarkAttendance extends AppCompatActivity implements ZXingScannerVie
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        studentId = new SessionManager(this).getUserDetails().get("id");
+    }
+
     public void runQrCodeScanner(View view){
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
@@ -120,6 +130,7 @@ public class MarkAttendance extends AppCompatActivity implements ZXingScannerVie
             }else{
                 JSONObject json = new JSONObject();
                 try{
+                    json.put("studentId", studentId);
                     if(radGrp.getCheckedRadioButtonId() == R.id.markAtt) {
                         json.put("registrationId",result.getContents());
                         EditText session = (EditText)findViewById(R.id.txt_session);
@@ -132,9 +143,9 @@ public class MarkAttendance extends AppCompatActivity implements ZXingScannerVie
                 }
 
                 if(radGrp.getCheckedRadioButtonId() == R.id.markAtt) {
-                    publishMessage(Action.combineMessage("001635",Action.asciiToHex(json.toString())));
+                    publishMessage(Action.combineMessage("001621",Action.asciiToHex(json.toString())));
                 } else if(radGrp.getCheckedRadioButtonId() == R.id.markBenefit) {
-                    publishMessage(Action.combineMessage("001641",Action.asciiToHex(json.toString())));
+                    publishMessage(Action.combineMessage("001619",Action.asciiToHex(json.toString())));
                 }
 
                 if (client == null ){
@@ -178,7 +189,7 @@ public class MarkAttendance extends AppCompatActivity implements ZXingScannerVie
                 public void onSuccess(IMqttToken asyncActionToken) {
                     //Toast.makeText(getApplicationContext(), "Connected!!", Toast.LENGTH_LONG).show();
                     try {
-                        client.subscribe(Action.clientTopic, 1);
+                        client.subscribe(Action.clientTopic+studentId, 1);
 
                     } catch (MqttException ex) {
                         ex.printStackTrace();

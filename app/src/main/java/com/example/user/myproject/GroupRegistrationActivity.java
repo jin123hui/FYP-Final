@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.example.user.myproject.Modal.Action;
 import com.example.user.myproject.Modal.EventRegistration;
 import com.example.user.myproject.Modal.Homepage;
+import com.example.user.myproject.Modal.SessionManager;
 import com.example.user.myproject.Modal.Student;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
@@ -130,9 +131,6 @@ public class GroupRegistrationActivity extends AppCompatActivity {
         conn();
 
     }
-
-
-
 
     public void slotCountRefresh(){
         if (arrayList != null ) {
