@@ -13,13 +13,13 @@ import com.example.user.myproject.Modal.Homepage;
 public class SplashScreen extends Activity {
 
     private static int SPLASH_TIME_OUT = 2000;
+    private final Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        final Handler handler = new Handler();
         RelativeLayout ss = (RelativeLayout) findViewById(R.id.ss);
         ss.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,5 +44,11 @@ public class SplashScreen extends Activity {
                 finish();
             }
         }, SPLASH_TIME_OUT);
+    }
+
+    @Override
+    public void onBackPressed() {
+        handler.removeCallbacksAndMessages(null);
+        super.onBackPressed();
     }
 }

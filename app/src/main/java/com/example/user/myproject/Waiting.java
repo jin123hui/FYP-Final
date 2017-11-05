@@ -79,9 +79,11 @@ public class Waiting extends AppCompatActivity implements NavigationView.OnNavig
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        View hView =  navigationView.getHeaderView(0);
+        View hView = navigationView.getHeaderView(0);
         TextView appDrawerName = (TextView) hView.findViewById(R.id.appDrawerName);
-        appDrawerName.setText(new SessionManager(this).getUserDetails().get("id"));
+        appDrawerName.setText(new SessionManager(this).getUserDetails().get("name"));
+        TextView appDrawerId = (TextView) hView.findViewById(R.id.appDrawerId);
+        appDrawerId.setText(new SessionManager(this).getUserDetails().get("id"));
 
         waitingList = (ListView) findViewById(R.id.waitinglist);
         waitingEvtList = new ArrayList<>();
@@ -399,24 +401,31 @@ public class Waiting extends AppCompatActivity implements NavigationView.OnNavig
         if (id == R.id.nav_home) {
             Intent intent = new Intent(this, Homepage.class);
             startActivity(intent);
+            finish();
         } else if (id == R.id.nav_incomingEvent) {
             Intent intent = new Intent(this, Upcoming.class);
             startActivity(intent);
+            finish();
         } else if (id == R.id.nav_waitingList) {
             Intent intent = new Intent(this, Waiting.class);
             startActivity(intent);
+            finish();
         } else if (id == R.id.nav_pastJoinedEvent) {
             Intent intent = new Intent(this, PastJoined.class);
             startActivity(intent);
+            finish();
         } else if (id == R.id.nav_walkinRegistration) {
             Intent intent = new Intent(this, WalkInRegistrationActivity.class);
             startActivity(intent);
+            finish();
         }else if (id == R.id.nav_redeemBenefits){
             Intent intent = new Intent(this, RedeemBenefit.class);
             startActivity(intent);
+            finish();
         } else if(id == R.id.nav_softskill) {
             Intent intent = new Intent(this, SoftSkill.class);
             startActivity(intent);
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

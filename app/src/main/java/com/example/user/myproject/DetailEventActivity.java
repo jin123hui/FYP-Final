@@ -83,7 +83,7 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
     String locationName;
     EncodedApplicationEvent event;
     String studentId = "";
-    String studentName = "desmond";
+    String studentName = "";
     private ArrayList<String> files_on_server = new ArrayList<>();
     String from;
     EventRegistration reg;
@@ -103,6 +103,7 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         studentId = new SessionManager(this).getUserDetails().get("id");
+        studentName = new SessionManager(this).getUserDetails().get("name");
     }
 
     private void zoomImageFromThumb(final View thumbView, Bitmap imageResId) {
@@ -221,6 +222,7 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
     protected void onResume() {
         super.onResume();
         studentId = new SessionManager(this).getUserDetails().get("id");
+        studentName = new SessionManager(this).getUserDetails().get("name");
     }
 
     @Override

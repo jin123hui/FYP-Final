@@ -48,6 +48,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Login ID"
+                    android:imeOptions="actionNext"
                     android:maxLines="1"
                     android:singleLine="true" />
 
@@ -64,6 +65,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Server Address"
                     android:imeActionId="@+id/login"
+                    android:imeOptions="actionDone"
                     android:maxLines="1"
                     android:singleLine="true" />
 

@@ -44,9 +44,6 @@
 
         </activity>
         <activity
-            android:name=".MainActivity"
-            android:label="testing" />
-        <activity
             android:name=".DetailEventActivity"
             android:label="@string/title_activity_detail_event"
             android:launchMode="singleTop"

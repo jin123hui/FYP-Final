@@ -68,6 +68,7 @@ public class Homepage extends AppCompatActivity
     String studentId = "";
     String studentName = "desmond";
     ProgressDialog pd;
+    String name = "";
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -95,6 +96,7 @@ public class Homepage extends AppCompatActivity
             }
 
             studentId = new SessionManager(this).getUserDetails().get("id");
+            name = new SessionManager(this).getUserDetails().get("name");
 
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -107,7 +109,9 @@ public class Homepage extends AppCompatActivity
 
             View hView = navigationView.getHeaderView(0);
             TextView appDrawerName = (TextView) hView.findViewById(R.id.appDrawerName);
-            appDrawerName.setText(new SessionManager(this).getUserDetails().get("id"));
+            appDrawerName.setText(new SessionManager(this).getUserDetails().get("name"));
+            TextView appDrawerId = (TextView) hView.findViewById(R.id.appDrawerId);
+            appDrawerId.setText(new SessionManager(this).getUserDetails().get("id"));
 
             //Toast.makeText(Homepage.this, new SessionManager(this).getUserDetails().get("address"), Toast.LENGTH_LONG).show();
             context = this;
@@ -253,6 +257,7 @@ public class Homepage extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         studentId = new SessionManager(this).getUserDetails().get("id");
+        name = new SessionManager(this).getUserDetails().get("name");
     }
 
     @Override

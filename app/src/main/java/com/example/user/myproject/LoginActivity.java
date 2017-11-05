@@ -7,6 +7,7 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -16,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -23,31 +25,49 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.user.myproject.Modal.Action;
+import com.example.user.myproject.Modal.ApplicationEvent;
+import com.example.user.myproject.Modal.DetailedListAdapter;
+import com.example.user.myproject.Modal.EncodedApplicationEvent;
+import com.example.user.myproject.Modal.EventRegistration;
 import com.example.user.myproject.Modal.Homepage;
 import com.example.user.myproject.Modal.SessionManager;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
     private UserLoginTask mAuthTask = null;
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
+    private AutoCompleteTextView mStudentId;
+    private EditText mServerAdd;
     private View mProgressView;
     private View mLoginFormView;
     private ProgressDialog pDialog;
@@ -62,11 +82,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         actionBar.hide();
         setContentView(R.layout.activity_login);
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.studentId);
+        mStudentId = (AutoCompleteTextView) findViewById(R.id.studentId);
         //populateAutoComplete();
 
-        mPasswordView = (EditText) findViewById(R.id.address);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mServerAdd = (EditText) findViewById(R.id.address);
+        mServerAdd.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
@@ -89,67 +109,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mProgressView = findViewById(R.id.login_progress);
     }
 
-    /*private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return;
-        }
-
-        getLoaderManager().initLoader(0, null, this);
-    }
-
-    /*private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
-    }
-
-    /**
-     * Callback received when a permissions request has been completed.
-     */
-
-
-
     private void attemptLogin() {
         if (mAuthTask != null) {
             return;
         }
 
-        mEmailView.setError(null);
-        mPasswordView.setError(null);
+        mStudentId.setError(null);
+        mServerAdd.setError(null);
 
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        final String studentId = mStudentId.getText().toString();
+        String password = mServerAdd.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
-
-        /*if (!TextUtils.isEmpty(password)) {
-            mPasswordView.setError("Enter ngrok Server Address");
-            focusView = mPasswordView;
-            cancel = true;
-        }
-
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError("Enter Student Id");
-            focusView = mEmailView;
-            cancel = true;
-        }*/
 
         if (cancel) {
             focusView.requestFocus();
@@ -165,10 +137,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 token.setActionCallback(new IMqttActionListener() {
                     @Override
                     public void onSuccess(IMqttToken asyncActionToken) {
-                        Toast.makeText(LoginActivity.this, "Connected!!", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(LoginActivity.this, "Connected!!", Toast.LENGTH_LONG).show();
                         try {
-                            client.subscribe(Action.clientTopic, 1);
+                            client.subscribe(Action.clientTopic+studentId.toLowerCase(), 1);
 
+                            JSONObject obj = new JSONObject();
+                            try {
+                                obj.put("studentId",studentId);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            publishMessage(Action.combineMessage("001624",Action.asciiToHex(obj.toString())));
+                            subscribeLoginMessage();
                             //readEvent();
                         } catch (MqttException ex) {
                             ex.printStackTrace();
@@ -193,12 +174,59 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             //mAuthTask = new UserLoginTask(email.toLowerCase(), password, this);
             //mAuthTask.execute((Void) null);
-            SessionManager sess = new SessionManager(this);
-            sess.createLoginSession(email.toLowerCase(), password);
-            Intent intent = new Intent(this, Homepage.class);
-            pDialog.dismiss();
-            startActivity(intent);
+
         }
+    }
+
+    public void publishMessage(String message) {
+        try {
+            client.publish(Action.serverTopic, message.getBytes(), 0, false);
+            //Toast.makeText(Upcoming.this, "Requesting Event Data !!", Toast.LENGTH_LONG).show();
+
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void subscribeLoginMessage(){
+        if (client == null ){
+            Toast.makeText(LoginActivity.this, "Connection fail!!", Toast.LENGTH_LONG).show();
+        }
+        client.setCallback(new MqttCallback() {
+            @Override
+            public void connectionLost(Throwable cause) {
+                String s = "";
+            }
+
+            @Override
+            public void messageArrived(String topic, MqttMessage message) throws Exception {
+                String strMessage = new String(message.getPayload());
+                strMessage = Action.hexToAscii(strMessage);
+                JSONObject obj = new JSONObject(strMessage);
+                if (obj.getString("success").equals("1")){
+                    SessionManager sess = new SessionManager(getApplicationContext());
+                    sess.createLoginSession(obj.getString("studentId"), mServerAdd.getText().toString(), obj.getString("name"));
+                    Intent intent = new Intent(getApplicationContext(), Homepage.class);
+                    pDialog.dismiss();
+                    startActivity(intent);
+                    finish();
+                } else {
+                    mStudentId.setError("Invalid Login ID");
+                    pDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken token) {
+                //Toast.makeText(Upcoming.this, "All event data received!!", Toast.LENGTH_LONG).show();
+                String str = "";
+                try {
+                    str = new String(token.getMessage().getPayload());
+                } catch (MqttException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     /**
@@ -277,7 +305,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 new ArrayAdapter<>(LoginActivity.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
-        mEmailView.setAdapter(adapter);
+        mStudentId.setAdapter(adapter);
     }
 
     private interface ProfileQuery {
@@ -294,12 +322,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         private final String mEmail;
         private final String mPassword;
+        private final String mName;
         private Context c;
         private boolean valid = false;
 
-        UserLoginTask(String email, String password, Context c) {
+        UserLoginTask(String email, String password, String mName, Context c) {
             mEmail = email;
             mPassword = password;
+            this.mName = mName;
             this.c = c;
         }
 
@@ -320,14 +350,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             if (success) {
                 Toast.makeText(LoginActivity.this, "Successful login", Toast.LENGTH_SHORT).show();
                 SessionManager sess = new SessionManager(c);
-                sess.createLoginSession(mEmail, mPassword);
+                sess.createLoginSession(mEmail, mPassword, mName);
                 Intent intent = new Intent(c, Homepage.class);
                 pDialog.dismiss();
                 startActivity(intent);
             } else {
-                mEmailView.setError("");
-                mPasswordView.setError("");
-                mEmailView.requestFocus();
+                mStudentId.setError("");
+                mServerAdd.setError("");
+                mStudentId.requestFocus();
                 pDialog.dismiss();
             }
         }

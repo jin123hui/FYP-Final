@@ -400,18 +400,19 @@ public class Ticket extends AppCompatActivity {
                                             int no = 0;
 
                                             for(EncodedEventRegistration e : arrList1){
-                                                if(e.getLeaderId().equals(studentId)) {
-                                                    ldrId = e.getLeaderId()+" (Me)";
+                                                if(e.getLeaderId().equals(e.getStudentId()) && e.getLeaderId().equals(studentId)) {
+                                                    ldrId = e.getName() + " | " + e.getLeaderId()+" (Me)";
                                                     //memId += no+". "+e.getStudentId()+" (Me)\n";
-                                                } else {
-                                                    ldrId = e.getLeaderId();
+                                                }
+                                                if(e.getLeaderId().equals(e.getStudentId())) {
+                                                    ldrId = e.getName() + " | " + e.getLeaderId();
                                                 }
                                                 if(!e.getStudentId().equals(e.getLeaderId())) {
                                                     no++;
                                                     if (e.getStudentId().equals(studentId)) {
-                                                        memId += no + ". " + e.getStudentId() + " (Me)" + System.getProperty("line.separator");
+                                                        memId += no + ". " + e.getName() + " | " + e.getStudentId() + " (Me)" + System.getProperty("line.separator");
                                                     } else {
-                                                        memId += no + ". " + e.getStudentId() + System.getProperty("line.separator");
+                                                        memId += no + ". " + e.getName() + " | " + e.getStudentId() + System.getProperty("line.separator");
                                                     }
                                                 }
                                             }
