@@ -250,6 +250,12 @@ public class Homepage extends AppCompatActivity
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        studentId = new SessionManager(this).getUserDetails().get("id");
+    }
+
+    @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -425,7 +431,7 @@ public class Homepage extends AppCompatActivity
                     //Toast.makeText(Homepage.this, "Connected!!", Toast.LENGTH_LONG).show();
                     try {
                         client.subscribe(Action.clientTopic+studentId, 1);
-                        Toast.makeText(Homepage.this, Action.clientTopic+studentId, Toast.LENGTH_LONG).show();
+                        //Toast.makeText(Homepage.this, Action.clientTopic+studentId, Toast.LENGTH_LONG).show();
                         readEvent();
                     } catch (MqttException ex) {
                         ex.printStackTrace();

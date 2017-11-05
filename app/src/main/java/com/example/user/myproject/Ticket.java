@@ -375,7 +375,7 @@ public class Ticket extends AppCompatActivity {
                                     obj.put("leaderId", reg.getLeaderId());
                                     obj.put("timetableId", reg.getTimetableId());
 
-                                    publishMessage(Action.combineMessage("001644",Action.asciiToHex(obj.toString())));
+                                    publishMessage(Action.combineMessage("001623",Action.asciiToHex(obj.toString())));
 
                                     if (client == null ){
                                         Toast.makeText(Ticket.this, "Retrieve group information failed", Toast.LENGTH_LONG).show();

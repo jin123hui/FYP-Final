@@ -136,17 +136,17 @@ public class DetailedListAdapter extends ArrayAdapter<ApplicationEvent> {
         long diffDays = TimeUnit.MILLISECONDS.toDays(diff);
 
         if(diffDays>365)
-            timeRemaining = (int)(diffDays/365) + " YR(s)";
+            timeRemaining = (int)(diffDays/365) + " YR";
         //else if(diffDays>7)
          //   timeRemaining = (int)(diffDays/7) + " WK";
         else if(diffDays>0)
-            timeRemaining = diffDays + " DAY(s)";
+            timeRemaining = diffDays + " DAY";
         else if(diffHours>0)
-            timeRemaining = diffHours + " HR(s)";
+            timeRemaining = diffHours + " HR";
         else if(diffMinutes>0)
-            timeRemaining = diffMinutes + " MIN(s)";
+            timeRemaining = diffMinutes + " MIN";
         else
-            timeRemaining = diffSeconds + " SEC(s)";
+            timeRemaining = diffSeconds + " SEC";
         return timeRemaining;
     }
 

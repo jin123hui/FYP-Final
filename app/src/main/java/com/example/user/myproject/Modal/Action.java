@@ -16,12 +16,12 @@ public class Action {
     public static String serverTopic = "MY/TARUC/ERS/0000000005/PUB";
     public static String clientTopic = "MY/TARUC/ERS/0000000006/PUB";
     public static String reserveCommand = "303030303030303030303030303030303030303030303030";
-    public static String studentId = "16wmu10392";
+    //public static String studentId = "16wmu10392";
 
     //54 character reserved
     public static String mqttServer = "iot.eclipse.org";
     //public static String mqttTest = "tcp://localhost:1883";
-    public static String mqttTest = "tcp://iot.eclipse.org:1883";
+    public static String mqttTest = "tcp://broker.hivemq.com:1883";
 
     //Turn Hex to ASCll For example : 31 turn to 1
     public static String hexToAscii(String hexStr) {

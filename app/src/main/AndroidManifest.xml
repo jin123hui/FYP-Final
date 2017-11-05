@@ -26,7 +26,7 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".SplashScreen"
-            android:label="@string/app_name"
+            android:label="TARUC ERS"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
             <intent-filter>
