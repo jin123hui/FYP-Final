@@ -22,7 +22,8 @@
 
         <activity
             android:name=".LoginActivity"
-            android:label="TARUC ERS" />
+            android:label="TARUC ERS"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".SplashScreen"
             android:label="@string/app_name"
@@ -38,7 +39,8 @@
         <activity
             android:name=".Modal.Homepage"
             android:label="TARUC ERS"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
 
         </activity>
         <activity
@@ -49,7 +51,8 @@
             android:label="@string/title_activity_detail_event"
             android:launchMode="singleTop"
             android:parentActivityName=".Modal.Homepage"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.user.myproject.Modal.Homepage" />
@@ -63,7 +66,8 @@
             android:name=".WalkInRegistrationActivity"
             android:label="Walk-In Registration"
             android:parentActivityName=".Modal.Homepage"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.user.myproject.Modal.Homepage" />
@@ -72,7 +76,8 @@
             android:name=".GroupRegistrationActivity"
             android:label="Group Registration"
             android:parentActivityName=".DetailEventActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.user.myproject.DetailEventActivity" />
@@ -81,7 +86,8 @@
             android:name=".Upcoming"
             android:label="Upcoming Event List"
             android:parentActivityName=".Modal.Homepage"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.user.myproject.Modal.Homepage" />
@@ -90,7 +96,8 @@
             android:name=".Waiting"
             android:label="Event Waiting List"
             android:parentActivityName=".Modal.Homepage"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.user.myproject.Modal.Homepage" />
@@ -99,7 +106,8 @@
             android:name=".Ticket"
             android:label="Event Ticket Information"
             android:parentActivityName=".Upcoming"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.user.myproject.Upcoming" />
@@ -108,7 +116,8 @@
             android:name=".MarkAttendance"
             android:label="Scan QR Code (For Staff Only)"
             android:parentActivityName=".Modal.Homepage"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.user.myproject.Modal.Homepage" />
@@ -123,7 +132,8 @@
             android:name=".WaitingInfo"
             android:label="Waiting List Event"
             android:parentActivityName=".Waiting"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.user.myproject.Waiting" />
@@ -132,7 +142,8 @@
             android:name=".PastJoined"
             android:label="Past Joined Event"
             android:parentActivityName=".Modal.Homepage"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.user.myproject.Modal.Homepage" />
@@ -141,7 +152,8 @@
             android:name=".RedeemBenefit"
             android:label="Redeem Benefits"
             android:parentActivityName=".Modal.Homepage"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.user.myproject.Modal.Homepage" />
@@ -150,7 +162,8 @@
             android:name=".SoftSkill"
             android:label="Soft Skill Point"
             android:parentActivityName=".Modal.Homepage"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.user.myproject.Modal.Homepage" />
@@ -158,7 +171,8 @@
         <activity
             android:name=".About"
             android:label="About Us"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
 
     </application>
 

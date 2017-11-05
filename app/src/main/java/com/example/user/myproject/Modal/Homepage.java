@@ -195,7 +195,7 @@ public class Homepage extends AppCompatActivity
                     obj.put("subscription",subscriptionListJson);
                     String testMessage = obj.toString();
                     publishMessage(Action.combineMessage("001611",Action.asciiToHex(obj.toString())));
-                    setSubscription(Action.clientTopic);
+                    setSubscription(Action.clientTopic+studentId);
 
                     if (client == null ){
                         Toast.makeText(Homepage.this, "Update subscription fail", Toast.LENGTH_LONG).show();
@@ -381,7 +381,7 @@ public class Homepage extends AppCompatActivity
             jsonObj.put("studentId",studentId);
             publishMessage(Action.combineMessage("001610",Action.asciiToHex(jsonObj.toString())));
 
-            setSubscription(Action.clientTopic);
+            setSubscription(Action.clientTopic+studentId);
             subscribeSubscriptionMessage();
         }catch(Exception ex){
             ex.printStackTrace();
@@ -427,7 +427,7 @@ public class Homepage extends AppCompatActivity
                 public void onSuccess(IMqttToken asyncActionToken) {
                     //Toast.makeText(Homepage.this, "Connected!!", Toast.LENGTH_LONG).show();
                     try {
-                        client.subscribe(Action.clientTopic, 1);
+                        client.subscribe(Action.clientTopic+studentId, 1);
                         readEvent();
                     } catch (MqttException ex) {
                         ex.printStackTrace();
@@ -510,6 +510,7 @@ public class Homepage extends AppCompatActivity
                 }
 
                 lstView = (ListView)findViewById(R.id.eventListView);
+                lstView.setEmptyView(findViewById(R.id.empty));
                 BasicListAdapter eventListView = new BasicListAdapter(context,R.layout.basiclist_entry_layout,arrList);
                 lstView.setAdapter(eventListView);
 
@@ -655,6 +656,7 @@ public class Homepage extends AppCompatActivity
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        swipeRefreshLayout.setRefreshing(true);
         TextView views = (TextView)findViewById(R.id.txtEventResult);
         views.setText(adapterView.getItemAtPosition(i).toString());
 

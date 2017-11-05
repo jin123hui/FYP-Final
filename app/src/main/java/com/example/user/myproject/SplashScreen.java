@@ -5,19 +5,32 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.example.user.myproject.Modal.Homepage;
 
 public class SplashScreen extends Activity {
 
-    private static int SPLASH_TIME_OUT = 3000;
+    private static int SPLASH_TIME_OUT = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        new Handler().postDelayed(new Runnable() {
+        final Handler handler = new Handler();
+        RelativeLayout ss = (RelativeLayout) findViewById(R.id.ss);
+        ss.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(SplashScreen.this, Homepage.class);
+                startActivity(i);
+                handler.removeCallbacksAndMessages(null);
+                finish();
+            }
+        });
+        handler.postDelayed(new Runnable() {
  
             /*
              * Showing splash screen with a timer. This will be useful when you
@@ -26,12 +39,8 @@ public class SplashScreen extends Activity {
 
             @Override
             public void run() {
-                // This method will be executed once the timer is over
-                // Start your app main activity
                 Intent i = new Intent(SplashScreen.this, Homepage.class);
                 startActivity(i);
-
-                // close this activity
                 finish();
             }
         }, SPLASH_TIME_OUT);

@@ -9,7 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-
         android:textColor="@color/colorBlack"
         android:textSize="45px"
         android:text="Category Subscription"
