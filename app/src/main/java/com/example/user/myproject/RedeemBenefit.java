@@ -183,7 +183,7 @@ public class RedeemBenefit extends AppCompatActivity implements NavigationView.O
                 public void onSuccess(IMqttToken asyncActionToken) {
                     //Toast.makeText(Upcoming.this, "Connected!!", Toast.LENGTH_LONG).show();
                     try {
-                        client.subscribe(Action.clientTopic, 1);
+                        client.subscribe(Action.clientTopic+studentId, 1);
                         //Toast.makeText(Upcoming.this, "Connected!!", Toast.LENGTH_LONG).show();
 
                         loadBenefit();
@@ -374,7 +374,7 @@ public class RedeemBenefit extends AppCompatActivity implements NavigationView.O
             e.printStackTrace();
         }
 
-        publishMessage(Action.combineMessage("001640",Action.asciiToHex(obj.toString())));
+        publishMessage(Action.combineMessage("001618",Action.asciiToHex(obj.toString())));
         subscribeBenefitMessage();
     }
 

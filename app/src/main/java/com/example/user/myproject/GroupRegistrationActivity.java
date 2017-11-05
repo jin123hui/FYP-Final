@@ -82,9 +82,6 @@ public class GroupRegistrationActivity extends AppCompatActivity {
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-
-
         Bundle bundle = getIntent().getExtras();
         if(!bundle.isEmpty()){
             try {
@@ -112,8 +109,6 @@ public class GroupRegistrationActivity extends AppCompatActivity {
 
             finish();
         }
-
-
 
         TextView leaderIdText = (TextView)findViewById(R.id.txtGroupLeaderStudentId);
         leaderIdText.setText(leaderId);
@@ -294,7 +289,7 @@ public class GroupRegistrationActivity extends AppCompatActivity {
                 }
 
                 //Toast.makeText(this, jsonArr.toString(), Toast.LENGTH_SHORT).show();
-                publishMessage(Action.combineMessage("001616", Action.asciiToHex(jsonArr.toString())));
+                publishMessage(Action.combineMessage("001608", Action.asciiToHex(jsonArr.toString())));
                 if (client == null ){
                     Toast.makeText(getApplicationContext(), "Connection fail!!", Toast.LENGTH_LONG).show();
                 }
@@ -310,7 +305,7 @@ public class GroupRegistrationActivity extends AppCompatActivity {
                         JSONObject obj = new JSONObject(decoded);
 
                         int response = obj.getInt("rowAffected");
-                        Toast.makeText(getApplicationContext(),"Number of record inserted: "+response,Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"Number of student registered: "+response,Toast.LENGTH_LONG).show();
 
                         pd.dismiss();
                         Intent intent = new Intent(getApplicationContext(), Homepage.class);
@@ -420,7 +415,7 @@ public class GroupRegistrationActivity extends AppCompatActivity {
                     ex.printStackTrace();
                 }
 
-                publishMessage(Action.combineMessage("001615", Action.asciiToHex(obj.toString())));
+                publishMessage(Action.combineMessage("001607", Action.asciiToHex(obj.toString())));
 
 
                 if (client == null ){

@@ -194,7 +194,7 @@ public class Homepage extends AppCompatActivity
                     String subscriptionListJson = convertString.toJson(parseString,String[].class);
                     obj.put("subscription",subscriptionListJson);
                     String testMessage = obj.toString();
-                    publishMessage(Action.combineMessage("001611",Action.asciiToHex(obj.toString())));
+                    publishMessage(Action.combineMessage("001603",Action.asciiToHex(obj.toString())));
                     setSubscription(Action.clientTopic+studentId);
 
                     if (client == null ){
@@ -379,7 +379,7 @@ public class Homepage extends AppCompatActivity
         try{
             JSONObject jsonObj = new JSONObject();
             jsonObj.put("studentId",studentId);
-            publishMessage(Action.combineMessage("001610",Action.asciiToHex(jsonObj.toString())));
+            publishMessage(Action.combineMessage("001602",Action.asciiToHex(jsonObj.toString())));
 
             setSubscription(Action.clientTopic+studentId);
             subscribeSubscriptionMessage();
@@ -601,7 +601,7 @@ public class Homepage extends AppCompatActivity
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        publishMessage(Action.combineMessage("001609",Action.asciiToHex(jsonString)));
+        publishMessage(Action.combineMessage("001601",Action.asciiToHex(jsonString)));
         subscribeEventMessage();
     }
 
@@ -672,7 +672,7 @@ public class Homepage extends AppCompatActivity
             e.printStackTrace();
         }
 
-        publishMessage(Action.combineMessage("001609",Action.asciiToHex(jsonString)));
+        publishMessage(Action.combineMessage("001601",Action.asciiToHex(jsonString)));
         subscribeEventMessage();
     }
 
@@ -680,4 +680,6 @@ public class Homepage extends AppCompatActivity
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
+
+
 }

@@ -317,12 +317,13 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
                 EditText eventRegistrationDescription = (EditText) findViewById(R.id.eventRegistrationDescription);
                 JSONObject obj = new JSONObject();
                 try {
+                    obj.put("studentId", studentId);
                     obj.put("registrationId", reg.getRegistrationId());
                     obj.put("description", eventRegistrationDescription.getText().toString());
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-                publishMessage(Action.combineMessage("001643", Action.asciiToHex(obj.toString())));
+                publishMessage(Action.combineMessage("001622", Action.asciiToHex(obj.toString())));
                 if (client == null) {
                     Toast.makeText(DetailEventActivity.this, "Connection fail!!", Toast.LENGTH_LONG).show();
                 }
@@ -428,7 +429,7 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
                 }catch(Exception ex){
                     ex.printStackTrace();
                 }
-                publishMessage(Action.combineMessage("001613",Action.asciiToHex(obj.toString())));
+                publishMessage(Action.combineMessage("001605",Action.asciiToHex(obj.toString())));
                 if (client == null ){
                     Toast.makeText(DetailEventActivity.this, "Connection fail!!", Toast.LENGTH_LONG).show();
                 }
@@ -553,7 +554,7 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
                 public void onSuccess(IMqttToken asyncActionToken) {
                     //Toast.makeText(DetailEventActivity.this, "Connected!!", Toast.LENGTH_LONG).show();
                     try {
-                        client.subscribe(Action.clientTopic, 1);
+                        client.subscribe(Action.clientTopic+studentId, 1);
 
                         JSONObject obj = new JSONObject();
                         try{
@@ -562,7 +563,7 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
                         }catch (Exception ex){
                             ex.printStackTrace();
                         }
-                        publishMessage(Action.combineMessage("001612",Action.asciiToHex(obj.toString())));
+                        publishMessage(Action.combineMessage("001604",Action.asciiToHex(obj.toString())));
                         subscribeEventMessage();
 
                     } catch (MqttException ex) {

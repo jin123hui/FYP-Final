@@ -168,7 +168,7 @@ public class SoftSkill extends AppCompatActivity implements NavigationView.OnNav
                 public void onSuccess(IMqttToken asyncActionToken) {
                     //Toast.makeText(Upcoming.this, "Connected!!", Toast.LENGTH_LONG).show();
                     try {
-                        client.subscribe(Action.clientTopic, 1);
+                        client.subscribe(Action.clientTopic+studentId, 1);
                         //Toast.makeText(Upcoming.this, "Connected!!", Toast.LENGTH_LONG).show();
 
                         loadSoftSkill();
@@ -286,7 +286,7 @@ public class SoftSkill extends AppCompatActivity implements NavigationView.OnNav
             e.printStackTrace();
         }
 
-        publishMessage(Action.combineMessage("001642",Action.asciiToHex(obj.toString())));
+        publishMessage(Action.combineMessage("001620",Action.asciiToHex(obj.toString())));
         subscribeEventMessage();
 
     }

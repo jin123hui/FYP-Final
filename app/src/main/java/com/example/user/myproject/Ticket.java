@@ -122,12 +122,13 @@ public class Ticket extends AppCompatActivity {
 
                         JSONObject obj = new JSONObject();
                         try{
+                            obj.put("studentId", studentId);
                             obj.put("registrationId", reg.getRegistrationId());
                         }catch(Exception ex){
                             ex.printStackTrace();
                         }
 
-                        publishMessage(Action.combineMessage("001634",Action.asciiToHex(obj.toString())));
+                        publishMessage(Action.combineMessage("001613",Action.asciiToHex(obj.toString())));
                         if (client == null ){
                             Toast.makeText(Ticket.this, "Connection fail!!", Toast.LENGTH_LONG).show();
                         }
@@ -254,15 +255,16 @@ public class Ticket extends AppCompatActivity {
                 public void onSuccess(IMqttToken asyncActionToken) {
                     //Toast.makeText(Ticket.this, "Connected!!", Toast.LENGTH_LONG).show();
                     try {
-                        client.subscribe(Action.clientTopic, 1);
+                        client.subscribe(Action.clientTopic+studentId, 1);
 
                         JSONObject obj = new JSONObject();
                         try{
+                            obj.put("studentId", studentId);
                             obj.put("registrationId", reg.getRegistrationId());
                         }catch (Exception ex){
                             ex.printStackTrace();
                         }
-                        publishMessage(Action.combineMessage("001632",Action.asciiToHex(obj.toString())));
+                        publishMessage(Action.combineMessage("001611",Action.asciiToHex(obj.toString())));
                         subscribeRegMessage();
                         //checkAttendance();
 
@@ -364,6 +366,7 @@ public class Ticket extends AppCompatActivity {
                                 pd.show();
                                 JSONObject obj = new JSONObject();
                                 try {
+                                    obj.put("studentId", studentId);
                                     obj.put("leaderId", reg.getLeaderId());
                                     obj.put("timetableId", reg.getTimetableId());
 
@@ -476,13 +479,14 @@ public class Ticket extends AppCompatActivity {
 
         JSONObject obj = new JSONObject();
         try{
+            obj.put("studentId", studentId);
             obj.put("registrationId", reg.getRegistrationId());
         }catch (Exception ex){
             ex.printStackTrace();
         }
-        publishMessage(Action.combineMessage("001633",Action.asciiToHex(obj.toString())));
+        publishMessage(Action.combineMessage("001612",Action.asciiToHex(obj.toString())));
         try {
-            client.subscribe(Action.clientTopic, 1);
+            client.subscribe(Action.clientTopic+studentId, 1);
         } catch (MqttException ex) {
             ex.printStackTrace();
         }

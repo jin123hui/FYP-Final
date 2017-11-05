@@ -24,6 +24,7 @@ import com.example.user.myproject.Modal.ApplicationEvent;
 import com.example.user.myproject.Modal.BasicListAdapter;
 import com.example.user.myproject.Modal.EncodedEventRegistration;
 import com.example.user.myproject.Modal.EventRegistration;
+import com.example.user.myproject.Modal.SessionManager;
 import com.google.zxing.WriterException;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
@@ -50,6 +51,7 @@ public class WaitingInfo extends AppCompatActivity {
     private Context context;
     private MqttAndroidClient client;
     private LinearLayout waitingInfoLayout;
+    private String studentId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,8 @@ public class WaitingInfo extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        studentId = new SessionManager(this).getUserDetails().get("id");
 
         waitingInfoLayout = (LinearLayout) findViewById(R.id.waitingInfo);
         waitingInfoLayout.setVisibility(View.INVISIBLE);
@@ -106,12 +110,13 @@ public class WaitingInfo extends AppCompatActivity {
                         pd.show();
                         JSONObject obj = new JSONObject();
                         try{
+                            obj.put("studentId", studentId);
                             obj.put("registrationId", reg.getRegistrationId());
                         }catch(Exception ex){
                             ex.printStackTrace();
                         }
 
-                        publishMessage(Action.combineMessage("001636",Action.asciiToHex(obj.toString())));
+                        publishMessage(Action.combineMessage("001614",Action.asciiToHex(obj.toString())));
                         if (client == null ){
                             Toast.makeText(WaitingInfo.this, "Connection fail!!", Toast.LENGTH_LONG).show();
                         }
@@ -166,12 +171,13 @@ public class WaitingInfo extends AppCompatActivity {
                         pd.show();
                         JSONObject obj = new JSONObject();
                         try{
+                            obj.put("studentId", studentId);
                             obj.put("registrationId", reg.getRegistrationId());
                             obj.put("timetableId", evt.getTimetableId());
                         }catch(Exception ex){
                             ex.printStackTrace();
                         }
-                        publishMessage(Action.combineMessage("001638",Action.asciiToHex(obj.toString())));
+                        publishMessage(Action.combineMessage("001616",Action.asciiToHex(obj.toString())));
                         if (client == null ){
                             Toast.makeText(WaitingInfo.this, "Connection fail!!", Toast.LENGTH_LONG).show();
                         }
@@ -250,15 +256,16 @@ public class WaitingInfo extends AppCompatActivity {
                 public void onSuccess(IMqttToken asyncActionToken) {
                     //Toast.makeText(Ticket.this, "Connected!!", Toast.LENGTH_LONG).show();
                     try {
-                        client.subscribe(Action.clientTopic, 1);
+                        client.subscribe(Action.clientTopic+studentId, 1);
 
                         JSONObject obj = new JSONObject();
                         try{
+                            obj.put("studentId", studentId);
                             obj.put("timetableId", evt.getTimetableId());
                         }catch (Exception ex){
                             ex.printStackTrace();
                         }
-                        publishMessage(Action.combineMessage("001637",Action.asciiToHex(obj.toString())));
+                        publishMessage(Action.combineMessage("001615",Action.asciiToHex(obj.toString())));
                         subscribeWaitMessage();
 
                     } catch (MqttException ex) {

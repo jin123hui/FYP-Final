@@ -126,7 +126,7 @@ public class PastJoined extends AppCompatActivity implements NavigationView.OnNa
                 public void onSuccess(IMqttToken asyncActionToken) {
                     //Toast.makeText(Upcoming.this, "Connected!!", Toast.LENGTH_LONG).show();
                     try {
-                        client.subscribe(Action.clientTopic, 1);
+                        client.subscribe(Action.clientTopic+studentId, 1);
                         //Toast.makeText(Upcoming.this, "Connected!!", Toast.LENGTH_LONG).show();
 
                         loadPast();
@@ -263,7 +263,7 @@ public class PastJoined extends AppCompatActivity implements NavigationView.OnNa
             e.printStackTrace();
         }
 
-        publishMessage(Action.combineMessage("001639",Action.asciiToHex(obj.toString())));
+        publishMessage(Action.combineMessage("001617",Action.asciiToHex(obj.toString())));
         subscribeEventMessage();
     }
 

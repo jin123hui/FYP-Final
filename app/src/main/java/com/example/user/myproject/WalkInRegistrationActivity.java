@@ -176,7 +176,7 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements Nav
                     }
 
 
-                    publishMessage(Action.combineMessage("001613",Action.asciiToHex(obj.toString())));
+                    publishMessage(Action.combineMessage("001605",Action.asciiToHex(obj.toString())));
 
 
 
@@ -236,12 +236,13 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements Nav
             }else{
                 JSONObject json = new JSONObject();
                 try{
+                    json.put("studentId",studentId);
                     json.put("timetableId",result.getContents());
                 }catch(Exception ex){
                     ex.printStackTrace();
                 }
 
-                publishMessage(Action.combineMessage("001614",Action.asciiToHex(json.toString())));
+                publishMessage(Action.combineMessage("001606",Action.asciiToHex(json.toString())));
                 setSubscription(Action.serverTopic);
                 if (client == null ){
                     Toast.makeText(getApplicationContext(), "Connection fail!!", Toast.LENGTH_LONG).show();
@@ -395,12 +396,13 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements Nav
 
         JSONObject json = new JSONObject();
         try{
+            json.put("studentId",studentId);
             json.put("timetableId","");
         }catch(Exception ex){
             ex.printStackTrace();
         }
 
-        publishMessage(Action.combineMessage("001614",Action.asciiToHex(json.toString())));
+        publishMessage(Action.combineMessage("001606",Action.asciiToHex(json.toString())));
 
         if (client == null ){
             Toast.makeText(getApplicationContext(), "Connection fail!!", Toast.LENGTH_LONG).show();
@@ -481,7 +483,7 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements Nav
                                         ex.printStackTrace();
                                     }
 
-                                    publishMessage(Action.combineMessage("001613",Action.asciiToHex(obj.toString())));
+                                    publishMessage(Action.combineMessage("001605",Action.asciiToHex(obj.toString())));
 
 
 
@@ -599,7 +601,7 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements Nav
                 public void onSuccess(IMqttToken asyncActionToken) {
                     //Toast.makeText(getApplicationContext(), "Connected!!", Toast.LENGTH_LONG).show();
                     try {
-                        client.subscribe(Action.clientTopic, 1);
+                        client.subscribe(Action.clientTopic+studentId, 1);
 
                     } catch (MqttException ex) {
                         ex.printStackTrace();

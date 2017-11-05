@@ -312,12 +312,13 @@ public class Upcoming extends AppCompatActivity implements NavigationView.OnNavi
 
                                 JSONObject obj = new JSONObject();
                                 try{
+                                    obj.put("studentId", studentId);
                                     obj.put("registrationId", regList.get(pos).getRegistrationId());
                                 }catch(Exception ex){
                                     ex.printStackTrace();
                                 }
 
-                                publishMessage(Action.combineMessage("001634",Action.asciiToHex(obj.toString())));
+                                publishMessage(Action.combineMessage("001613",Action.asciiToHex(obj.toString())));
                                 if (client == null ){
                                     Toast.makeText(Upcoming.this, "Connection fail!!", Toast.LENGTH_LONG).show();
                                 }
@@ -383,7 +384,7 @@ public class Upcoming extends AppCompatActivity implements NavigationView.OnNavi
             e.printStackTrace();
         }
 
-        publishMessage(Action.combineMessage("001630",Action.asciiToHex(obj.toString())));
+        publishMessage(Action.combineMessage("001609",Action.asciiToHex(obj.toString())));
         subscribeEventMessage();
 
     }

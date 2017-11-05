@@ -124,6 +124,12 @@ public class Waiting extends AppCompatActivity implements NavigationView.OnNavig
         conn();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        studentId = new SessionManager(this).getUserDetails().get("id");
+    }
+
     public void conn(){
         String clientId = MqttClient.generateClientId();
         client = new MqttAndroidClient(this.getApplicationContext(), Action.mqttTest,
@@ -136,8 +142,7 @@ public class Waiting extends AppCompatActivity implements NavigationView.OnNavig
                 public void onSuccess(IMqttToken asyncActionToken) {
                     //Toast.makeText(Upcoming.this, "Connected!!", Toast.LENGTH_LONG).show();
                     try {
-                        client.subscribe(Action.clientTopic, 1);
-
+                        client.subscribe(Action.clientTopic+studentId, 1);
                         loadEvent();
                     } catch (MqttException ex) {
                         ex.printStackTrace();
@@ -258,12 +263,13 @@ public class Waiting extends AppCompatActivity implements NavigationView.OnNavig
                                 pd.show();
                                 JSONObject obj = new JSONObject();
                                 try{
+                                    obj.put("studentId", studentId);
                                     obj.put("registrationId", regList.get(pos).getRegistrationId());
                                 }catch(Exception ex){
                                     ex.printStackTrace();
                                 }
 
-                                publishMessage(Action.combineMessage("001636",Action.asciiToHex(obj.toString())));
+                                publishMessage(Action.combineMessage("001614",Action.asciiToHex(obj.toString())));
                                 if (client == null ){
                                     Toast.makeText(Waiting.this, "Connection fail!!", Toast.LENGTH_LONG).show();
                                 }
@@ -332,7 +338,7 @@ public class Waiting extends AppCompatActivity implements NavigationView.OnNavig
             e.printStackTrace();
         }
 
-        publishMessage(Action.combineMessage("001631",Action.asciiToHex(obj.toString())));
+        publishMessage(Action.combineMessage("001610",Action.asciiToHex(obj.toString())));
         subscribeEventMessage();
         //swipeRefreshLayout.setRefreshing(false);
     }
