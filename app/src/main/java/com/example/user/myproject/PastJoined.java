@@ -17,7 +17,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.user.myproject.Modal.Action;
@@ -47,7 +49,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-public class PastJoined extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
+public class PastJoined extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemSelectedListener {
 
     private ListView pastList;
     private List<ApplicationEvent> pastEvtList;
@@ -99,6 +101,13 @@ public class PastJoined extends AppCompatActivity implements NavigationView.OnNa
                                     }
                                 }
         );
+
+        Spinner spinner = (Spinner) findViewById(R.id.category);
+        spinner.setOnItemSelectedListener(this);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.category, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
     }
 
     public void onBackPressed() {
@@ -263,10 +272,11 @@ public class PastJoined extends AppCompatActivity implements NavigationView.OnNa
 
     private void loadPast() {
 
-
         JSONObject obj = new JSONObject();
+        Spinner spinner = (Spinner)findViewById(R.id.category);
         try {
             obj.put("studentId",studentId);
+            obj.put("category",spinner.getSelectedItem().toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -361,5 +371,30 @@ public class PastJoined extends AppCompatActivity implements NavigationView.OnNa
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        swipeRefreshLayout.setRefreshing(true);
+
+        JSONObject obj = new JSONObject();
+        Spinner spinner = (Spinner)findViewById(R.id.category);
+        String jsonString = "";
+        try {
+            obj.put("studentId",studentId);
+            obj.put("category",spinner.getSelectedItem().toString());
+
+            jsonString = obj.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        publishMessage(Action.combineMessage("001617",Action.asciiToHex(jsonString)));
+        subscribeEventMessage();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 }

@@ -23,6 +23,16 @@
 
     </string-array>
 
+    <string-array name="category">
+        <item>All Events</item>
+        <item>Business</item>
+        <item>Education</item>
+        <item>Game</item>
+        <item>IT</item>
+        <item>Music</item>
+        <item>Sports</item>
+
+    </string-array>
 
     <string name="google_map_api_key">AIzaSyAfRsO-VolLmJV4Jfcqp7_XX0ksAUxd9XU</string>
     <string name="title_activity_walk_in_registration">WalkInRegistrationActivity</string>
