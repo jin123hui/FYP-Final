@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -29,6 +30,7 @@ public class StudentListView extends ArrayAdapter<Student>{
     private ArrayList<Student> studentList;
     private SparseBooleanArray mSelectedItemsIds;
     public ArrayList<Integer> selectedIds = new ArrayList<Integer>();
+    boolean checking;
 
     public StudentListView(@NonNull Context context, @LayoutRes int resource, ArrayList<Student> student){
         super(context,resource,student);
@@ -36,6 +38,8 @@ public class StudentListView extends ArrayAdapter<Student>{
         mResource = resource;
         this.context = context;
         studentList = student;
+        checking = false;
+
     }
 
 
@@ -63,10 +67,34 @@ public class StudentListView extends ArrayAdapter<Student>{
         //viewHolder.txtStudentName.setBackgroundColor(Color.CYAN);
 
         viewHolder.linearLayout.setBackgroundColor(selectedIds.contains(position)?Color.LTGRAY:Color.WHITE);
+        viewHolder.checkBox.setChecked(selectedIds.contains(position)?true:false);
+        if(checking)
+            viewHolder.checkBox.setVisibility(View.VISIBLE);
+        else
+            viewHolder.checkBox.setVisibility(View.GONE);
 
 
         return convertView;
 
+    }
+
+
+
+    public void checkAll(){
+        for(int x = 0; x < studentList.size(); x++){
+            //studentList.get(x).setChecked(!alumno.get(x).isChecked());
+
+            if(!selectedIds.contains(studentList.get(x))){
+                selectedIds.add(x);
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+
+    public void uncheckAll(){
+        selectedIds.clear();
+        notifyDataSetChanged();
     }
 
 
@@ -78,7 +106,7 @@ public class StudentListView extends ArrayAdapter<Student>{
     }
 
     public ArrayList<Student> getStudentList(){
-            return studentList;
+        return studentList;
 
     }
 
@@ -96,7 +124,6 @@ public class StudentListView extends ArrayAdapter<Student>{
     public void selectView(int position,boolean value){
         if(value){
             mSelectedItemsIds.put(position,value);
-
         }else{
             mSelectedItemsIds.delete(position);
 
@@ -104,6 +131,7 @@ public class StudentListView extends ArrayAdapter<Student>{
         notifyDataSetChanged();
 
     }
+
 
 
 
@@ -123,11 +151,14 @@ public class StudentListView extends ArrayAdapter<Student>{
         TextView txtStudentId;
         TextView txtStudentName;
         LinearLayout linearLayout;
+        CheckBox checkBox;
+
 
         ViewHolder(View v){
             txtStudentId = (TextView)(v.findViewById(R.id.txtGroupStudentId));
             txtStudentName = (TextView)(v.findViewById(R.id.txtGroupStudentName));
             linearLayout = (LinearLayout)(v.findViewById(R.id.linearBackground));
+            checkBox = (CheckBox)(v.findViewById(R.id.checkBoxSelection));
         }
 
     }

@@ -6,8 +6,17 @@
     android:id="@+id/linearBackground">
 
 
+    <CheckBox
+        android:id="@+id/checkBoxSelection"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:visibility="gone"
+        android:focusable="false"
+        />
+
     <TableLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent">
 
         <TableRow

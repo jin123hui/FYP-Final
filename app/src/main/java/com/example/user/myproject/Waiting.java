@@ -352,7 +352,7 @@ public class Waiting extends AppCompatActivity implements NavigationView.OnNavig
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.homepage, menu);
+        getMenuInflater().inflate(R.menu.other_action, menu);
         return true;
     }
 

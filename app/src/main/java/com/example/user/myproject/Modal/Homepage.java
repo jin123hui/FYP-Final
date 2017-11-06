@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -15,7 +16,9 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,6 +26,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,6 +73,8 @@ public class Homepage extends AppCompatActivity
     String studentName = "desmond";
     ProgressDialog pd;
     String name = "";
+    private int hot_number = 0;
+    private TextView ui_notif = null;
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -145,6 +151,111 @@ public class Homepage extends AppCompatActivity
             Toast.makeText(Homepage.this, "No internet connection!", Toast.LENGTH_LONG).show();
         }
 
+    }
+
+    public void readUpcoming(){
+        JSONObject obj = new JSONObject();
+        String jsonString = "";
+        try {
+            obj.put("studentId",studentId);
+            jsonString = obj.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        publishMessage(Action.combineMessage("001625",Action.asciiToHex(jsonString)));
+        if (client == null ){
+            Toast.makeText(Homepage.this, "Upcoming events count retrieve failed", Toast.LENGTH_LONG).show();
+        }
+        client.setCallback(new MqttCallback() {
+            @Override
+            public void connectionLost(Throwable cause) {
+            }
+
+            @Override
+            public void messageArrived(String topic, MqttMessage message) throws Exception {
+                String strMessage = new String(message.getPayload());
+                strMessage = Action.hexToAscii(strMessage);
+                JSONObject jObj = new JSONObject(strMessage);
+                hot_number = Integer.parseInt(jObj.getString("count"));
+                //Toast.makeText(Homepage.this, jObj.getString("count"), Toast.LENGTH_LONG).show();
+                updateHotCount(hot_number);
+                readEvent();
+            }
+
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken token) {
+                // Toast.makeText(Homepage.this, "All message received!!", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.homepage_action, menu);
+        final RelativeLayout menu_hotlist = (RelativeLayout) menu.findItem(R.id.action_upcoming).getActionView();
+        ui_notif = (TextView) menu_hotlist.findViewById(R.id.notif_no);
+        updateHotCount(hot_number);
+        new MyMenuItemStuffListener(menu_hotlist, "Show upcoming event registered.") {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, Upcoming.class);
+                startActivity(intent);
+            }
+        };
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    public void updateHotCount(final int new_hot_number) {
+        hot_number = new_hot_number;
+        if (ui_notif == null) return;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (new_hot_number == 0)
+                    ui_notif.setVisibility(View.INVISIBLE);
+                else {
+                    ui_notif.setVisibility(View.VISIBLE);
+                    ui_notif.setText(Integer.toString(new_hot_number));
+                }
+            }
+        });
+    }
+
+    static abstract class MyMenuItemStuffListener implements View.OnClickListener, View.OnLongClickListener {
+        private String hint;
+        private View view;
+
+        MyMenuItemStuffListener(View view, String hint) {
+            this.view = view;
+            this.hint = hint;
+            view.setOnClickListener(this);
+            view.setOnLongClickListener(this);
+        }
+
+        @Override abstract public void onClick(View v);
+
+        @Override public boolean onLongClick(View v) {
+            final int[] screenPos = new int[2];
+            final Rect displayFrame = new Rect();
+            view.getLocationOnScreen(screenPos);
+            view.getWindowVisibleDisplayFrame(displayFrame);
+            final Context context = view.getContext();
+            final int width = view.getWidth();
+            final int height = view.getHeight();
+            final int midy = screenPos[1] + height / 2;
+            final int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
+            Toast cheatSheet = Toast.makeText(context, hint, Toast.LENGTH_SHORT);
+            if (midy < displayFrame.height()) {
+                cheatSheet.setGravity(Gravity.BOTTOM | Gravity.RIGHT,
+                        screenWidth - screenPos[0] - width / 2, height);
+            } else {
+                cheatSheet.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, height);
+            }
+            cheatSheet.show();
+            return true;
+        }
     }
 
     public void buildSubscriptionDialog(String[] category){
@@ -301,11 +412,11 @@ public class Homepage extends AppCompatActivity
         }
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.homepage, menu);
+        getMenuInflater().inflate(R.menu.other_action, menu);
         return true;
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -442,7 +553,8 @@ public class Homepage extends AppCompatActivity
                     try {
                         client.subscribe(Action.clientTopic+studentId, 1);
                         //Toast.makeText(Homepage.this, Action.clientTopic+studentId, Toast.LENGTH_LONG).show();
-                        readEvent();
+                        readUpcoming();
+                        //readEvent();
                     } catch (MqttException ex) {
                         ex.printStackTrace();
                     }
@@ -658,12 +770,11 @@ public class Homepage extends AppCompatActivity
 
     }
 
-
-
     @Override
     public void onRefresh() {
         swipeRefreshLayout.setRefreshing(true);
-        readEvent();
+        readUpcoming();
+        //readEvent();
     }
 
     @Override

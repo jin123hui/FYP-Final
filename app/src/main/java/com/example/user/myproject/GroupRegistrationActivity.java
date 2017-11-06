@@ -66,6 +66,7 @@ public class GroupRegistrationActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,11 +152,17 @@ public class GroupRegistrationActivity extends AppCompatActivity {
 
 
         listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+            MenuItem selectMenu = null;
             @Override
             public void onItemCheckedStateChanged(ActionMode actionMode, int i, long l, boolean b) {
+
+
+
                 final int checkedCount = listView.getCheckedItemCount();
                 actionMode.setTitle(checkedCount + " Selected");
                 studentListView.toggleSelection(i);
+
+
 
                 ArrayList<Integer> selectedIds = studentListView.selectedIds;
                 Integer pos = new Integer(i);
@@ -165,8 +172,21 @@ public class GroupRegistrationActivity extends AppCompatActivity {
                     selectedIds.add(pos);
                 }
 
-                studentListView.notifyDataSetChanged();
 
+                studentListView.notifyDataSetChanged();
+                if(studentListView.getStudentList().size() == studentListView.selectedIds.size()){
+                    if(selectMenu!= null) {
+
+                        selectMenu.setTitle("Unselect All");
+                    }
+
+                }else{
+                    if(selectMenu!= null) {
+
+                        selectMenu.setTitle("Select All");
+                    }
+
+                }
                 String ss = "";
 
             }
@@ -174,18 +194,37 @@ public class GroupRegistrationActivity extends AppCompatActivity {
             @Override
             public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
                 actionMode.getMenuInflater().inflate(R.menu.group_menu,menu);
+                selectMenu = menu.findItem(R.id.selectAll_item);
+                getSupportActionBar().hide();
 
+                studentListView.checking = true;
+                studentListView.notifyDataSetChanged();
                 return true;
             }
 
             @Override
             public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+
                 return false;
             }
 
             @Override
             public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+
+
                 switch (menuItem.getItemId()){
+                    case R.id.selectAll_item:
+                        String choice = menuItem.getTitle().toString();
+                        if(choice.equals("Select All")){
+                            studentListView.checkAll();
+                            menuItem.setTitle("Unselected All");
+                        }else{
+                            studentListView.uncheckAll();
+                            menuItem.setTitle("Select All");
+                        }
+
+
+                        return true;
                     case R.id.delete_item:
                         SparseBooleanArray selected = studentListView.getSparseBooleanArray();
                         for(int index = (selected.size() -1 ) ; index >= 0; index--) {
@@ -211,6 +250,8 @@ public class GroupRegistrationActivity extends AppCompatActivity {
             public void onDestroyActionMode(ActionMode actionMode) {
                 ArrayList<Integer> selectedIds = studentListView.selectedIds;
                 selectedIds.clear();
+                getSupportActionBar().show();
+                studentListView.checking = false;
                 studentListView.removeSelection();
             }
         });
@@ -242,6 +283,7 @@ public class GroupRegistrationActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+
             case R.id.action_group_register:
                 if(arrayList.size() < seatAvailable){
                     Toast.makeText(getApplicationContext(),"Cannot perform group registration because the team do not reach maximum amount of student!",Toast.LENGTH_LONG).show();
