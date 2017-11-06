@@ -386,11 +386,7 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements Nav
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        disconnect();
-    }
+
 
     @Override
     public void handleResult(Result result) {
@@ -691,13 +687,19 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements Nav
         return true;
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disconnect();
+    }
+
     public void disconnect(){
         try {
             IMqttToken disconToken = client.disconnect();
             disconToken.setActionCallback(new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
-                    Toast.makeText(getApplicationContext(), "disconnected!!", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(), "disconnected!!", Toast.LENGTH_LONG).show();
                     // we are now successfully disconnected
                 }
 
@@ -711,7 +713,6 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements Nav
         } catch (MqttException e) {
             e.printStackTrace();
         }
-
     }
 
 

@@ -277,7 +277,10 @@ public class Homepage extends AppCompatActivity
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    Homepage.super.onBackPressed();
+                                    //Homepage.super.onBackPressed();
+                                    finishAffinity();
+                                    //System.exit(0);
+                                    //finishAndRemoveTask();
                                 }
                             }).create().show();
                 }
@@ -289,7 +292,9 @@ public class Homepage extends AppCompatActivity
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                Homepage.super.onBackPressed();
+                                //Homepage.super.onBackPressed();
+                                finishAffinity();
+                                //System.exit(0);
                             }
                         }).create().show();
             }
