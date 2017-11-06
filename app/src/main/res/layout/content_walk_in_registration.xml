@@ -121,14 +121,14 @@
         android:textStyle="bold"
         android:textAllCaps="false"
         android:textSize="20dp"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/ovalbutton"
         android:textColor="@android:color/white"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="5dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_gravity="center_horizontal"
-        android:text="Register"
+        android:text="REGISTER"
         android:visibility="gone" />
 
 
@@ -139,17 +139,14 @@
         android:textStyle="bold"
         android:textAllCaps="false"
         android:textSize="20dp"
-        android:background="@color/colorPrimaryDark"
+        android:background="@drawable/ovalbutton4"
         android:textColor="@android:color/white"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_gravity="center_horizontal"
         android:onClick="runQrCodeScanner"
-        android:text="Scan QR code" />
-
-
-
+        android:text="SCAN QR CODE" />
 
 </LinearLayout>

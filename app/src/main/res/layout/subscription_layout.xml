@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:textColor="@color/colorBlack"
-        android:textSize="45px"
+        android:textSize="18dp"
         android:text="Category Subscription"
         android:textStyle="bold"
         android:paddingTop="30px"
@@ -112,20 +112,20 @@
             android:layout_marginBottom="10dp"
             android:layout_height="wrap_content"
             android:text="update subscription"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/ovalbutton"
             android:textColor="@android:color/white"
-            android:layout_marginRight="10px"/>
+            android:layout_marginRight="5px"/>
 
 
         <Button
             android:id="@+id/btnCancelSubscription"
             android:layout_width="wrap_content"
             android:layout_weight="0"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10px"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp"
             android:layout_height="wrap_content"
-            android:background="@android:color/holo_red_light"
+            android:background="@drawable/ovalbutton3"
             android:textColor="@android:color/white"
             android:text="Cancel" />
 

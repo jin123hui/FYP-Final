@@ -74,6 +74,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <Button
@@ -82,8 +83,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
+                    android:layout_marginTop="10dp"
                     android:layout_weight="1"
-                    android:background="@color/colorPrimaryDark"
+                    android:background="@drawable/ovalbutton4"
                     android:text="LOGIN"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"

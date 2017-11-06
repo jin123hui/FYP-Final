@@ -59,7 +59,7 @@
             android:layout_marginTop="10dp"
             android:textSize="20dp"
             android:textStyle="bold"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/ovalbutton4"
             android:textColor="@android:color/white"
             android:layout_gravity="center_horizontal"
             android:onClick="runQrCodeScanner"

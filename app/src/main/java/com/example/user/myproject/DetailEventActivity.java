@@ -274,10 +274,10 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
         EditText eventRegistrationDescription = (EditText)findViewById(R.id.eventRegistrationDescription);
 
         if(from.equals("ticket")) {
-            groupRegistration.setVisibility(View.INVISIBLE);
+            groupRegistration.setVisibility(View.GONE);
             individualRegistrationButton.setText("Update Registration Details");
-            txtIndividualInfo.setVisibility(View.INVISIBLE);
-            txtGroupInfo.setVisibility(View.INVISIBLE);
+            txtIndividualInfo.setVisibility(View.GONE);
+            txtGroupInfo.setVisibility(View.GONE);
 
             individualRegistrationButton.setOnClickListener(new View.OnClickListener(){
                 @Override
@@ -288,23 +288,23 @@ public class DetailEventActivity extends AppCompatActivity implements OnMapReady
             eventRegistrationDescription.setText(reg.getDescription());
             studentId = new SessionManager(this).getUserDetails().get("id");
         } else if(from.equals("waiting")) {
-            groupRegistration.setVisibility(View.INVISIBLE);
+            groupRegistration.setVisibility(View.GONE);
             individualRegistrationButton.setText("Reserved in Waiting List");
             individualRegistrationButton.setEnabled(false);
             individualRegistrationButton.setBackgroundColor(Color.GRAY);
-            txtIndividualInfo.setVisibility(View.INVISIBLE);
-            txtGroupInfo.setVisibility(View.INVISIBLE);
+            txtIndividualInfo.setVisibility(View.GONE);
+            txtGroupInfo.setVisibility(View.GONE);
             eventRegistrationDescription.setText(reg.getDescription());
             eventRegistrationDescription.setEnabled(false);
             studentId = new SessionManager(this).getUserDetails().get("id");
             //timetableId = reg.getTimetableId();
         } else if(from.equals("past")) {
-            groupRegistration.setVisibility(View.INVISIBLE);
+            groupRegistration.setVisibility(View.GONE);
             individualRegistrationButton.setText("Participated");
             individualRegistrationButton.setEnabled(false);
             individualRegistrationButton.setBackgroundColor(Color.GRAY);
-            txtIndividualInfo.setVisibility(View.INVISIBLE);
-            txtGroupInfo.setVisibility(View.INVISIBLE);
+            txtIndividualInfo.setVisibility(View.GONE);
+            txtGroupInfo.setVisibility(View.GONE);
             eventRegistrationDescription.setText(reg.getDescription());
             eventRegistrationDescription.setEnabled(false);
             //timetableId = reg.getTimetableId();
