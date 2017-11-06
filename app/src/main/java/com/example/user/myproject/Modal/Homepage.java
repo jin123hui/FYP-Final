@@ -248,8 +248,7 @@ public class Homepage extends AppCompatActivity
             final int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
             Toast cheatSheet = Toast.makeText(context, hint, Toast.LENGTH_SHORT);
             if (midy < displayFrame.height()) {
-                cheatSheet.setGravity(Gravity.BOTTOM | Gravity.RIGHT,
-                        screenWidth - screenPos[0] - width / 2, height);
+                cheatSheet.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, height);
             } else {
                 cheatSheet.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, height);
             }
