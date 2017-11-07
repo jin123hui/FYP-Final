@@ -81,7 +81,7 @@ public class Ticket extends AppCompatActivity {
         studentId = new SessionManager(this).getUserDetails().get("id");
 
         pd = new ProgressDialog(Ticket.this);
-        pd.setMessage("Loading");
+        pd.setMessage("Loading ticket info...");
         pd.show();
 
         reg = new EventRegistration();
@@ -117,7 +117,7 @@ public class Ticket extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         pd = new ProgressDialog(Ticket.this);
-                        pd.setMessage("Loading");
+                        pd.setMessage("Cancelling registration...");
                         pd.show();
 
                         JSONObject obj = new JSONObject();
@@ -184,7 +184,6 @@ public class Ticket extends AppCompatActivity {
                         calIntent.putExtra(CalendarContract.Events.TITLE, evt.getEventTitle());
                         calIntent.putExtra(CalendarContract.Events.EVENT_LOCATION, evt.getVenueName());
                         calIntent.putExtra(CalendarContract.Events.DESCRIPTION, evt.getEventDescription());
-
                         calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
                                 evt.getStartTime().getTimeInMillis());
                         calIntent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
@@ -236,12 +235,6 @@ public class Ticket extends AppCompatActivity {
                     intent.putExtra("FROM", "ticket");
                 }
                 intent.putExtra("REGISTRATION", reg);
-                /*try {
-                    client.disconnect();
-                } catch (MqttException e) {
-                    e.printStackTrace();
-                }*/
-
                 startActivity(intent);
             }
         });

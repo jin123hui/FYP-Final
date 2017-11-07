@@ -67,6 +67,7 @@ public class Homepage extends AppCompatActivity
     ListView lstView;
     ArrayList<ApplicationEvent> eventList = new ArrayList<>();
     MqttAndroidClient client;
+    MqttAndroidClient client2;
     Context context;
     AlertDialog dialog;
     String studentId = "";
@@ -147,6 +148,7 @@ public class Homepage extends AppCompatActivity
             swipeRefreshLayout.setRefreshing(true);
 
             conn();
+            conn2();
         } else {
             Toast.makeText(Homepage.this, "No internet connection!", Toast.LENGTH_LONG).show();
         }
@@ -179,7 +181,7 @@ public class Homepage extends AppCompatActivity
                 hot_number = Integer.parseInt(jObj.getString("count"));
                 //Toast.makeText(Homepage.this, jObj.getString("count"), Toast.LENGTH_LONG).show();
                 updateHotCount(hot_number);
-                readEvent();
+                //readEvent();
             }
 
             @Override
@@ -236,7 +238,7 @@ public class Homepage extends AppCompatActivity
 
         @Override abstract public void onClick(View v);
 
-        @Override public boolean onLongClick(View v) {
+        @Override public boolean onLongClick(View v) { //????
             final int[] screenPos = new int[2];
             final Rect displayFrame = new Rect();
             view.getLocationOnScreen(screenPos);
@@ -463,6 +465,7 @@ public class Homepage extends AppCompatActivity
 
         if (id == R.id.nav_home) {
             readEvent();
+            readUpcoming();
         } else if (id == R.id.nav_subscriptionCategory) {
             pd = new ProgressDialog(Homepage.this);
             pd.setMessage("Loading subscription info...");
@@ -570,9 +573,65 @@ public class Homepage extends AppCompatActivity
         }
     }
 
+    public void conn2(){
+
+        String clientId = MqttClient.generateClientId();
+        client2 = new MqttAndroidClient(this.getApplicationContext(), Action.mqttTest,
+                clientId);
+
+        try {
+            IMqttToken token = client2.connect();
+            token.setActionCallback(new IMqttActionListener() {
+                @Override
+                public void onSuccess(IMqttToken asyncActionToken) {
+                    //Toast.makeText(Homepage.this, "Connected!!", Toast.LENGTH_LONG).show();
+                    try {
+                        client2.subscribe(Action.clientTopic+studentId, 1);
+                        //Toast.makeText(Homepage.this, Action.clientTopic+studentId, Toast.LENGTH_LONG).show();
+                        //readUpcoming();
+                        readEvent();
+                    } catch (MqttException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                    Toast.makeText(Homepage.this, "Connection fail!!", Toast.LENGTH_LONG).show();
+
+                }
+            });
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void disconnect(){
         try {
             IMqttToken disconToken = client.disconnect();
+            disconToken.setActionCallback(new IMqttActionListener() {
+                @Override
+                public void onSuccess(IMqttToken asyncActionToken) {
+                    //  Toast.makeText(Homepage.this, "disconnected!!", Toast.LENGTH_LONG).show();
+                    // we are now successfully disconnected
+                }
+
+                @Override
+                public void onFailure(IMqttToken asyncActionToken,
+                                      Throwable exception) {
+                    Toast.makeText(Homepage.this, "Disconnect fail!!", Toast.LENGTH_LONG).show();
+                    // something went wrong, but probably we are disconnected anyway
+                }
+            });
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void disconnect2(){
+        try {
+            IMqttToken disconToken = client2.disconnect();
             disconToken.setActionCallback(new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
@@ -605,12 +664,24 @@ public class Homepage extends AppCompatActivity
 
     }
 
+    public void publishMessage2(String message) {
+
+        try {
+            byte[] ss= message.getBytes();
+            client2.publish(Action.serverTopic, message.getBytes(), 0, false);
+            //Toast.makeText(Homepage.this, "publish success l!!", Toast.LENGTH_LONG).show();
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     public void subscribeEventMessage(){
-        if (client == null ){
+        if (client2 == null ){
             Toast.makeText(Homepage.this, "Connection fail!!", Toast.LENGTH_LONG).show();
         }
-        client.setCallback(new MqttCallback() {
+        client2.setCallback(new MqttCallback() {
             @Override
             public void connectionLost(Throwable cause) {
 
@@ -724,7 +795,7 @@ public class Homepage extends AppCompatActivity
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        publishMessage(Action.combineMessage("001601",Action.asciiToHex(jsonString)));
+        publishMessage2(Action.combineMessage("001601",Action.asciiToHex(jsonString)));
         subscribeEventMessage();
     }
 
@@ -773,7 +844,7 @@ public class Homepage extends AppCompatActivity
     public void onRefresh() {
         swipeRefreshLayout.setRefreshing(true);
         readUpcoming();
-        //readEvent();
+        readEvent();
     }
 
     @Override
@@ -794,8 +865,9 @@ public class Homepage extends AppCompatActivity
             e.printStackTrace();
         }
 
-        publishMessage(Action.combineMessage("001601",Action.asciiToHex(jsonString)));
+        publishMessage2(Action.combineMessage("001601",Action.asciiToHex(jsonString)));
         subscribeEventMessage();
+        readUpcoming();
     }
 
     @Override

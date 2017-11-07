@@ -274,7 +274,7 @@ public class Upcoming extends AppCompatActivity implements NavigationView.OnNavi
                     evt.setEventTitle(e.getEventTitle());
                     evt.setActivityType(e.getActivityType());
                     evt.setVenueName(e.getVenueName());
-
+                    evt.setEventDescription(e.getEventDescription());
 
                     EventRegistration reg = new EventRegistration();
                     reg.setRegistrationId(Integer.parseInt(e.getRegistrationId()));
