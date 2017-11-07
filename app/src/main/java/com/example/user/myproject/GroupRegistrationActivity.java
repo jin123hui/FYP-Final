@@ -151,8 +151,10 @@ public class GroupRegistrationActivity extends AppCompatActivity {
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 
 
+
         listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
             MenuItem selectMenu = null;
+
             @Override
             public void onItemCheckedStateChanged(ActionMode actionMode, int i, long l, boolean b) {
 
@@ -216,11 +218,35 @@ public class GroupRegistrationActivity extends AppCompatActivity {
                     case R.id.selectAll_item:
                         String choice = menuItem.getTitle().toString();
                         if(choice.equals("Select All")){
-                            studentListView.checkAll();
+                            //  studentListView.checkAll();
+
+                            ArrayList<Integer> selectedIds = studentListView.selectedIds;
+
+
+                            for(int index=0; index<studentListView.getStudentList().size(); index++){
+                                if(selectedIds.contains(index)) {
+
+                                }else {
+                                    listView.setItemChecked(index,true);
+                                }
+
+                            }
+
+                            //  listView.setItemChecked(0,true);
                             menuItem.setTitle("Unselected All");
+
+                            final int checkedCount = listView.getCheckedItemCount();
+                            actionMode.setTitle(checkedCount + " Selected");
                         }else{
-                            studentListView.uncheckAll();
+                            //studentListView.uncheckAll();
+                            for(int index=0; index<studentListView.getStudentList().size(); index++){
+                                listView.setItemChecked(index,false);
+                            }
+
                             menuItem.setTitle("Select All");
+
+                            final int checkedCount = listView.getCheckedItemCount();
+                            actionMode.setTitle(checkedCount + " Selected");
                         }
 
 
@@ -294,7 +320,7 @@ public class GroupRegistrationActivity extends AppCompatActivity {
                 }
 
                 pd = new ProgressDialog(GroupRegistrationActivity.this);
-                pd.setMessage("Registering...");
+                pd.setMessage("Loading");
                 pd.show();
                 ArrayList<EventRegistration> arrEventReg = new ArrayList<>();
 
@@ -318,8 +344,8 @@ public class GroupRegistrationActivity extends AppCompatActivity {
                     for (EventRegistration regTemp : arrEventReg) {
                         JSONObject obj = new JSONObject();
                         obj.put("timetableId", regTemp.getTimetableId());
-                        obj.put("studentId",regTemp.getStudentId());
-                        obj.put("leaderId",regTemp.getLeaderId());
+                        obj.put("studentId",regTemp.getStudentId().toLowerCase());
+                        obj.put("leaderId",regTemp.getLeaderId().toLowerCase());
                         obj.put("description",registrationDescription);
                         jsonArr.put(obj);
 
@@ -449,7 +475,7 @@ public class GroupRegistrationActivity extends AppCompatActivity {
                 JSONObject obj = new JSONObject();
                 try{
                     obj.put("leaderId", leaderId);
-                    obj.put("studentId",studentId);
+                    obj.put("studentId",studentId.toLowerCase());
                     obj.put("timetableId",timetableId);
                 }
                 catch(Exception ex){
@@ -651,6 +677,7 @@ public class GroupRegistrationActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
 
 
 

@@ -80,24 +80,6 @@ public class StudentListView extends ArrayAdapter<Student>{
 
 
 
-    public void checkAll(){
-        for(int x = 0; x < studentList.size(); x++){
-            //studentList.get(x).setChecked(!alumno.get(x).isChecked());
-
-            if(!selectedIds.contains(studentList.get(x))){
-                selectedIds.add(x);
-            }
-        }
-        notifyDataSetChanged();
-    }
-
-
-    public void uncheckAll(){
-        selectedIds.clear();
-        notifyDataSetChanged();
-    }
-
-
 
 
     public void remove(Student student){
