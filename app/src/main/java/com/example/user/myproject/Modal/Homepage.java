@@ -71,7 +71,6 @@ public class Homepage extends AppCompatActivity
     Context context;
     AlertDialog dialog;
     String studentId = "";
-    String studentName = "desmond";
     ProgressDialog pd;
     String name = "";
     private int hot_number = 0;
@@ -198,13 +197,13 @@ public class Homepage extends AppCompatActivity
         final RelativeLayout menu_hotlist = (RelativeLayout) menu.findItem(R.id.action_upcoming).getActionView();
         ui_notif = (TextView) menu_hotlist.findViewById(R.id.notif_no);
         updateHotCount(hot_number);
-        new MyMenuItemStuffListener(menu_hotlist, "Show upcoming event registered.") {
+        menu_hotlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, Upcoming.class);
                 startActivity(intent);
             }
-        };
+        });
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -223,40 +222,6 @@ public class Homepage extends AppCompatActivity
                 }
             }
         });
-    }
-
-    static abstract class MyMenuItemStuffListener implements View.OnClickListener, View.OnLongClickListener {
-        private String hint;
-        private View view;
-
-        MyMenuItemStuffListener(View view, String hint) {
-            this.view = view;
-            this.hint = hint;
-            view.setOnClickListener(this);
-            view.setOnLongClickListener(this);
-        }
-
-        @Override abstract public void onClick(View v);
-
-        @Override public boolean onLongClick(View v) { //????
-            final int[] screenPos = new int[2];
-            final Rect displayFrame = new Rect();
-            view.getLocationOnScreen(screenPos);
-            view.getWindowVisibleDisplayFrame(displayFrame);
-            final Context context = view.getContext();
-            final int width = view.getWidth();
-            final int height = view.getHeight();
-            final int midy = screenPos[1] + height / 2;
-            final int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
-            Toast cheatSheet = Toast.makeText(context, hint, Toast.LENGTH_SHORT);
-            if (midy < displayFrame.height()) {
-                cheatSheet.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, height);
-            } else {
-                cheatSheet.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, height);
-            }
-            cheatSheet.show();
-            return true;
-        }
     }
 
     public void buildSubscriptionDialog(String[] category){
