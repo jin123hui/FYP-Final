@@ -294,7 +294,7 @@ public class GroupRegistrationActivity extends AppCompatActivity {
                 }
 
                 pd = new ProgressDialog(GroupRegistrationActivity.this);
-                pd.setMessage("Loading");
+                pd.setMessage("Registering...");
                 pd.show();
                 ArrayList<EventRegistration> arrEventReg = new ArrayList<>();
 
@@ -448,6 +448,7 @@ public class GroupRegistrationActivity extends AppCompatActivity {
                 String studentId = edit.getText().toString();
                 JSONObject obj = new JSONObject();
                 try{
+                    obj.put("leaderId", leaderId);
                     obj.put("studentId",studentId);
                     obj.put("timetableId",timetableId);
                 }
@@ -536,7 +537,7 @@ public class GroupRegistrationActivity extends AppCompatActivity {
                 public void onSuccess(IMqttToken asyncActionToken) {
                     //Toast.makeText(getApplicationContext(), "Connected!!", Toast.LENGTH_LONG).show();
                     try {
-                        client.subscribe(Action.clientTopic, 1);
+                        client.subscribe(Action.clientTopic+leaderId, 1);
 
 
                     } catch (MqttException ex) {

@@ -64,6 +64,7 @@ public class Ticket extends AppCompatActivity {
     private MqttAndroidClient client;
     private MqttAndroidClient client2;
     private String studentId = "";
+    private String name = "";
     private Context context;
     private ProgressDialog pd;
     private ScrollView svupcome;
@@ -80,6 +81,7 @@ public class Ticket extends AppCompatActivity {
         svupcome.setVisibility(View.INVISIBLE);
 
         studentId = new SessionManager(this).getUserDetails().get("id");
+        name = new SessionManager(this).getUserDetails().get("name");
 
         pd = new ProgressDialog(Ticket.this);
         pd.setMessage("Loading ticket info...");
@@ -211,6 +213,7 @@ public class Ticket extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         studentId = new SessionManager(this).getUserDetails().get("id");
+        name = new SessionManager(this).getUserDetails().get("name");
         conn();
         conn2();
     }
@@ -219,6 +222,7 @@ public class Ticket extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         studentId = new SessionManager(this).getUserDetails().get("id");
+        name = new SessionManager(this).getUserDetails().get("name");
     }
 
     private void loadEvent() {
@@ -439,10 +443,6 @@ public class Ticket extends AppCompatActivity {
                                             int no = 0;
 
                                             for(EncodedEventRegistration e : arrList1){
-                                                if(e.getLeaderId().equals(e.getStudentId()) && e.getLeaderId().equals(studentId)) {
-                                                    ldrId = e.getName() + " | " + e.getLeaderId()+" (Me)";
-                                                    //memId += no+". "+e.getStudentId()+" (Me)\n";
-                                                }
                                                 if(e.getLeaderId().equals(e.getStudentId())) {
                                                     ldrId = e.getName() + " | " + e.getLeaderId();
                                                 }
@@ -454,6 +454,11 @@ public class Ticket extends AppCompatActivity {
                                                         memId += no + ". " + e.getName() + " | " + e.getStudentId() + System.getProperty("line.separator");
                                                     }
                                                 }
+                                            }
+
+                                            if(arrList1.get(0).getLeaderId().equals(studentId)) {
+                                                ldrId = name + " | " + studentId +" (Me)";
+                                                //memId += no+". "+e.getStudentId()+" (Me)\n";
                                             }
 
                                             if(no==0) {
