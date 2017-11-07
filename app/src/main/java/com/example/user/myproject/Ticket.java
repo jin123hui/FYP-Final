@@ -62,6 +62,7 @@ public class Ticket extends AppCompatActivity {
     public final static int WIDTH = 300;
     public final static int HEIGHT = 300;
     private MqttAndroidClient client;
+    private MqttAndroidClient client2;
     private String studentId = "";
     private Context context;
     private ProgressDialog pd;
@@ -211,6 +212,7 @@ public class Ticket extends AppCompatActivity {
         super.onStart();
         studentId = new SessionManager(this).getUserDetails().get("id");
         conn();
+        conn2();
     }
 
     @Override
@@ -284,11 +286,55 @@ public class Ticket extends AppCompatActivity {
         }
     }
 
+    public void conn2(){
+        String clientId = MqttClient.generateClientId();
+        client2 = new MqttAndroidClient(this.getApplicationContext(), Action.mqttTest,
+                clientId);
+
+        try {
+            IMqttToken token = client2.connect();
+            token.setActionCallback(new IMqttActionListener() {
+                @Override
+                public void onSuccess(IMqttToken asyncActionToken) {
+                    //Toast.makeText(Ticket.this, "Connected!!", Toast.LENGTH_LONG).show();
+                    try {
+                        client2.subscribe(Action.clientTopic+studentId, 1);
+                        checkAttendance();
+
+                    } catch (MqttException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                    Toast.makeText(Ticket.this, "Connection fail!!", Toast.LENGTH_LONG).show();
+                    // Something went wrong e.g. connection timeout or firewall problems
+                    // Log.d(TAG, "onFailure");
+
+                }
+            });
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void publishMessage(String message) {
 
         try {
             byte[] ss= message.getBytes();
             client.publish(Action.serverTopic, message.getBytes(), 0, false);
+            //Toast.makeText(Ticket.this, "Request Data !!", Toast.LENGTH_LONG).show();
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void publishMessage2(String message) {
+
+        try {
+            byte[] ss= message.getBytes();
+            client2.publish(Action.serverTopic, message.getBytes(), 0, false);
             //Toast.makeText(Ticket.this, "Request Data !!", Toast.LENGTH_LONG).show();
         } catch (MqttException e) {
             e.printStackTrace();
@@ -483,9 +529,9 @@ public class Ticket extends AppCompatActivity {
         }catch (Exception ex){
             ex.printStackTrace();
         }
-        publishMessage(Action.combineMessage("001612",Action.asciiToHex(obj.toString())));
+        publishMessage2(Action.combineMessage("001612",Action.asciiToHex(obj.toString())));
         try {
-            client.subscribe(Action.clientTopic+studentId, 1);
+            client2.subscribe(Action.clientTopic+studentId, 1);
         } catch (MqttException ex) {
             ex.printStackTrace();
         }
@@ -493,10 +539,10 @@ public class Ticket extends AppCompatActivity {
     }
 
     public void subscribeAttndMessage(){
-        if (client == null ){
+        if (client2 == null ){
             Toast.makeText(Ticket.this, "Connection fail!!", Toast.LENGTH_LONG).show();
         }
-        client.setCallback(new MqttCallback() {
+        client2.setCallback(new MqttCallback() {
             @Override
             public void connectionLost(Throwable cause) {
                 String s = "";
@@ -574,11 +620,34 @@ public class Ticket extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         disconnect();
+        disconnect2();
     }
 
     public void disconnect(){
         try {
             IMqttToken disconToken = client.disconnect();
+            disconToken.setActionCallback(new IMqttActionListener() {
+                @Override
+                public void onSuccess(IMqttToken asyncActionToken) {
+                    //Toast.makeText(getApplicationContext(), "disconnected!!", Toast.LENGTH_LONG).show();
+                    // we are now successfully disconnected
+                }
+
+                @Override
+                public void onFailure(IMqttToken asyncActionToken,
+                                      Throwable exception) {
+                    Toast.makeText(getApplicationContext(), "Disconnect fail!!", Toast.LENGTH_LONG).show();
+                    // something went wrong, but probably we are disconnected anyway
+                }
+            });
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void disconnect2(){
+        try {
+            IMqttToken disconToken = client2.disconnect();
             disconToken.setActionCallback(new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
