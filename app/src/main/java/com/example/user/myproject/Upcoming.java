@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -59,6 +60,9 @@ public class Upcoming extends AppCompatActivity implements NavigationView.OnNavi
     private String studentId = "";
     private Context context;
     private  ProgressDialog pd;
+    private final int interval = 5000; // 1 Second
+    private static Handler handler = new Handler();
+    private static boolean returned = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -195,6 +199,7 @@ public class Upcoming extends AppCompatActivity implements NavigationView.OnNavi
                         //Toast.makeText(Upcoming.this, "Connected!!", Toast.LENGTH_LONG).show();
 
                         loadEvent();
+
                     } catch (MqttException ex) {
                         ex.printStackTrace();
                     }
@@ -239,6 +244,12 @@ public class Upcoming extends AppCompatActivity implements NavigationView.OnNavi
                 Gson gson = builder.create();
                 String decoded = Action.hexToAscii(strMessage);
                 EncodedApplicationEvent[] result = gson.fromJson(decoded,EncodedApplicationEvent[].class);
+
+                //
+                returned = true;
+                handler.removeCallbacksAndMessages(null);
+                //Toast.makeText(Upcoming.this, String.valueOf(returned), Toast.LENGTH_SHORT).show();
+                //
 
                 ArrayList<EncodedApplicationEvent> arrList1 = new ArrayList<>(Arrays.asList(result));
                 final ArrayList<ApplicationEvent> arrList = new ArrayList<>();
@@ -374,17 +385,22 @@ public class Upcoming extends AppCompatActivity implements NavigationView.OnNavi
             @Override
             public void deliveryComplete(IMqttDeliveryToken token) {
                 //Toast.makeText(Upcoming.this, "All event data received!!", Toast.LENGTH_LONG).show();
-                String str = "";
-                try {
-                    str = new String(token.getMessage().getPayload());
-                } catch (MqttException e) {
-                    e.printStackTrace();
-                }
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        if(returned) {
+                            handler.removeCallbacksAndMessages(null);
+                        } else {
+                            Toast.makeText(Upcoming.this, "Failed! Reconnecting!", Toast.LENGTH_SHORT).show();
+                            loadEvent();
+                        }
+                    }
+                }, interval);
             }
         });
     }
 
     private void loadEvent() {
+        returned = false;
         JSONObject obj = new JSONObject();
         try {
             obj.put("studentId",studentId);
@@ -394,7 +410,6 @@ public class Upcoming extends AppCompatActivity implements NavigationView.OnNavi
 
         publishMessage(Action.combineMessage("001609",Action.asciiToHex(obj.toString())));
         subscribeEventMessage();
-
     }
 
 
@@ -447,6 +462,7 @@ public class Upcoming extends AppCompatActivity implements NavigationView.OnNavi
     protected void onDestroy() {
         super.onDestroy();
         disconnect();
+        handler.removeCallbacksAndMessages(null);
     }
 
     public void disconnect(){

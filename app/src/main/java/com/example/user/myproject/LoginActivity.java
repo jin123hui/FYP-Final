@@ -143,7 +143,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                             JSONObject obj = new JSONObject();
                             try {
-                                obj.put("studentId",studentId);
+                                obj.put("studentId",studentId.toLowerCase());
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
