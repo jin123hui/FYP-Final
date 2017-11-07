@@ -63,7 +63,7 @@ public class StudentListView extends ArrayAdapter<Student>{
         }
 
         viewHolder.txtStudentName.setText(studentName);
-        viewHolder.txtStudentId.setText(studentId);
+        viewHolder.txtStudentId.setText(studentId.toUpperCase());
         //viewHolder.txtStudentName.setBackgroundColor(Color.CYAN);
 
         viewHolder.linearLayout.setBackgroundColor(selectedIds.contains(position)?Color.LTGRAY:Color.WHITE);

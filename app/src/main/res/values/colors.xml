@@ -8,9 +8,10 @@
     <color name="colorRed">#f70000</color>
     <color name="colorShallowGreen">#a6f9b1</color>
     <color name="colorCell">#e6cece</color>
-        <color name="colorCyan">#00ffd9</color>
-        <color name="colorDarkBlue">#0004f9</color>
+    <color name="colorCyan">#00ffd9</color>
+    <color name="colorDarkBlue">#0004f9</color>
     <color name="colorPink">#fab5ba</color>
     <color name="colorWhite">#ffffff</color>
+    <color name="colorList">#eff0f5</color>
     </resources>
 

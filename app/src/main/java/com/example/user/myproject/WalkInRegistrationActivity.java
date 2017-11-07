@@ -90,7 +90,7 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements Nav
         TextView appDrawerName = (TextView) hView.findViewById(R.id.appDrawerName);
         appDrawerName.setText(new SessionManager(this).getUserDetails().get("name"));
         TextView appDrawerId = (TextView) hView.findViewById(R.id.appDrawerId);
-        appDrawerId.setText(new SessionManager(this).getUserDetails().get("id"));
+        appDrawerId.setText(new SessionManager(this).getUserDetails().get("id").toUpperCase());
     }
 
     public void onBackPressed() {

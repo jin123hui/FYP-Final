@@ -113,7 +113,7 @@ public class GroupRegistrationActivity extends AppCompatActivity {
         }
 
         TextView leaderIdText = (TextView)findViewById(R.id.txtGroupLeaderStudentId);
-        leaderIdText.setText(leaderId);
+        leaderIdText.setText(leaderId.toUpperCase());
 
         TextView leaderNameText = (TextView)findViewById(R.id.txtGroupLeaderStudentName);
         leaderNameText.setText(leaderName);
@@ -482,7 +482,7 @@ public class GroupRegistrationActivity extends AppCompatActivity {
 
                         }else{
                             String studentName = obj.getString("studentName");
-                            String studentId = edit.getText().toString();
+                            String studentId = edit.getText().toString().toLowerCase();
                             arrayList.add(new Student(studentId,studentName));
                             studentListView.notifyDataSetChanged();
                             Toast.makeText(getApplicationContext(),"Student added successful!!",Toast.LENGTH_LONG).show();

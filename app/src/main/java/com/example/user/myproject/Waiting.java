@@ -83,7 +83,7 @@ public class Waiting extends AppCompatActivity implements NavigationView.OnNavig
         TextView appDrawerName = (TextView) hView.findViewById(R.id.appDrawerName);
         appDrawerName.setText(new SessionManager(this).getUserDetails().get("name"));
         TextView appDrawerId = (TextView) hView.findViewById(R.id.appDrawerId);
-        appDrawerId.setText(new SessionManager(this).getUserDetails().get("id"));
+        appDrawerId.setText(new SessionManager(this).getUserDetails().get("id").toUpperCase());
 
         waitingList = (ListView) findViewById(R.id.waitinglist);
         waitingEvtList = new ArrayList<>();

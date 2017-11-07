@@ -117,7 +117,7 @@ public class Homepage extends AppCompatActivity
             TextView appDrawerName = (TextView) hView.findViewById(R.id.appDrawerName);
             appDrawerName.setText(new SessionManager(this).getUserDetails().get("name"));
             TextView appDrawerId = (TextView) hView.findViewById(R.id.appDrawerId);
-            appDrawerId.setText(new SessionManager(this).getUserDetails().get("id"));
+            appDrawerId.setText(new SessionManager(this).getUserDetails().get("id").toUpperCase());
 
             //Toast.makeText(Homepage.this, new SessionManager(this).getUserDetails().get("address"), Toast.LENGTH_LONG).show();
             context = this;

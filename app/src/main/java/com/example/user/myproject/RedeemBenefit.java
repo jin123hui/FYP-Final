@@ -92,7 +92,7 @@ public class RedeemBenefit extends AppCompatActivity implements NavigationView.O
         TextView appDrawerName = (TextView) hView.findViewById(R.id.appDrawerName);
         appDrawerName.setText(new SessionManager(this).getUserDetails().get("name"));
         TextView appDrawerId = (TextView) hView.findViewById(R.id.appDrawerId);
-        appDrawerId.setText(new SessionManager(this).getUserDetails().get("id"));
+        appDrawerId.setText(new SessionManager(this).getUserDetails().get("id").toUpperCase());
 
         redeemListV = (ListView) findViewById(R.id.benefitlist);
         redeemList = new ArrayList<>();

@@ -444,20 +444,20 @@ public class Ticket extends AppCompatActivity {
 
                                             for(EncodedEventRegistration e : arrList1){
                                                 if(e.getLeaderId().equals(e.getStudentId())) {
-                                                    ldrId = e.getName() + " | " + e.getLeaderId();
+                                                    ldrId = e.getName() + " | " + e.getLeaderId().toUpperCase();
                                                 }
                                                 if(!e.getStudentId().equals(e.getLeaderId())) {
                                                     no++;
                                                     if (e.getStudentId().equals(studentId)) {
-                                                        memId += no + ". " + e.getName() + " | " + e.getStudentId() + " (Me)" + System.getProperty("line.separator");
+                                                        memId += no + ". " + e.getName() + " | " + e.getStudentId().toUpperCase() + " (Me)" + System.getProperty("line.separator");
                                                     } else {
-                                                        memId += no + ". " + e.getName() + " | " + e.getStudentId() + System.getProperty("line.separator");
+                                                        memId += no + ". " + e.getName() + " | " + e.getStudentId().toUpperCase() + System.getProperty("line.separator");
                                                     }
                                                 }
                                             }
 
                                             if(arrList1.get(0).getLeaderId().equals(studentId)) {
-                                                ldrId = name + " | " + studentId +" (Me)";
+                                                ldrId = name + " | " + studentId.toUpperCase() +" (Me)";
                                                 //memId += no+". "+e.getStudentId()+" (Me)\n";
                                             }
 
