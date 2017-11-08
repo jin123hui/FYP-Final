@@ -21,7 +21,7 @@ public class Action {
     //54 character reserved
     public static String mqttServer = "iot.eclipse.org";
     //public static String mqttTest = "tcp://localhost:1883";
-    public static String mqttTest = "tcp://broker.hivemq.com:1883";
+    public static String mqttTest = "tcp://iot.eclipse.org:1883";
 
     //Turn Hex to ASCll For example : 31 turn to 1
     public static String hexToAscii(String hexStr) {
