@@ -246,8 +246,8 @@ public class Upcoming extends AppCompatActivity implements NavigationView.OnNavi
                 EncodedApplicationEvent[] result = gson.fromJson(decoded,EncodedApplicationEvent[].class);
 
                 //
-                returned = true;
-                handler.removeCallbacksAndMessages(null);
+                //returned = true;
+                //handler.removeCallbacksAndMessages(null);
                 //Toast.makeText(Upcoming.this, String.valueOf(returned), Toast.LENGTH_SHORT).show();
                 //
 
@@ -385,7 +385,7 @@ public class Upcoming extends AppCompatActivity implements NavigationView.OnNavi
             @Override
             public void deliveryComplete(IMqttDeliveryToken token) {
                 //Toast.makeText(Upcoming.this, "All event data received!!", Toast.LENGTH_LONG).show();
-                handler.postDelayed(new Runnable() {
+                /*handler.postDelayed(new Runnable() {
                     public void run() {
                         if(returned) {
                             handler.removeCallbacksAndMessages(null);
@@ -394,7 +394,7 @@ public class Upcoming extends AppCompatActivity implements NavigationView.OnNavi
                             loadEvent();
                         }
                     }
-                }, interval);
+                }, interval);*/
             }
         });
     }

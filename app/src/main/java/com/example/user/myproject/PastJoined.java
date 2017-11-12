@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ import com.example.user.myproject.Modal.BasicListAdapter;
 import com.example.user.myproject.Modal.EncodedApplicationEvent;
 import com.example.user.myproject.Modal.EventRegistration;
 import com.example.user.myproject.Modal.Homepage;
+import com.example.user.myproject.Modal.PastListAdapter;
 import com.example.user.myproject.Modal.SessionManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -45,6 +47,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -102,12 +105,35 @@ public class PastJoined extends AppCompatActivity implements NavigationView.OnNa
                                 }
         );
 
+        Button btnReport = (Button) findViewById(R.id.report_btn);
+        btnReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent showReport = new Intent(context, Report.class);
+                showReport.putExtra("EVENTS", (ArrayList)pastEvtList);
+                startActivity(showReport);
+            }
+        });
+
         Spinner spinner = (Spinner) findViewById(R.id.category);
         spinner.setOnItemSelectedListener(this);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.category, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+
+        Spinner spinner2 = (Spinner) findViewById(R.id.year);
+        ArrayList<String> years = new ArrayList<String>();
+        int thisYear = Calendar.getInstance().get(Calendar.YEAR);
+        years.add("All Years");
+        for (int i = thisYear; i >= 1990; i--) {
+            years.add(Integer.toString(i));
+        }
+        spinner2.setOnItemSelectedListener(this);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, years);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner2.setAdapter(adapter2);
     }
 
     public void onBackPressed() {
@@ -240,7 +266,7 @@ public class PastJoined extends AppCompatActivity implements NavigationView.OnNa
                 pastList = (ListView) findViewById(R.id.pastlist);
                 pastList.setEmptyView(findViewById(R.id.empty));
 
-                final BasicListAdapter adapter = new BasicListAdapter(context, R.layout.content_past_joined, pastEvtList);
+                final PastListAdapter adapter = new PastListAdapter(context, R.layout.content_past_joined, pastEvtList);
                 pastList.setAdapter(adapter);
 
                 pastList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -274,9 +300,11 @@ public class PastJoined extends AppCompatActivity implements NavigationView.OnNa
 
         JSONObject obj = new JSONObject();
         Spinner spinner = (Spinner)findViewById(R.id.category);
+        Spinner spinner2 = (Spinner)findViewById(R.id.year);
         try {
             obj.put("studentId",studentId);
             obj.put("category",spinner.getSelectedItem().toString());
+            obj.put("year", spinner2.getSelectedItem().toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -379,10 +407,12 @@ public class PastJoined extends AppCompatActivity implements NavigationView.OnNa
 
         JSONObject obj = new JSONObject();
         Spinner spinner = (Spinner)findViewById(R.id.category);
+        Spinner spinner2 = (Spinner)findViewById(R.id.year);
         String jsonString = "";
         try {
             obj.put("studentId",studentId);
             obj.put("category",spinner.getSelectedItem().toString());
+            obj.put("year", spinner2.getSelectedItem().toString());
 
             jsonString = obj.toString();
         } catch (JSONException e) {

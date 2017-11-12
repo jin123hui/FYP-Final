@@ -381,6 +381,8 @@ public class Ticket extends AppCompatActivity {
                     TextView tvStatus = (TextView) findViewById(R.id.reg_status);
                     TextView tvRegId = (TextView) findViewById(R.id.reg_id);
                     TextView tvTicket = (TextView) findViewById(R.id.txtTicket);
+                    TextView tvAttnLbl = (TextView) findViewById(R.id.attd_label);
+                    TextView tvAttnStatus = (TextView) findViewById(R.id.attd_status);
                     Button btnReminder = (Button) findViewById(R.id.reminder_btn);
                     Button btnCancel = (Button) findViewById(R.id.cancel_btn);
                     ImageView qrCode = (ImageView) findViewById(R.id.qrCode);
@@ -391,6 +393,8 @@ public class Ticket extends AppCompatActivity {
                         qrCode.setVisibility(View.VISIBLE);
                         btnCancel.setVisibility(View.VISIBLE);
                         tvTicket.setVisibility(View.VISIBLE);
+                        tvAttnLbl.setVisibility(View.VISIBLE);
+                        tvAttnStatus.setVisibility(View.VISIBLE);
 
                         if(evt.getEndTime().before(new GregorianCalendar())) {
                             tvStatus.setText("Participated. Event is over.");
@@ -398,6 +402,8 @@ public class Ticket extends AppCompatActivity {
                             qrCode.setVisibility(View.INVISIBLE);
                             btnCancel.setVisibility(View.INVISIBLE);
                             tvTicket.setVisibility(View.INVISIBLE);
+                            tvAttnLbl.setVisibility(View.INVISIBLE);
+                            tvAttnStatus.setVisibility(View.INVISIBLE);
                         }
                     }
 
