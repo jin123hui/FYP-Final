@@ -41,6 +41,7 @@
     <string name="title_activity_soft_skill">SoftSkill</string>
     <string name="title_activity_about">About</string>
     <string name="title_activity_report">Report</string>
+    <string name="title_activity_update_group_registration">UpdateGroupRegistrationActivity</string>
 
 
 </resources>

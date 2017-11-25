@@ -46,6 +46,7 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONObject;
@@ -66,6 +67,7 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements Nav
     private int timetableId = 0;
     private String studentId = "";
     private final int CAMERA_REQUEST_CODE =1;
+    MqttConnectOptions options = new MqttConnectOptions();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +144,16 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements Nav
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        options.setUserName(Action.MQTT_USERNAME);
+        options.setPassword(Action.MQTT_PASSWORD.toCharArray());
+        options.setCleanSession(true);
+
     }
 
     @Override
@@ -586,11 +598,11 @@ public class WalkInRegistrationActivity extends AppCompatActivity implements Nav
     public void conn(){
         String clientId = MqttClient.generateClientId();
         client =
-                new MqttAndroidClient(this.getApplicationContext(), Action.mqttTest,
+                new MqttAndroidClient(this.getApplicationContext(), Action.MQTT_ADDRESS,
                         clientId);
 
         try {
-            IMqttToken token = client.connect();
+            IMqttToken token = client.connect(options);
             token.setActionCallback(new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {

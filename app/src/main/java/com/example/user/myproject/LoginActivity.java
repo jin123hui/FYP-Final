@@ -50,6 +50,7 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONException;
@@ -72,6 +73,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mLoginFormView;
     private ProgressDialog pDialog;
     private MqttAndroidClient client;
+    MqttConnectOptions options = new MqttConnectOptions();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +111,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mProgressView = findViewById(R.id.login_progress);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        options.setUserName(Action.MQTT_USERNAME);
+        options.setPassword(Action.MQTT_PASSWORD.toCharArray());
+        options.setCleanSession(true);
+
+    }
+
     private void attemptLogin() {
         if (mAuthTask != null) {
             return;
@@ -129,11 +141,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             pDialog = ProgressDialog.show(LoginActivity.this, "", "Login...");
 
             String clientId = MqttClient.generateClientId();
-            client = new MqttAndroidClient(this.getApplicationContext(), Action.mqttTest,
+            client = new MqttAndroidClient(this.getApplicationContext(), Action.MQTT_ADDRESS,
                     clientId);
 
             try {
-                IMqttToken token = client.connect();
+                IMqttToken token = client.connect(options);
                 token.setActionCallback(new IMqttActionListener() {
                     @Override
                     public void onSuccess(IMqttToken asyncActionToken) {

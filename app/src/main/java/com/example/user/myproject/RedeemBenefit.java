@@ -43,6 +43,7 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONException;
@@ -68,6 +69,7 @@ public class RedeemBenefit extends AppCompatActivity implements NavigationView.O
     public final static int BLACK = 0xFF000000;
     public final static int WIDTH = 300;
     public final static int HEIGHT = 300;
+    MqttConnectOptions options = new MqttConnectOptions();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,6 +172,9 @@ public class RedeemBenefit extends AppCompatActivity implements NavigationView.O
         super.onStart();
         studentId = new SessionManager(this).getUserDetails().get("id");
         swipeRefreshLayout.setRefreshing(true);
+        options.setUserName(Action.MQTT_USERNAME);
+        options.setPassword(Action.MQTT_PASSWORD.toCharArray());
+        options.setCleanSession(true);
         conn();
     }
 
@@ -181,11 +186,11 @@ public class RedeemBenefit extends AppCompatActivity implements NavigationView.O
 
     public void conn(){
         String clientId = MqttClient.generateClientId();
-        client = new MqttAndroidClient(this.getApplicationContext(), Action.mqttTest,
+        client = new MqttAndroidClient(this.getApplicationContext(), Action.MQTT_ADDRESS,
                 clientId);
 
         try {
-            IMqttToken token = client.connect();
+            IMqttToken token = client.connect(options);
             token.setActionCallback(new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {

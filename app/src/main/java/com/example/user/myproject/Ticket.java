@@ -41,6 +41,7 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONObject;
@@ -68,6 +69,7 @@ public class Ticket extends AppCompatActivity {
     private Context context;
     private ProgressDialog pd;
     private ScrollView svupcome;
+    MqttConnectOptions options = new MqttConnectOptions();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -214,6 +216,9 @@ public class Ticket extends AppCompatActivity {
         super.onStart();
         studentId = new SessionManager(this).getUserDetails().get("id");
         name = new SessionManager(this).getUserDetails().get("name");
+        options.setUserName(Action.MQTT_USERNAME);
+        options.setPassword(Action.MQTT_PASSWORD.toCharArray());
+        options.setCleanSession(true);
         conn();
         conn2();
     }
@@ -249,11 +254,11 @@ public class Ticket extends AppCompatActivity {
 
     public void conn(){
         String clientId = MqttClient.generateClientId();
-        client = new MqttAndroidClient(this.getApplicationContext(), Action.mqttTest,
+        client = new MqttAndroidClient(this.getApplicationContext(), Action.MQTT_ADDRESS,
                         clientId);
 
         try {
-            IMqttToken token = client.connect();
+            IMqttToken token = client.connect(options);
             token.setActionCallback(new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
@@ -292,11 +297,11 @@ public class Ticket extends AppCompatActivity {
 
     public void conn2(){
         String clientId = MqttClient.generateClientId();
-        client2 = new MqttAndroidClient(this.getApplicationContext(), Action.mqttTest,
+        client2 = new MqttAndroidClient(this.getApplicationContext(), Action.MQTT_ADDRESS,
                 clientId);
 
         try {
-            IMqttToken token = client2.connect();
+            IMqttToken token = client2.connect(options);
             token.setActionCallback(new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
@@ -462,9 +467,23 @@ public class Ticket extends AppCompatActivity {
                                                 }
                                             }
 
+                                            Button btnUpdateTeam = (Button) findViewById(R.id.update_team_btn);
+                                            btnUpdateTeam.setVisibility(View.GONE);
+
                                             if(arrList1.get(0).getLeaderId().equals(studentId)) {
                                                 ldrId = name + " | " + studentId.toUpperCase() +" (Me)";
                                                 //memId += no+". "+e.getStudentId()+" (Me)\n";
+                                                //Button btnUpdateTeam = (Button) findViewById(R.id.update_team_btn);
+                                                btnUpdateTeam.setVisibility(View.VISIBLE);
+                                                btnUpdateTeam.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        Intent intent = new Intent(context, UpdateGroupRegistrationActivity.class);
+                                                        intent.putExtra("LEADERID", studentId);
+                                                        intent.putExtra("TIMETABLEID", reg.getTimetableId());
+                                                        startActivity(intent);
+                                                    }
+                                                });
                                             }
 
                                             if(no==0) {

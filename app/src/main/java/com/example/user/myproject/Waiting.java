@@ -36,6 +36,7 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONException;
@@ -59,6 +60,7 @@ public class Waiting extends AppCompatActivity implements NavigationView.OnNavig
     private String studentId = "";
     private Context context;
     private  ProgressDialog pd;
+    MqttConnectOptions options = new MqttConnectOptions();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +125,9 @@ public class Waiting extends AppCompatActivity implements NavigationView.OnNavig
         super.onStart();
         studentId = new SessionManager(this).getUserDetails().get("id");
         swipeRefreshLayout.setRefreshing(true);
+        options.setUserName(Action.MQTT_USERNAME);
+        options.setPassword(Action.MQTT_PASSWORD.toCharArray());
+        options.setCleanSession(true);
         conn();
     }
 
@@ -134,11 +139,11 @@ public class Waiting extends AppCompatActivity implements NavigationView.OnNavig
 
     public void conn(){
         String clientId = MqttClient.generateClientId();
-        client = new MqttAndroidClient(this.getApplicationContext(), Action.mqttTest,
+        client = new MqttAndroidClient(this.getApplicationContext(), Action.MQTT_ADDRESS,
                 clientId);
 
         try {
-            IMqttToken token = client.connect();
+            IMqttToken token = client.connect(options);
             token.setActionCallback(new IMqttActionListener() {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {

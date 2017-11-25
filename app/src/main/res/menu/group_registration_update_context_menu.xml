@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/delete_student"
+        android:title="Delete Student">
+
+    </item>
+
+    <item android:id="@+id/set_as_party_leader"
+        android:title="Set as party leader">
+
+    </item>
+</menu>

@@ -176,6 +176,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.user.myproject.PastJoined" />
         </activity>
+        <activity
+            android:name=".UpdateGroupRegistrationActivity"
+            android:label="@string/title_activity_update_group_registration"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
