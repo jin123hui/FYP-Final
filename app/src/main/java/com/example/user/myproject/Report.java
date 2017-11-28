@@ -299,8 +299,8 @@ public class Report extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.save_report_menu, menu);
+        //MenuInflater inflater = getMenuInflater();
+        //inflater.inflate(R.menu.save_report_menu, menu);
 
         return true;
     }
@@ -308,9 +308,9 @@ public class Report extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_save_report:
-                savePdf();
-                break;
+            //case R.id.action_save_report:
+            //    savePdf();
+            //    break;
             case R.id.home:
                 this.finish();
                 break;

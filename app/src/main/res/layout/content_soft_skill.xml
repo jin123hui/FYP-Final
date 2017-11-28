@@ -31,11 +31,27 @@
             tools:layout_editor_absoluteX="8dp">
             <ListView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@android:color/white"
+                android:layout_weight="1"
                 android:id="@+id/softskilllist">
             </ListView>
+
         </android.support.v4.widget.SwipeRefreshLayout>
+
+        <TextView
+            android:id="@+id/totalleft"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:text="HEY"
+            android:layout_centerInParent="true"
+            android:background="@drawable/ovalbutton"
+            android:textSize="24dp"
+            android:textColor="@color/colorWhite"
+            android:visibility="visible" />
 
     </RelativeLayout>
 

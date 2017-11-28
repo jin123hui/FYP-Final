@@ -148,8 +148,7 @@ public class Homepage extends AppCompatActivity
 
             swipeRefreshLayout.setRefreshing(true);
 
-            conn();
-            conn2();
+
         } else {
             Toast.makeText(Homepage.this, "No internet connection!", Toast.LENGTH_LONG).show();
         }
@@ -333,6 +332,9 @@ public class Homepage extends AppCompatActivity
         options.setUserName(Action.MQTT_USERNAME);
         options.setPassword(Action.MQTT_PASSWORD.toCharArray());
         options.setCleanSession(true);
+        //options.setAutomaticReconnect(true);
+        conn();
+        conn2();
     }
 
     @Override
@@ -846,4 +848,10 @@ public class Homepage extends AppCompatActivity
     }
 
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disconnect();
+        disconnect2();
+    }
 }

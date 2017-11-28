@@ -22,7 +22,7 @@ public class Action {
     public static String MQTT_PASSWORD = "DIQ-EjuHMCzJ";
     public static String MQTT_PORT = "10582";
 
-    public static String MQTT_ADDRESS = Action.mqttServer + ":" + MQTT_PORT;
+    public static String MQTT_ADDRESS = "tcp://m13.cloudmqtt.com:10582";
 
     //54 character reserved
     public static String mqttServer = "tcp://m13.cloudmqtt.com";

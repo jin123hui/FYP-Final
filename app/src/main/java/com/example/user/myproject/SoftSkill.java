@@ -263,9 +263,35 @@ public class SoftSkill extends AppCompatActivity implements NavigationView.OnNav
                 }
 
                 ApplicationEvent total = new ApplicationEvent();
-                total.setEventTitle("Total Score :");
-                total.setSoftSkillPoint(cs+","+ctps+","+ts+","+ll+","+kk+","+em+","+ls);
+                total.setEventTitle("**Total Score :");
+                total.setSoftSkillPoint(cs+"/5,"+ctps+"/5,"+ts+"/5,"+ll+"/5,"+kk+"/3,"+em+"/5,"+ls+"/5");
                 arrList.add(total);
+
+                int csLeft = 5-cs;
+                int ctpsLeft = 5-ctps;
+                int tsLeft = 5-ts;
+                int llLeft = 5-ll;
+                int kkLeft = 3-kk;
+                int emLeft = 5-em;
+                int lsLeft = 5-ls;
+                int[] ssArray = {csLeft,ctpsLeft,tsLeft,llLeft,kkLeft,emLeft,lsLeft};
+
+                TextView totalLeft = (TextView) findViewById(R.id.totalleft);
+                totalLeft.setText("");totalLeft.setVisibility(View.GONE);
+                int count = 0;
+                for(int i:ssArray) {
+                    if(i<=0)
+                        count++;
+                }
+                if(count==ssArray.length) {
+                    totalLeft.setVisibility(View.VISIBLE);
+                    totalLeft.setText("Qualify for Soft Skill Certificate");
+                }
+
+                //ApplicationEvent meet = new ApplicationEvent();
+                //meet.setEventTitle("**Target Score :");
+                //meet.setSoftSkillPoint("5,5,5,5,3,5,5");
+                //arrList.add(meet);
 
                 evtList = arrList;
                 //Toast.makeText(Upcoming.this, "WOW!!"+arrList.get(0).getVenueName(), Toast.LENGTH_LONG).show();
