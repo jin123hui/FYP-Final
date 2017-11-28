@@ -315,6 +315,7 @@ public class Upcoming extends AppCompatActivity implements NavigationView.OnNavi
                         intent.putExtra("REGISTRATION", regList.get(i));
                         intent.putExtra("EVENT", incomingEvtList.get(i));
                         startActivity(intent);
+                        //disconnect();
                     }
                 });
 
@@ -467,7 +468,7 @@ public class Upcoming extends AppCompatActivity implements NavigationView.OnNavi
     protected void onDestroy() {
         super.onDestroy();
         disconnect();
-        handler.removeCallbacksAndMessages(null);
+        //handler.removeCallbacksAndMessages(null);
     }
 
     public void disconnect(){

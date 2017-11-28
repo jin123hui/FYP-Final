@@ -16,6 +16,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -851,7 +852,11 @@ public class Homepage extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        disconnect();
-        disconnect2();
+        try {
+            disconnect();
+            disconnect2();
+        } catch (Exception ex) {
+
+        }
     }
 }
